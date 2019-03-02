@@ -6,36 +6,45 @@
   "Location of cached `wal' theme in json format.")
 (defvar wal-theme-own-cache-dir "cache"
   "Location of cached `wal' theme in json format.")
-(defvar wal-theme-own-cache-json-hashfile nil
-  "Hash value base filename of current `wal' theme.
-Used for caching results of palette extension.")
+(defvar wal-theme-canonical-tty-color-names
+  '(black red green yellow blue magenta cyan white)
+  "The 8 most universaly supported tty color names.
+Their look-alikes will be extracted from the `wal' cache, and
+with the right escape sequences---i.e. (cat
+~/.cache/wal/sequences &)---should be viewable even in the Linux
+console. NOTE: Order matters.")
 (defvar wal-theme-base-palette nil
   "Unmodified colors extracted directly from `wal'.
 Stored in a flat alist.")
-(defvar wal-theme-extended-pallete nil
+(defvar wal-theme-extended-palette nil
   "Extended color palette stored as flat alist.")
+(defvar wal-theme-full-theme-colors nil
+  "Colors in use in current wal-theme.
+Generated from `wal-theme-base-palette'")
+(defvar wal-theme-tty-theme-colors nil
+  "Colors in use in current wal-theme.
+Extracted from `wal-theme-base-palette'")
 
-(defun wal-theme--wal-cache-json-load (&optional json)
-  "Read JSON as the most complete of the stored files."
+(defun wal-theme--wal-cache-json-load (&optional json color-names)
+  "Read JSON as the most complete of the stored files.
+COLOR-NAMES will be associated with the first 8 colors of regular
+wal colors."
   (let ((json (or json wal-theme-wal-cache-json))
         (json-object-type 'alist)
-        (colors (json-read-file wal-theme-wal-cache-json))
-        (canonical-color-names '(black red green yellow blue magenta cyan
-                                       white)))
-    (let ((special-colors (alist-get 'special colors))
-          (regular-colors (alist-get 'colors colors)))
-      (let ((regular-color-values (cl-loop for
-                                           (key . value)
-                                           in
-                                           regular-colors
-                                           collect
-                                           value)))
-        (let ((cannonical-colors (pairlis canonical-color-names regular-color-values)))
-          (append special-colors cannonical-colors))))))
+        (color-names (or color-names wal-theme-canonical-tty-color-names)))
+    (let ((colors (json-read-file json)))
+      (let ((special-colors (alist-get 'special colors))
+            (regular-colors (alist-get 'colors colors)))
+        (let ((regular-color-values (cl-loop for
+                                             (key . value)
+                                             in
+                                             regular-colors
+                                             collect
+                                             value)))
+          (let ((cannonical-colors (pairlis color-names regular-color-values)))
+            (append special-colors cannonical-colors)))))))
 
 (setq wal-theme-base-palette (wal-theme--wal-cache-json-load))
-(setq wal-theme-own-cache-json-hashfile
-      (concat (sha1 (format "%s" wal-theme-base-palette)) ".json"))
 
 (defun wal-theme--extend-base-color (color num-degrees degree-size)
   "Extends (darkens (-) and lightens (+)) COLOR.
@@ -68,43 +77,139 @@ points. Returns extended palette as alist."
                . ,(wal-theme--extend-base-color value num-degrees
                                                 degree-size)))))
 
-(setq wal-theme-extended-pallete (wal-theme--extend-base-palette 4 5))
+(setq wal-theme-extended-palette (wal-theme--extend-base-palette 4 5))
 
-(defun wal-theme-get-color (color &optional shade palette)
-  "Return SHADE of COLOR from current `wal-theme' pallete.
+(defun wal-theme-get-color (color &optional shade tty palette)
+  "Return SHADE of COLOR from current `wal-theme' palette.
 Darken (-) or lightened (+) COLOR by SHADE. SHADE defaults to 0,
 returning unmodified `wal' COLOR. If SHADE exceeds number of
 available shades, the darkest/lightest shade is returned.
-If `(display-graphic-p)' is nil, the default `wal' color is
+If TTY is t, the default, tty compatible `wal' color is
 returned."
-  (let ((palette (or palette wal-theme-extended-pallete))
-        (middle (/ (- (length (car wal-theme-extended-pallete)) 1) 2))
-        (shade (if (display-graphic-p) (or shade 0) 0)))
+  (let ((palette (or palette wal-theme-extended-palette))
+        (tty (or tty nil))
+        (middle (/ (- (length (car wal-theme-extended-palette)) 1) 2))
+        (shade (if tty 0 (or shade 0))))
     (let ((return-color (nth (+ middle shade) (alist-get color palette))))
       (if return-color
           return-color
         (car (last (alist-get color palette)))))))
 
-(defun wal-theme--cache-extended-palette (&optional palette)
-  "Serializes extended PALETTE in json format.
-Defaults to current pallete."
-  (let ((palette (or palette wal-theme-extended-pallete))
-        (hashfile (concat (file-name-as-directory wal-theme-own-cache-dir)
-                          wal-theme-own-cache-json-hashfile)))
-    (if (null (file-exists-p hashfile))
-        (progn
-          (if (null (file-directory-p wal-theme-own-cache-dir))
-              (make-directory wal-theme-own-cache-dir))
-          (with-temp-file hashfile
-            (insert (json-encode-list palette)))))))
+(defun wal-theme--cache-current-theme (&optional base-palette extended-palette tty-theme-colors
+                                                 full-theme-colors)
+  "Serializes all palettes and colors in json format.
+BASE-PALETTE, EXTENDED-PALETTE, TTY-THEME-COLORS, and
+FULL-THEME-COLORS all refer to the variables provided by
+wal-theme by default, prefixed with the package name."
+  (let ((cache-dir (file-name-as-directory wal-theme-own-cache-dir))
+        (base-palette (or base-palette wal-theme-base-palette))
+        (extended-palette (or extended-palette wal-theme-extended-palette))
+        (tty-theme-colors (or base-palette wal-theme-tty-theme-colors))
+        (full-theme-colors (or base-palette wal-theme-full-theme-colors))
+        )
+    (let ((base-palette-file (concat cache-dir "base-palette.json"))
+          (extended-palette-file (concat cache-dir "extended-palette.json"))
+          (tty-theme-colors-file (concat cache-dir "tty-theme-colors.json"))
+          (full-theme-colors-file (concat cache-dir "full-theme-colors.json"))
+          )
+      (if (null (and
+                 (file-exists-p base-palette-file)
+                 (file-exists-p extended-palette-file)
+                 ;; (file-exists-p tty-theme-colors-file)
+                 ;; (file-exists-p full-theme-colors-file)
+                 ))
+          (progn
+            (if (null (file-directory-p wal-theme-own-cache-dir))
+                (make-directory wal-theme-own-cache-dir))
+            (with-temp-file base-palette-file
+              (insert (json-encode-list wal-theme-base-palette)))
+            (with-temp-file extended-palette-file
+              (insert (json-encode-list wal-theme-extended-palette)))
+            ;; (with-temp-file tty-theme-colors-file
+            ;;   (insert (json-encode-list wal-theme-tty-theme-colors)))
+            ;; (with-temp-file full-theme-colors-file
+            ;;   (insert (json-encode-list wal-theme-full-theme-colors)))
+            )))))
 
-(wal-theme--cache-extended-palette)
+(wal-theme--cache-current-theme)
 
-(defun wal-theme--load-extended-palette (&optional hashfile)
-  "Load one of the cached extended palettes.
-Defaults to palette currently being loaded."
-  (let ((hashfile (or hashfile wal-theme-own-cache-json-hashfile))
+(defun wal-theme--load-current-theme ()
+  "Load most recently cached theme files and set related global variables."
+  (let ((cache-dir (file-name-as-directory wal-theme-own-cache-dir))
         (json-array-type 'list))
-    (let ((hashfile-path (concat (file-name-as-directory wal-theme-own-cache-dir)
-                                 hashfile)))
-      (json-read-file hashfile-path))))
+    (let ((base-palette-file (concat cache-dir "base-palette.json"))
+          (extended-palette-file (concat cache-dir "extended-palette.json"))
+          (tty-theme-colors-file (concat cache-dir "tty-theme-colors.json"))
+          (full-theme-colors-file (concat cache-dir "full-theme-colors.json")))
+      (setq wal-theme-base-palette (json-read-file base-palette-file))
+      (setq wal-theme-extended-palette (json-read-file extended-palette-file))
+      (setq wal-theme-tty-theme-colors (json-read-file tty-theme-colors-file))
+      (setq wal-theme-full-theme-colors (json-read-file full-theme-colors-file)))))
+
+(defun wal-theme--set-theme-colors (&optional tty)
+  "Make theme colorscheme from theme palettes.
+If TTY is t colorscheme is reduced to basic tty supported
+colors."
+  (let ((theme-colors
+        `((act1          . ,(wal-theme-get-color 'background -4 tty))
+          (act2          . ,(wal-theme-get-color 'magenta -4 tty))
+          (base          . ,(wal-theme-get-color 'background 4 tty))
+          (base-dim      . ,(wal-theme-get-color 'background 3 tty))
+          (bg1           . ,(wal-theme-get-color 'background 0 tty))
+          (bg2           . ,(wal-theme-get-color 'background -1 tty))
+          (bg3           . ,(wal-theme-get-color 'background -2 tty))
+          (bg4           . ,(wal-theme-get-color 'background -3 tty))
+          (border        . ,(wal-theme-get-color 'magenta -4 tty))
+          (cblk          . ,(wal-theme-get-color 'background 4 tty))
+          (cblk-bg       . ,(wal-theme-get-color 'background -4 tty))
+          (cblk-ln       . ,(wal-theme-get-color 'magenta 0 tty))
+          (cblk-ln-bg    . ,(wal-theme-get-color 'magenta 0 tty))
+          (cursor        . ,(wal-theme-get-color 'magenta 0 tty))
+          (const         . ,(wal-theme-get-color 'magenta 0 tty))
+          (comment       . ,(wal-theme-get-color 'magenta 0 tty))
+          (comment-light . ,(wal-theme-get-color 'magenta 0 tty))
+          (comment-bg    . ,(wal-theme-get-color 'magenta 0 tty))
+          (comp          . ,(wal-theme-get-color 'magenta 0 tty))
+          (err           . ,(wal-theme-get-color 'magenta 0 tty))
+          (func          . ,(wal-theme-get-color 'magenta 0 tty))
+          (head1         . ,(wal-theme-get-color 'magenta 0 tty))
+          (head1-bg      . ,(wal-theme-get-color 'magenta 0 tty))
+          (head2         . ,(wal-theme-get-color 'magenta 0 tty))
+          (head2-bg      . ,(wal-theme-get-color 'magenta 0 tty))
+          (head3         . ,(wal-theme-get-color 'magenta 0 tty))
+          (head3-bg      . ,(wal-theme-get-color 'magenta 0 tty))
+          (head4         . ,(wal-theme-get-color 'magenta 0 tty))
+          (head4-bg      . ,(wal-theme-get-color 'magenta 0 tty))
+          (highlight     . ,(wal-theme-get-color 'magenta 0 tty))
+          (highlight-dim . ,(wal-theme-get-color 'magenta 0 tty))
+          (keyword       . ,(wal-theme-get-color 'magenta 0 tty))
+          (lnum          . ,(wal-theme-get-color 'magenta 0 tty))
+          (mat           . ,(wal-theme-get-color 'magenta 0 tty))
+          (meta          . ,(wal-theme-get-color 'magenta 0 tty))
+          (str           . ,(wal-theme-get-color 'magenta 0 tty))
+          (suc           . ,(wal-theme-get-color 'magenta 0 tty))
+          (ttip          . ,(wal-theme-get-color 'magenta 0 tty))
+          (ttip-sl       . ,(wal-theme-get-color 'magenta 0 tty))
+          (ttip-bg       . ,(wal-theme-get-color 'magenta 0 tty))
+          (type          . ,(wal-theme-get-color 'magenta 0 tty))
+          (var           . ,(wal-theme-get-color 'magenta 0 tty))
+          (war           . ,(wal-theme-get-color 'magenta 0 tty))
+
+          ;; colors
+          (aqua          . ,(wal-theme-get-color 'cyan 0 tty))
+          (aqua-bg       . ,(wal-theme-get-color 'cyan -4 tty))
+          (green         . ,(wal-theme-get-color 'green 0 tty))
+          (green-bg      . ,(wal-theme-get-color 'green -4 tty))
+          (green-bg-s    . ,(wal-theme-get-color 'green -3 tty))
+          (cyan          . ,(wal-theme-get-color 'cyan 4 tty))
+          (red           . ,(wal-theme-get-color 'red 0 tty))
+          (red-bg        . ,(wal-theme-get-color 'red -4 tty))
+          (red-bg-s      . ,(wal-theme-get-color 'red -3 tty))
+          (blue          . ,(wal-theme-get-color 'blue 0 tty))
+          (blue-bg       . ,(wal-theme-get-color 'blue -4 tty))
+          (blue-bg-s     . ,(wal-theme-get-color 'blue -3 tty))
+          (magenta       . ,(wal-theme-get-color 'magenta 0 tty))
+          (yellow        . ,(wal-theme-get-color 'yellow 0 tty))
+          (yellow-bg     . ,(wal-theme-get-color 'yellow -4 tty)))
+         ))
+    theme-colors))
