@@ -339,7 +339,7 @@ Also cache the results."
   (setq wal-theme-tty-theme-colors (wal-theme--generate-theme-colors t))
   (wal-theme--cache-current-theme))
 
-(defun wal-theme-create-theme (&optional tty accent-color theme-name)
+(defun wal-theme-create-theme (&optional theme-name tty accent-color)
   "Create new wal-theme.
 Do so by either from loading from wal-theme cache or generating
 from wal cache. TTY deafults to \(display-graphic-p\) unless
