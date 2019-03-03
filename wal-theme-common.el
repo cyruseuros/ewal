@@ -366,7 +366,7 @@ THEME-NAME gives a title to the generated theme."
      `(eval-sexp-fu-flash (((alist-get 'class colors) (:background (alist-get 'suc colors) :foreground (alist-get 'bg1 colors)))))
      `(eval-sexp-fu-flash-error (((alist-get 'class colors) (:background (alist-get 'err colors) :foreground (alist-get 'bg1 colors)))))
      `(font-lock-builtin-face (((alist-get 'class colors) (:foreground (alist-get 'keyword colors)))))
-     `(font-lock-comment-face (((alist-get 'class colors) (:foreground ,(if wal-theme-comment-italic comment-light comment) :background ,(when wal-theme-comment-bg comment-bg) :slant ,(if wal-theme-comment-italic 'italic 'normal)))))
+     `(font-lock-comment-face (((alist-get 'class colors) (:foreground ,(if wal-theme-comment-italic (alist-get 'comment-light colors) (alist-get 'comment colors)) :background ,(when wal-theme-comment-bg (alist-get 'comment-bg colors)) :slant ,(if wal-theme-comment-italic 'italic 'normal)))))
      `(font-lock-constant-face (((alist-get 'class colors) (:foreground (alist-get 'const colors)))))
      `(font-lock-doc-face (((alist-get 'class colors) (:foreground (alist-get 'meta colors)))))
      `(font-lock-function-name-face (((alist-get 'class colors) (:foreground (alist-get 'func colors) :inherit bold))))
