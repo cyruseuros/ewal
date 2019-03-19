@@ -287,7 +287,8 @@ ACCENT-COLOR sets the main theme color---defaults to `magenta'"
 BASE-PALETTE, EXTENDED-PALETTE, TTY-THEME-COLORS, and
 FULL-THEME-COLORS all refer to the variables provided by
 wal-theme by default, prefixed with the package name."
-  (let ((cache-dir (file-name-as-directory wal-theme-own-cache-dir))
+  (let ((json-encoding-pretty-print t)
+        (cache-dir (file-name-as-directory wal-theme-own-cache-dir))
         (base-palette (or base-palette wal-theme-base-palette))
         (extended-palette (or extended-palette wal-theme-extended-palette))
         (tty-theme-colors (or base-palette wal-theme-tty-theme-colors))
