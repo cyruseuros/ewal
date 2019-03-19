@@ -68,9 +68,8 @@ Meant for setting tty theme regardless of gui support."
   :type 'boolean
   :group 'wal-theme)
 
-(defcustom wal-theme-accent-color nil
-  "Whether to use a non-extended version of wall theme.
-Meant for setting tty theme regardless of gui support."
+(defcustom wal-theme-accent-color 'blue
+  "Predominant color in generated wal-theme."
   :type 'symbol
   :group 'wal-theme)
 
@@ -215,8 +214,8 @@ returned."
 (defun wal-theme--generate-theme-colors (&optional tty accent-color)
   "Make theme colorscheme from theme palettes.
 If TTY is t colorscheme is reduced to basic tty supported colors.
-ACCENT-COLOR sets the main theme color---defaults to `magenta'"
-  (let ((accent-color (or accent-color 'magenta)))
+ACCENT-COLOR sets the main theme color---defaults to `wal-theme-accent-color'"
+  (let ((accent-color (or accent-color 'wal-theme-accent-color)))
     (let ((theme-colors
           `((act1          . ,(wal-theme-get-color 'background -4 tty))
             (act2          . ,(wal-theme-get-color accent-color -4 tty))
@@ -758,10 +757,10 @@ THEME-NAME gives a title to the generated theme."
      `(font-latex-italic-face (((alist-get 'class colors) (:foreground (alist-get 'keyword colors) :italic t))))
      `(font-latex-match-reference-keywords (((alist-get 'class colors) (:foreground (alist-get 'const colors)))))
      `(font-latex-match-variable-keywords (((alist-get 'class colors) (:foreground (alist-get 'var colors)))))
-     `(font-latex-sectioning-0-face (((alist-get 'class colors) (:inherit bold :foreground (alist-get 'head3 colors) :height ,(if wal-theme-org-height 1.3 1.0) :background ,(when wal-theme-org-highlight head3-bg)))))
-     `(font-latex-sectioning-1-face (((alist-get 'class colors) (:inherit bold :foreground (alist-get 'head4 colors) :height ,(if wal-theme-org-height 1.3 1.0) :background ,(when wal-theme-org-highlight head4-bg)))))
-     `(font-latex-sectioning-2-face (((alist-get 'class colors) (:inherit bold :foreground (alist-get 'head1 colors) :height ,(if wal-theme-org-height 1.3 1.0) :background ,(when wal-theme-org-highlight head1-bg)))))
-     `(font-latex-sectioning-3-face (((alist-get 'class colors) (:inherit bold :foreground (alist-get 'head2 colors) :height ,(if wal-theme-org-height 1.2 1.0) :background ,(when wal-theme-org-highlight head2-bg)))))
+     `(font-latex-sectioning-0-face (((alist-get 'class colors) (:inherit bold :foreground (alist-get 'head3 colors) :height ,(if wal-theme-org-height 1.3 1.0) :background ,(when wal-theme-org-highlight (alist-get 'head3-bg colors))))))
+     `(font-latex-sectioning-1-face (((alist-get 'class colors) (:inherit bold :foreground (alist-get 'head4 colors) :height ,(if wal-theme-org-height 1.3 1.0) :background ,(when wal-theme-org-highlight (alist-get 'head4-bg colors))))))
+     `(font-latex-sectioning-2-face (((alist-get 'class colors) (:inherit bold :foreground (alist-get 'head1 colors) :height ,(if wal-theme-org-height 1.3 1.0) :background ,(when wal-theme-org-highlight (alist-get 'head1-bg colors))))))
+     `(font-latex-sectioning-3-face (((alist-get 'class colors) (:inherit bold :foreground (alist-get 'head2 colors) :height ,(if wal-theme-org-height 1.2 1.0) :background ,(when wal-theme-org-highlight (alist-get 'head2-bg colors))))))
      `(font-latex-sectioning-4-face (((alist-get 'class colors) (:bold nil :foreground (alist-get 'head3 colors) :height ,(if wal-theme-org-height 1.1 1.0) :background ,(when wal-theme-org-highlight head3-bg)))))
      `(font-latex-sectioning-5-face (((alist-get 'class colors) (:bold nil :foreground (alist-get 'head4 colors) :background ,(when wal-theme-org-highlight head4-bg)))))
      `(font-latex-string-face (((alist-get 'class colors) (:foreground (alist-get 'str colors)))))
@@ -833,10 +832,10 @@ THEME-NAME gives a title to the generated theme."
      `(Man-underline (((alist-get 'class colors) (:foreground (alist-get 'comp colors) :underline t))))
 
 ;;;;; markdown
-     `(markdown-header-face-1 (((alist-get 'class colors) (:inherit bold :foreground (alist-get 'head1 colors) :height ,(if wal-theme-org-height 1.3 1.0) :background ,(when wal-theme-org-highlight head1-bg)))))
-     `(markdown-header-face-2 (((alist-get 'class colors) (:inherit bold :foreground (alist-get 'head2 colors) :height ,(if wal-theme-org-height 1.2 1.0) :background ,(when wal-theme-org-highlight head2-bg)))))
-     `(markdown-header-face-3 (((alist-get 'class colors) (:bold nil :foreground (alist-get 'head3 colors) :height ,(if wal-theme-org-height 1.1 1.0) :background ,(when wal-theme-org-highlight head3-bg)))))
-     `(markdown-header-face-4 (((alist-get 'class colors) (:bold nil :foreground (alist-get 'head4 colors) :background ,(when wal-theme-org-highlight head4-bg)))))
+     `(markdown-header-face-1 (((alist-get 'class colors) (:inherit bold :foreground (alist-get 'head1 colors) :height ,(if wal-theme-org-height 1.3 1.0) :background ,(when wal-theme-org-highlight (alist-get 'head1-bg colors))))))
+     `(markdown-header-face-2 (((alist-get 'class colors) (:inherit bold :foreground (alist-get 'head2 colors) :height ,(if wal-theme-org-height 1.2 1.0) :background ,(when wal-theme-org-highlight (alist-get 'head2-bg colors))))))
+     `(markdown-header-face-3 (((alist-get 'class colors) (:bold nil :foreground (alist-get 'head3 colors) :height ,(if wal-theme-org-height 1.1 1.0) :background ,(when wal-theme-org-highlight (alist-get 'head3-bg colors))))))
+     `(markdown-header-face-4 (((alist-get 'class colors) (:bold nil :foreground (alist-get 'head4 colors) :background ,(when wal-theme-org-highlight (alist-get 'head4-bg colors))))))
      `(markdown-header-face-5 (((alist-get 'class colors) (:bold nil :foreground (alist-get 'head1 colors)))))
      `(markdown-header-face-6 (((alist-get 'class colors) (:bold nil :foreground (alist-get 'head2 colors)))))
      `(markdown-table-face (((alist-get 'class colors) (:foreground (alist-get 'base colors) :background (alist-get 'head1 colors)-bg))))
