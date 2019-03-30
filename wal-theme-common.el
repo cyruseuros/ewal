@@ -124,7 +124,7 @@ Stored as a flat alist, and cached in `wal-theme--own-cache-semantic-tty-colors-
   :type 'alist
   :group 'wal-theme)
 
-(defcustom wal-theme-comment-bg t
+(defcustom wal-theme-comment-bg nil
   "Use a background for comment lines."
   :type 'boolean
   :group 'wal-theme)
@@ -134,7 +134,7 @@ Stored as a flat alist, and cached in `wal-theme--own-cache-semantic-tty-colors-
   :type 'boolean
   :group 'wal-theme)
 
-(defcustom wal-theme-keyword-italic nil
+(defcustom wal-theme-keyword-italic t
   "Enable italics for keywords."
   :type 'boolean
   :group 'wal-theme)
@@ -163,7 +163,7 @@ to 'auto, tags may not be properly aligned."
   :type 'boolean
   :group 'wal-theme)
 
-(defcustom wal-theme-org-highlight nil
+(defcustom wal-theme-org-highlight t
   "Highlight org headings."
   :type 'boolean
   :group 'wal-theme)
