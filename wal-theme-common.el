@@ -97,8 +97,13 @@ Meant for setting TTY theme regardless of GUI support."
   :type 'boolean
   :group 'wal-theme)
 
-(defcustom wal-theme-accent-color 'magenta
+(defcustom wal-theme-primary-accent-color 'magenta
   "Predominant color in generated wal-theme."
+  :type 'symbol
+  :group 'wal-theme)
+
+(defcustom wal-theme-secondary-accent-color 'blue
+  "Second most predominant color in generated wal-theme."
   :type 'symbol
   :group 'wal-theme)
 
@@ -252,14 +257,17 @@ shade is returned. If TTY is t, return original, TTY compatible
           return-color
         (car (last (alist-get color palette)))))))
 
-(defun wal-theme--generate-theme-colors (&optional tty accent-color)
+(defun wal-theme--generate-theme-colors (&optional tty primary-accent-color secondary-accent-color)
   "Make theme colorscheme from theme palettes.
 If TTY is t colorscheme is reduced to basic tty supported colors.
-ACCENT-COLOR sets the main theme color---defaults to `wal-theme-accent-color'"
-  (let ((accent-color (or accent-color wal-theme-accent-color)))
+PRIMARY-ACCENT-COLOR sets the main theme color---defaults to
+`wal-theme-primary-accent-color'. Ditto for
+SECONDARY-ACCENT-COLOR"
+  (let ((primary-accent-color (or primary-accent-color wal-theme-primary-accent-color))
+        (secondary-accent-color (or secondary-accent-color wal-theme-secondary-accent-color)))
     (let ((theme-colors
           `((act1          . ,(wal-theme-get-color 'background -4 tty))
-            (act2          . ,(wal-theme-get-color accent-color -4 tty))
+            (act2          . ,(wal-theme-get-color primary-accent-color -4 tty))
             (base          . ,(wal-theme-get-color 'foreground 0 tty))
             (base-dim      . ,(wal-theme-get-color 'foreground -2 tty))
             (bg1           . ,(wal-theme-get-color 'background 0 tty))
@@ -269,17 +277,17 @@ ACCENT-COLOR sets the main theme color---defaults to `wal-theme-accent-color'"
             (border        . ,(wal-theme-get-color 'background 0 tty))
             (cblk          . ,(wal-theme-get-color 'background 4 tty))
             (cblk-bg       . ,(wal-theme-get-color 'background -4 tty))
-            (cblk-ln       . ,(wal-theme-get-color accent-color 1 tty))
-            (cblk-ln-bg    . ,(wal-theme-get-color accent-color -2 tty))
+            (cblk-ln       . ,(wal-theme-get-color primary-accent-color 1 tty))
+            (cblk-ln-bg    . ,(wal-theme-get-color primary-accent-color -2 tty))
             (cursor        . ,(wal-theme-get-color 'foreground -2 tty))
-            (const         . ,(wal-theme-get-color accent-color 3 tty))
+            (const         . ,(wal-theme-get-color primary-accent-color 3 tty))
             (comment       . ,(wal-theme-get-color 'background 3 tty))
             (comment-light . ,(wal-theme-get-color 'background 4 tty))
             (comment-bg    . ,(wal-theme-get-color 'background 0 tty))
-            (comp          . ,(wal-theme-get-color accent-color 2 tty))
+            (comp          . ,(wal-theme-get-color primary-accent-color 2 tty))
             (err           . ,(wal-theme-get-color 'red 4 tty))
-            (func          . ,(wal-theme-get-color accent-color 2 tty))
-            (head1         . ,(wal-theme-get-color 'blue 0 tty))
+            (func          . ,(wal-theme-get-color primary-accent-color 2 tty))
+            (head1         . ,(wal-theme-get-color secondary-accent-color 0 tty))
             (head1-bg      . ,(wal-theme-get-color 'background 0 tty))
             (head2         . ,(wal-theme-get-color 'cyan 0 tty))
             (head2-bg      . ,(wal-theme-get-color 'background 0 tty))
@@ -289,7 +297,7 @@ ACCENT-COLOR sets the main theme color---defaults to `wal-theme-accent-color'"
             (head4-bg      . ,(wal-theme-get-color 'background 0 tty))
             (highlight     . ,(wal-theme-get-color 'background 4 tty))
             (highlight-dim . ,(wal-theme-get-color 'background 3 tty))
-            (keyword       . ,(wal-theme-get-color 'blue 2 tty))
+            (keyword       . ,(wal-theme-get-color secondary-accent-color 2 tty))
             (lnum          . ,(wal-theme-get-color 'background 2 tty))
             (mat           . ,(wal-theme-get-color 'green 1 tty))
             (meta          . ,(wal-theme-get-color 'yellow 4 tty))
@@ -299,7 +307,7 @@ ACCENT-COLOR sets the main theme color---defaults to `wal-theme-accent-color'"
             (ttip-sl       . ,(wal-theme-get-color 'foreground -3 tty))
             (ttip-bg       . ,(wal-theme-get-color 'background 0 tty))
             (type          . ,(wal-theme-get-color 'red 2 tty))
-            (var           . ,(wal-theme-get-color 'blue 4 tty))
+            (var           . ,(wal-theme-get-color secondary-accent-color 4 tty))
             (war           . ,(wal-theme-get-color 'red 1 tty))
 
             ;; colors
@@ -312,10 +320,10 @@ ACCENT-COLOR sets the main theme color---defaults to `wal-theme-accent-color'"
             (red           . ,(wal-theme-get-color 'red 0 tty))
             (red-bg        . ,(wal-theme-get-color 'red -4 tty))
             (red-bg-s      . ,(wal-theme-get-color 'red -3 tty))
-            (blue          . ,(wal-theme-get-color 'blue 0 tty))
-            (blue-bg       . ,(wal-theme-get-color 'blue -4 tty))
-            (blue-bg-s     . ,(wal-theme-get-color 'blue -3 tty))
-            (magenta       . ,(wal-theme-get-color accent-color 0 tty))
+            (blue          . ,(wal-theme-get-color secondary-accent-color 0 tty))
+            (blue-bg       . ,(wal-theme-get-color secondary-accent-color -4 tty))
+            (blue-bg-s     . ,(wal-theme-get-color secondary-accent-color -3 tty))
+            (magenta       . ,(wal-theme-get-color primary-accent-color 0 tty))
             (yellow        . ,(wal-theme-get-color 'yellow 0 tty))
             (yellow-bg     . ,(wal-theme-get-color 'yellow -4 tty)))))
           theme-colors)))
@@ -366,17 +374,17 @@ palettes and colors afresh and cache them."
         (setq wal-theme-semantic-tty-colors (wal-theme--generate-theme-colors t))
         (wal-theme--cache-own-theme)))))
 
-(defun wal-theme-create-theme (&optional theme-name tty accent-color)
+(defun wal-theme-create-theme (&optional theme-name tty primary-accent-color)
   "Create new wal-theme.
 Do so by either from loading from wal-theme cache or generating
 from wal cache. TTY deafults to \(display-graphic-p\) unless
 overridden by `wal-theme-force-tty-colors', while ACCENT-COLOR
-defaults to `wal-theme-accent-color' if set, 'magenta otherwise.
+defaults to `wal-theme-primary-accent-color' if set, 'magenta otherwise.
 THEME-NAME gives a title to the generated theme."
   (wal-theme--load-own-theme)
   (let ((tty (or tty wal-theme-force-tty-colors (display-graphic-p))))
     (let ((colors (if tty wal-theme-semantic-tty-colors wal-theme-semantic-gui-colors))
-          (accent-color (or accent-color wal-theme-accent-color 'magenta))
+          (primary-accent-color (or primary-accent-color wal-theme-primary-accent-color 'magenta))
           (class '((class color) (min-colors 89))))
 
       (progn
