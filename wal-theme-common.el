@@ -295,9 +295,9 @@ ACCENT-COLOR sets the main theme color---defaults to `wal-theme-accent-color'"
             (meta          . ,(wal-theme-get-color 'yellow 4 tty))
             (str           . ,(wal-theme-get-color 'cyan -1 tty))
             (suc           . ,(wal-theme-get-color 'green 1 tty))
-            (ttip          . ,(wal-theme-get-color 'foreground -2 tty))
-            (ttip-sl       . ,(wal-theme-get-color 'foreground -1 tty))
-            (ttip-bg       . ,(wal-theme-get-color 'background 4 tty))
+            (ttip          . ,(wal-theme-get-color 'background 3 tty))
+            (ttip-sl       . ,(wal-theme-get-color 'foreground -3 tty))
+            (ttip-bg       . ,(wal-theme-get-color 'background 0 tty))
             (type          . ,(wal-theme-get-color 'red 2 tty))
             (var           . ,(wal-theme-get-color 'blue 4 tty))
             (war           . ,(wal-theme-get-color 'red 1 tty))
@@ -332,11 +332,6 @@ wal-theme by default, prefixed with the package name."
         (extended-palette (or extended-palette wal-theme-extended-palette))
         (tty-theme-colors (or base-palette wal-theme-semantic-tty-colors))
         (gui-theme-colors (or base-palette wal-theme-semantic-gui-colors)))
-      (if (null (and
-                 (file-exists-p wal-theme--own-cache-base-palette-json-file)
-                 (file-exists-p wal-theme--own-cache-extended-palette-json-file)
-                 (file-exists-p wal-theme--own-cache-semantic-tty-colors-json-file)
-                 (file-exists-p wal-theme--own-cache-semantic-gui-colors-json-file)))
           (progn
             (if (null (file-directory-p wal-theme-own-cache-dir))
                 (make-directory wal-theme-own-cache-dir))
@@ -347,7 +342,7 @@ wal-theme by default, prefixed with the package name."
             (with-temp-file wal-theme--own-cache-semantic-tty-colors-json-file
               (insert (json-encode-list wal-theme-semantic-tty-colors)))
             (with-temp-file wal-theme--own-cache-semantic-gui-colors-json-file
-              (insert (json-encode-list wal-theme-semantic-gui-colors)))))))
+              (insert (json-encode-list wal-theme-semantic-gui-colors))))))
 
 (defun wal-theme--load-own-theme (&optional load-from-cache)
   "Load current wal-theme variables for use in `wal-theme-create-theme'.
@@ -363,12 +358,13 @@ palettes and colors afresh and cache them."
           (setq wal-theme-extended-palette (json-read-file wal-theme--own-cache-extended-palette-json-file))
           (setq wal-theme-semantic-tty-colors (json-read-file wal-theme--own-cache-semantic-gui-colors-json-file))
           (setq wal-theme-semantic-gui-colors (json-read-file wal-theme--own-cache-semantic-tty-colors-json-file)))
-        (progn
-          (setq wal-theme-base-palette (wal-theme--load-wal-theme))
-          (setq wal-theme-extended-palette (wal-theme--extend-base-palette 4 5))
-          (setq wal-theme-semantic-gui-colors (wal-theme--generate-theme-colors nil))
-          (setq wal-theme-semantic-tty-colors (wal-theme--generate-theme-colors t))
-          (wal-theme--cache-own-theme)))))
+      (progn
+        (delete-directory wal-theme-own-cache-dir t)
+        (setq wal-theme-base-palette (wal-theme--load-wal-theme))
+        (setq wal-theme-extended-palette (wal-theme--extend-base-palette 4 5))
+        (setq wal-theme-semantic-gui-colors (wal-theme--generate-theme-colors nil))
+        (setq wal-theme-semantic-tty-colors (wal-theme--generate-theme-colors t))
+        (wal-theme--cache-own-theme)))))
 
 (defun wal-theme-create-theme (&optional theme-name tty accent-color)
   "Create new wal-theme.
@@ -824,9 +820,9 @@ THEME-NAME gives a title to the generated theme."
         `(magit-blame-summary ((,class :background ,(alist-get 'yellow colors) :foreground ,(alist-get 'yellow colors))))
         `(magit-blame-time    ((,class :background ,(alist-get 'yellow colors) :foreground ,(alist-get 'green colors))))
         `(magit-branch ((,class (:foreground ,(alist-get 'const colors) :inherit bold))))
-        `(magit-branch-current ((,class (:background ,(alist-get 'blue colors) :foreground ,(alist-get 'blue colors) :inherit bold :box t))))
-        `(magit-branch-local ((,class (:background ,(alist-get 'blue colors) :foreground ,(alist-get 'blue colors) :inherit bold))))
-        `(magit-branch-remote ((,class (:background ,(alist-get 'aqua colors) :foreground ,(alist-get 'aqua colors) :inherit bold))))
+        `(magit-branch-current ((,class (:background ,(alist-get 'background colors) :foreground ,(alist-get 'blue colors) :inherit bold :box t))))
+        `(magit-branch-local ((,class (:background ,(alist-get 'background colors) :foreground ,(alist-get 'blue colors) :inherit bold))))
+        `(magit-branch-remote ((,class (:background ,(alist-get 'background colors) :foreground ,(alist-get 'aqua colors) :inherit bold))))
         `(magit-diff-context-highlight ((,class (:background ,(alist-get 'bg2 colors) :foreground ,(alist-get 'base colors)))))
         `(magit-diff-hunk-heading ((,class (:background ,(alist-get 'ttip colors) :foreground ,(alist-get 'ttip colors)))))
         `(magit-diff-hunk-heading-highlight ((,class (:background ,(alist-get 'ttip colors)l :foreground ,(alist-get 'base colors)))))
@@ -839,7 +835,7 @@ THEME-NAME gives a title to the generated theme."
         `(magit-log-head-label-local ((,class (:background ,(alist-get 'keyword colors) :foreground ,(alist-get 'bg1 colors) :inherit bold))))
         `(magit-log-head-label-remote ((,class (:background ,(alist-get 'suc colors) :foreground ,(alist-get 'bg1 colors) :inherit bold))))
         `(magit-log-head-label-tags ((,class (:background ,(alist-get 'magenta colors) :foreground ,(alist-get 'bg1 colors) :inherit bold))))
-        `(magit-log-head-label-wip ((,class (:background ,(alist-get 'cyan colors) :foreground ,(alist-get 'bg1 colors) :inherit bold))))
+        `(magit-log-head-label-wip ((,class (:background ,(alist-get 'background colors) :foreground ,(alist-get 'bg1 colors) :inherit bold))))
         `(magit-log-sha1 ((,class (:foreground ,(alist-get 'str colors)))))
         `(magit-process-ng ((,class (:foreground ,(alist-get 'war colors) :inherit bold))))
         `(magit-process-ok ((,class (:foreground ,(alist-get 'func colors) :inherit bold))))
