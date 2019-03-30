@@ -256,7 +256,7 @@ shade is returned. If TTY is t, return original, TTY compatible
   "Make theme colorscheme from theme palettes.
 If TTY is t colorscheme is reduced to basic tty supported colors.
 ACCENT-COLOR sets the main theme color---defaults to `wal-theme-accent-color'"
-  (let ((accent-color (or accent-color 'wal-theme-accent-color)))
+  (let ((accent-color (or accent-color wal-theme-accent-color)))
     (let ((theme-colors
           `((act1          . ,(wal-theme-get-color 'background -4 tty))
             (act2          . ,(wal-theme-get-color accent-color -4 tty))
@@ -359,16 +359,16 @@ palettes and colors afresh and cache them."
                                                      wal-theme--wal-cache-json-file))))
     (if load-from-cache
         (progn
+          (setq wal-theme-base-palette (json-read-file wal-theme--own-cache-base-palette-json-file))
+          (setq wal-theme-extended-palette (json-read-file wal-theme--own-cache-extended-palette-json-file))
+          (setq wal-theme-semantic-tty-colors (json-read-file wal-theme--own-cache-semantic-gui-colors-json-file))
+          (setq wal-theme-semantic-gui-colors (json-read-file wal-theme--own-cache-semantic-tty-colors-json-file)))
+        (progn
           (setq wal-theme-base-palette (wal-theme--load-wal-theme))
           (setq wal-theme-extended-palette (wal-theme--extend-base-palette 4 5))
           (setq wal-theme-semantic-gui-colors (wal-theme--generate-theme-colors nil))
           (setq wal-theme-semantic-tty-colors (wal-theme--generate-theme-colors t))
-          (wal-theme--cache-own-theme))
-      (progn
-        (setq wal-theme-base-palette (json-read-file wal-theme--own-cache-base-palette-json-file))
-        (setq wal-theme-extended-palette (json-read-file wal-theme--own-cache-extended-palette-json-file))
-        (setq wal-theme-semantic-tty-colors (json-read-file wal-theme--own-cache-semantic-gui-colors-json-file))
-        (setq wal-theme-semantic-gui-colors (json-read-file wal-theme--own-cache-semantic-tty-colors-json-file))))))
+          (wal-theme--cache-own-theme)))))
 
 (defun wal-theme-create-theme (&optional theme-name tty accent-color)
   "Create new wal-theme.
