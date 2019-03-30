@@ -187,8 +187,8 @@ the returned alist."
         (json-object-type 'alist)
         (color-names (or color-names wal-theme-ansi-color-names)))
     (let ((colors (json-read-file json)))
-      (let ((special-colors ,(alist-get 'special colors))
-            (regular-colors ,(alist-get 'colors colors)))
+      (let ((special-colors (alist-get 'special colors))
+            (regular-colors (alist-get 'colors colors)))
         (let ((regular-color-values (cl-loop for
                                              (key . value)
                                              in
@@ -245,10 +245,10 @@ shade is returned. If TTY is t, return original, TTY compatible
         (tty (or tty nil))
         (middle (/ (- (length (car wal-theme-extended-palette)) 1) 2))
         (shade (if tty 0 (or shade 0))))
-    (let ((return-color (nth (+ middle shade) ,(alist-get color palette))))
+    (let ((return-color (nth (+ middle shade) (alist-get color palette))))
       (if return-color
           return-color
-        (car (last ,(alist-get color palette)))))))
+        (car (last (alist-get color palette)))))))
 
 (defun wal-theme--generate-theme-colors (&optional tty accent-color)
   "Make theme colorscheme from theme palettes.
@@ -394,7 +394,7 @@ THEME-NAME gives a title to the generated theme."
         `(eval-sexp-fu-flash ((,class (:background ,(alist-get 'suc colors) :foreground ,(alist-get 'bg1 colors)))))
         `(eval-sexp-fu-flash-error ((,class (:background ,(alist-get 'err colors) :foreground ,(alist-get 'bg1 colors)))))
         `(font-lock-builtin-face ((,class (:foreground ,(alist-get 'keyword colors)))))
-        `(font-lock-comment-face ((,class (:foreground ,(if wal-theme-comment-italic ,(alist-get 'comment-light colors) ,(alist-get 'comment colors)) :background ,(when wal-theme-comment-bg ,(alist-get 'comment-bg colors)) :slant ,(if wal-theme-comment-italic 'italic 'normal)))))
+        `(font-lock-comment-face ((,class (:foreground ,(if wal-theme-comment-italic (alist-get 'comment-light colors) (alist-get 'comment colors)) :background ,(when wal-theme-comment-bg (alist-get 'comment-bg colors)) :slant ,(if wal-theme-comment-italic 'italic 'normal)))))
         `(font-lock-constant-face ((,class (:foreground ,(alist-get 'const colors)))))
         `(font-lock-doc-face ((,class (:foreground ,(alist-get 'meta colors)))))
         `(font-lock-function-name-face ((,class (:foreground ,(alist-get 'func colors) :inherit bold))))
