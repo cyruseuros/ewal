@@ -35,6 +35,8 @@
 (require 'cl-lib)
 (require 'color)
 (require 'term/tty-colors)
+(require 'config nil t)
+(require 'spacemacs-common nil t)
 ;; declare undetected functions
 (declare-function pairlis 'cl-lib)
 
