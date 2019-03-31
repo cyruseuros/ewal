@@ -193,23 +193,29 @@ percentage points."
                . ,(wal-theme--extend-base-color value num-degrees
                                                 degree-size)))))
 
-(defun wal-theme-get-color (color &optional shade tty palette)
+(defun wal-theme-get-color (color &optional shade tty approximate palette)
   "Return SHADE of COLOR from current `wal-theme' PALETTE.
 Choose color that is darker (-) or lightener (+) than COLOR by
 SHADE. SHADE defaults to 0, returning original wal COLOR. If
 SHADE exceeds number of available shades, the darkest/lightest
 shade is returned. If TTY is t, return original, TTY compatible
-`wal' color regardless od SHADE."
+`wal' color regardless od SHADE. If APPROXIMATE is set,
+approximate color using `tty-color-approximate', otherwise return
+default (non-extended) wal color."
   (let ((palette (or palette wal-theme-extended-palette))
         (tty (or tty nil))
         (middle (/ (- (length (car wal-theme-extended-palette)) 1) 2))
         (shade (or shade 0)))
-    (let ((color (nth (+ middle shade) (alist-get color palette))))
-      (let ((bound-color (if color color
+    (let ((return-color (nth (+ middle shade) (alist-get color palette))))
+      (let ((bound-color (if return-color
+                             return-color
                            (car (last (alist-get color palette))))))
         (if tty
-            (apply 'color-rgb-to-hex
-                   (cddr (tty-color-approximate (tty-color-standard-values bound-color))))
+            (if approximate
+                (apply 'color-rgb-to-hex
+                       (cddr (tty-color-approximate
+                              (tty-color-standard-values bound-color))))
+              (nth middle (alist-get color palette)))
           bound-color)))))
 
 (defun wal-theme--generate-theme-colors (&optional tty primary-accent-color secondary-accent-color)
