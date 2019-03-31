@@ -635,8 +635,8 @@ to the generated theme."
         `(ess-r-signal-keyword-face ((,class (:foreground ,(alist-get 'war colors)))))
 
         ;; evil
-        `(evil-ex-substitute-matches ((,class (:background ,(alist-get 'red colors) :foreground ,(alist-get 'red colors)))))
-        `(evil-ex-substitute-replacement ((,class (:background ,(alist-get 'green colors) :foreground ,(alist-get 'green colors)))))
+        `(evil-ex-substitute-matches ((,class (:background ,(alist-get 'red-bg colors) :foreground ,(alist-get 'red colors)))))
+        `(evil-ex-substitute-replacement ((,class (:background ,(alist-get 'green-bg colors) :foreground ,(alist-get 'green colors)))))
 
         ;; evil-goggles
         `(evil-goggles--pulse-face ((,class (:background ,(alist-get 'yellow colors) :foreground ,(alist-get 'yellow colors)))))
