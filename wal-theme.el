@@ -351,7 +351,7 @@ only be used with CAUTIOUS set to nil prior to any calls to
                 (null (equal num-states (length spacemacs-evil-cursors)))))
           (message "Not modifying `spacemacs-evil-cursors' as
           either previously modified or unbound.")
-        (setq spacemacs-evil-cursors
+        (custom-set-variables spacemacs-evil-cursors
               `(("normal" ,(alist-get 'cursor colors) box)
                 ("insert" ,(alist-get 'green colors) (bar . 2))
                 ("emacs" ,(alist-get 'blue colors) box)
@@ -374,8 +374,8 @@ TTY defualts to `wal-theme-force-tty-colors' or
                (or wal-theme-force-tty-colors
                    (display-graphic-p)))))
     (if tty
-        (setq spacemacs-theme-custom-colors wal-theme-semantic-tty-colors))
-    (setq spacemacs-theme-custom-colors wal-theme-semantic-gui-colors)))
+        (custom-set-variables spacemacs-theme-custom-colors wal-theme-semantic-tty-colors))
+    (custom-set-variables spacemacs-theme-custom-colors wal-theme-semantic-gui-colors)))
 
 (provide 'wal-theme)
 ;;; wal-theme ends here
