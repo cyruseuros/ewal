@@ -5,4 +5,4 @@ beetween GUI and TTY colors using `display-graphic-p'")
 
 (wal-theme-create-theme 'wal-theme-gui)
 
-(provide-theme 'wal-theme-gui)
+(provide-theme 'wal-theme)
