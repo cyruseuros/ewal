@@ -283,8 +283,8 @@ SECONDARY-ACCENT-COLOR"
           theme-colors)))
 
 
-(defun wal-theme--cache-own-theme (&optional base-palette extended-palette tty-theme-colors
-                                                 gui-theme-colors)
+(defun wal-theme--cache-own-theme (&optional base-palette extended-palette
+                                             tty-colors gui-colors)
   "Serializes all palettes and colors in json format.
 BASE-PALETTE, EXTENDED-PALETTE, TTY-THEME-COLORS, and
 GUI-THEME-COLORS all refer to the variables provided by
@@ -292,19 +292,19 @@ wal-theme by default, prefixed with the package name."
   (let ((json-encoding-pretty-print t)
         (base-palette (or base-palette wal-theme-base-palette))
         (extended-palette (or extended-palette wal-theme-extended-palette))
-        (tty-theme-colors (or base-palette wal-theme-semantic-tty-colors))
-        (gui-theme-colors (or base-palette wal-theme-semantic-gui-colors)))
+        (tty-colors (or tty-colors wal-theme-semantic-tty-colors))
+        (gui-colors (or gui-colors wal-theme-semantic-gui-colors)))
           (progn
             (if (null (file-directory-p wal-theme-own-cache-dir))
                 (make-directory wal-theme-own-cache-dir))
             (with-temp-file wal-theme--own-cache-base-palette-json-file
-              (insert (json-encode-list wal-theme-base-palette)))
+              (insert (json-encode-list base-palette)))
             (with-temp-file wal-theme--own-cache-extended-palette-json-file
-              (insert (json-encode-list wal-theme-extended-palette)))
+              (insert (json-encode-list extended-palette)))
             (with-temp-file wal-theme--own-cache-semantic-tty-colors-json-file
-              (insert (json-encode-list wal-theme-semantic-tty-colors)))
+              (insert (json-encode-list tty-colors)))
             (with-temp-file wal-theme--own-cache-semantic-gui-colors-json-file
-              (insert (json-encode-list wal-theme-semantic-gui-colors))))))
+              (insert (json-encode-list gui-colors))))))
 
 (defun wal-theme--load-own-theme ()
   "Load current wal-theme variables for use in `wal-theme-create-theme'."
@@ -317,8 +317,8 @@ wal-theme by default, prefixed with the package name."
         (progn
           (setq wal-theme-base-palette (json-read-file wal-theme--own-cache-base-palette-json-file))
           (setq wal-theme-extended-palette (json-read-file wal-theme--own-cache-extended-palette-json-file))
-          (setq wal-theme-semantic-tty-colors (json-read-file wal-theme--own-cache-semantic-gui-colors-json-file))
-          (setq wal-theme-semantic-gui-colors (json-read-file wal-theme--own-cache-semantic-tty-colors-json-file)))
+          (setq wal-theme-semantic-tty-colors (json-read-file wal-theme--own-cache-semantic-tty-colors-json-file))
+          (setq wal-theme-semantic-gui-colors (json-read-file wal-theme--own-cache-semantic-gui-colors-json-file)))
       (progn
         (delete-directory wal-theme-own-cache-dir t)
         (setq wal-theme-base-palette (wal-theme--load-wal-theme))
