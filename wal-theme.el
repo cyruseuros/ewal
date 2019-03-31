@@ -1,4 +1,4 @@
-;;; wal-theme-common.el --- A wal-based automatic, terminal aware theme generator.
+;;; wal-theme.el --- A wal-based automatic, terminal aware theme generator.
 
 ;; Copyright (C) 2015-2018 Nasser Alshammari
 ;; Copyright (C) 2019 Uros Perisic
@@ -7,7 +7,7 @@
 ;; URL: <https://github.com/nashamri/spacemacs-theme>
 ;;
 ;; Version: 0.1
-;; Keywords: color, theme
+;; Keywords: color, theme, generator, wal, pywal
 ;; Package-Requires: ((emacs "24") (cl-lib) (json) (color))
 
 ;; This program is free software: you can redistribute it and/or modify
