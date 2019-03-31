@@ -374,37 +374,53 @@ palettes and colors afresh and cache them."
         (setq wal-theme-semantic-tty-colors (wal-theme--generate-theme-colors t))
         (wal-theme--cache-own-theme)))))
 
-(defun wal-theme-create-theme (&optional theme-name tty primary-accent-color)
+(defun wal-theme-customize-spacemacs-cursors (&optional cautious original-number-of-states)
+  "Use wal colors to customize `spacemacs-evil-cursors'.
+If CAUTIOUS is not nil, check if `spacemacs-evil-cursors' has
+length of ORIGINAL-NUMBER-OF-STATES, and do not edit the variable
+if it does not, so as not to remove custom states added by the
+user using `spacemacs/add-evil-cursor'. This function only has
+and effect when applied inside `dotspacemacs/user-init', and
+should only be used with CAUTIOUS set to nil prior to any calls
+to `spacemacs-evil-cursors'."
+  (let ((cautious (or cautious t))
+        (num-states (or original-number-of-states 11)))
+    (if (and cautious
+             (or
+              (null (boundp 'spacemacs-evil-cursors))
+              (null (equal num-states (length spacemacs-evil-cursors)))))
+        (message "Not modifying `spacemacs-evil-cursors' as
+        either previously modified or unbound.")
+      (setq spacemacs-evil-cursors
+            `(("normal" ,(alist-get 'cursor colors) box)
+              ("insert" ,(alist-get 'green colors) (bar . 2))
+              ("emacs" ,(alist-get 'blue colors) box)
+              ("hybrid" ,(alist-get 'blue colors) (bar . 2))
+              ("evilified" ,(alist-get 'red colors) box)
+              ("visual" ,(alist-get 'foreground colors) (hbar . 2))
+              ("motion" ,(alist-get 'magenta colors) box)
+              ;; defaults
+              ("replace" ,(alist-get 'red-bg colors) (hbar . 2))
+              ("lisp" ,(alist-get 'cblk-ln-bg colors) box)
+              ("iedit" ,(alist-get 'act2 colors) box)
+              ("iedit-insert" ,(alist-get 'act2 colors) (bar . 2)))))))
+
+(defun wal-theme-create-theme (&optional theme-name tty primary-accent-color secondary-accent-color)
   "Create new wal-theme.
 Do so by either from loading from wal-theme cache or generating
 from wal cache. TTY deafults to \(display-graphic-p\) unless
-overridden by `wal-theme-force-tty-colors', while ACCENT-COLOR
-defaults to `wal-theme-primary-accent-color' if set, 'magenta otherwise.
-THEME-NAME gives a title to the generated theme."
+overridden by `wal-theme-force-tty-colors', while
+PRIMARY-ACCENT-COLOR defaults to `wal-theme-primary-accent-color'
+and `wal-theme-secondary-accent-color'. THEME-NAME gives a title
+to the generated theme."
   (wal-theme--load-own-theme)
   (let ((tty (or tty wal-theme-force-tty-colors (display-graphic-p))))
     (let ((colors (if tty wal-theme-semantic-tty-colors wal-theme-semantic-gui-colors))
-          (primary-accent-color (or primary-accent-color wal-theme-primary-accent-color 'magenta))
+          (primary-accent-color (or primary-accent-color wal-theme-primary-accent-color))
+          (secondary-accent-color (or secondary-accent-color wal-theme-secondary-accent-color))
           (class '((class color) (min-colors 89))))
 
       (progn
-        ;; spacemacs cursor color override if already present
-        ;; TODO: use add to list in case people defined their own cursors
-        (if (boundp 'spacemacs-evil-cursors)
-            (setq spacemacs-evil-cursors
-                  `(("normal" ,(alist-get 'cursor colors) box)
-                    ("insert" ,(alist-get 'green colors) (bar . 2))
-                    ("emacs" ,(alist-get 'blue colors) box)
-                    ("hybrid" ,(alist-get 'blue colors) (bar . 2))
-                    ("evilified" ,(alist-get 'red colors) box)
-                    ("visual" ,(alist-get 'foreground colors) (hbar . 2))
-                    ("motion" ,(alist-get 'magenta colors) box)
-                    ;; defaults
-                    ("replace" ,(alist-get 'red-bg colors) (hbar . 2))
-                    ("lisp" ,(alist-get 'cblk-ln-bg colors) box)
-                    ("iedit" ,(alist-get 'act2 colors) box)
-                    ("iedit-insert" ,(alist-get 'act2 colors) (bar . 2)))))
-
         (custom-theme-set-faces
         theme-name
 
