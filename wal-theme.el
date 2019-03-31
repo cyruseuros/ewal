@@ -34,6 +34,7 @@
 (require 'json)
 (require 'cl-lib)
 (require 'color)
+(require 'term/tty-colors)
 ;; declare undetected functions
 (declare-function pairlis 'cl-lib)
 
@@ -200,11 +201,14 @@ shade is returned. If TTY is t, return original, TTY compatible
   (let ((palette (or palette wal-theme-extended-palette))
         (tty (or tty nil))
         (middle (/ (- (length (car wal-theme-extended-palette)) 1) 2))
-        (shade (if tty 0 (or shade 0))))
-    (let ((return-color (nth (+ middle shade) (alist-get color palette))))
-      (if return-color
-          return-color
-        (car (last (alist-get color palette)))))))
+        (shade (or shade 0)))
+    (let ((color (nth (+ middle shade) (alist-get color palette))))
+      (let ((bound-color (if color color
+                           (car (last (alist-get color palette))))))
+        (if tty
+            (apply 'color-rgb-to-hex
+                   (cddr (tty-color-approximate (tty-color-standard-values bound-color))))
+          bound-color)))))
 
 (defun wal-theme--generate-theme-colors (&optional tty primary-accent-color secondary-accent-color)
   "Make theme colorscheme from theme palettes.
@@ -231,7 +235,6 @@ SECONDARY-ACCENT-COLOR"
             (cursor        . ,(wal-theme-get-color 'foreground -2 tty))
             (const         . ,(wal-theme-get-color primary-accent-color 3 tty))
             (comment       . ,(wal-theme-get-color 'background 3 tty))
-            (comment-light . ,(wal-theme-get-color 'background 4 tty))
             (comment-bg    . ,(wal-theme-get-color 'background 0 tty))
             (comp          . ,(wal-theme-get-color primary-accent-color 2 tty))
             (err           . ,(wal-theme-get-color 'red 4 tty))
@@ -322,35 +325,41 @@ wal-theme by default, prefixed with the package name."
         (setq wal-theme-semantic-tty-colors (wal-theme--generate-theme-colors t))
         (wal-theme--cache-own-theme)))))
 
-(defun wal-theme-customize-spacemacs-cursors (&optional cautious original-number-of-states)
+(defun wal-theme-customize-spacemacs-cursors (&optional tty cautious original-number-of-states)
   "Use wal colors to customize `spacemacs-evil-cursors'.
-If CAUTIOUS is not nil, check if `spacemacs-evil-cursors' has
-length of ORIGINAL-NUMBER-OF-STATES, and do not edit the variable
-if it does not, so as not to remove custom states added by the
-user using `spacemacs/add-evil-cursor'. This function only has
-and effect when applied inside `dotspacemacs/user-init', and
-should only be used with CAUTIOUS set to nil prior to any calls
-to `spacemacs-evil-cursors'."
+TTY specifies whether to use TTY or GUI colors. If CAUTIOUS is
+not nil, check if `spacemacs-evil-cursors' has length of
+ORIGINAL-NUMBER-OF-STATES, and do not edit the variable if it
+does not, so as not to remove custom states added by the user
+using `spacemacs/add-evil-cursor'. This function only has and
+effect when applied inside `dotspacemacs/user-init', and should
+only be used with CAUTIOUS set to nil prior to any calls to
+`spacemacs-evil-cursors'."
   (let ((cautious (or cautious t))
+        (tty (if (boundp tty) tty
+               (or wal-theme-force-tty-colors
+                   (display-graphic-p))))
         (num-states (or original-number-of-states 11)))
-    (if (and cautious
-             (or
-              (null (boundp 'spacemacs-evil-cursors))
-              (null (equal num-states (length spacemacs-evil-cursors)))))
-        (message "Not modifying `spacemacs-evil-cursors' as
-        either previously modified or unbound.")
-      (setq spacemacs-evil-cursors
-            `(("normal" ,(alist-get 'cursor colors) box)
-              ("insert" ,(alist-get 'green colors) (bar . 2))
-              ("emacs" ,(alist-get 'blue colors) box)
-              ("hybrid" ,(alist-get 'blue colors) (bar . 2))
-              ("evilified" ,(alist-get 'red colors) box)
-              ("visual" ,(alist-get 'foreground colors) (hbar . 2))
-              ("motion" ,(alist-get 'magenta colors) box)
-              ("replace" ,(alist-get 'red-bg colors) (hbar . 2))
-              ("lisp" ,(alist-get 'cblk-ln-bg colors) box)
-              ("iedit" ,(alist-get 'act2 colors) box)
-              ("iedit-insert" ,(alist-get 'act2 colors) (bar . 2)))))))
+    (let ((colors (if tty wal-theme-semantic-tty-colors
+                   wal-theme-semantic-gui-colors)))
+      (if (and cautious
+              (or
+                (null (boundp 'spacemacs-evil-cursors))
+                (null (equal num-states (length spacemacs-evil-cursors)))))
+          (message "Not modifying `spacemacs-evil-cursors' as
+          either previously modified or unbound.")
+        (setq spacemacs-evil-cursors
+              `(("normal" ,(alist-get 'cursor colors) box)
+                ("insert" ,(alist-get 'green colors) (bar . 2))
+                ("emacs" ,(alist-get 'blue colors) box)
+                ("hybrid" ,(alist-get 'blue colors) (bar . 2))
+                ("evilified" ,(alist-get 'red colors) box)
+                ("visual" ,(alist-get 'foreground colors) (hbar . 2))
+                ("motion" ,(alist-get 'magenta colors) box)
+                ("replace" ,(alist-get 'red-bg colors) (hbar . 2))
+                ("lisp" ,(alist-get 'cblk-ln-bg colors) box)
+                ("iedit" ,(alist-get 'act2 colors) box)
+                ("iedit-insert" ,(alist-get 'act2 colors) (bar . 2))))))))
 
 (defun wal-theme-customize-spacemacs-theme (&optional tty)
   "Use wal colors to customize spacemacs-theme.
@@ -365,4 +374,4 @@ TTY defualts to `wal-theme-force-tty-colors' or
     (setq spacemacs-theme-custom-colors wal-theme-semantic-gui-colors)))
 
 (provide 'wal-theme)
-;;; wal-theme-common ends here
+;;; wal-theme ends here
