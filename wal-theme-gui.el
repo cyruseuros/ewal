@@ -1,8 +1,7 @@
 (require 'wal-theme-common)
 
-(deftheme wal-theme-gui "Wal theme, the GUI version that
-defaults to TTY version in terminal.")
+(deftheme wal-theme-gui "Wal theme, the GUI version.")
 
-(wal-theme-create-theme 'wal-theme-gui)
+(wal-theme-create-theme 'wal-theme-gui nil)
 
 (provide-theme 'wal-theme-gui)
