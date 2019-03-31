@@ -286,9 +286,9 @@ SECONDARY-ACCENT-COLOR"
 (defun wal-theme--cache-own-theme (&optional base-palette extended-palette
                                              tty-colors gui-colors)
   "Serializes all palettes and colors in json format.
-BASE-PALETTE, EXTENDED-PALETTE, TTY-THEME-COLORS, and
-GUI-THEME-COLORS all refer to the variables provided by
-wal-theme by default, prefixed with the package name."
+BASE-PALETTE, EXTENDED-PALETTE, TTY-COLORS, and GUI-COLORS all
+refer to the variables provided by wal-theme by default, prefixed
+with the package name."
   (let ((json-encoding-pretty-print t)
         (base-palette (or base-palette wal-theme-base-palette))
         (extended-palette (or extended-palette wal-theme-extended-palette))
@@ -351,18 +351,19 @@ only be used with CAUTIOUS set to nil prior to any calls to
                 (null (equal num-states (length spacemacs-evil-cursors)))))
           (message "Not modifying `spacemacs-evil-cursors' as
           either previously modified or unbound.")
-        (custom-set-variables spacemacs-evil-cursors
-              `(("normal" ,(alist-get 'cursor colors) box)
-                ("insert" ,(alist-get 'green colors) (bar . 2))
-                ("emacs" ,(alist-get 'blue colors) box)
-                ("hybrid" ,(alist-get 'blue colors) (bar . 2))
-                ("evilified" ,(alist-get 'red colors) box)
-                ("visual" ,(alist-get 'foreground colors) (hbar . 2))
-                ("motion" ,(alist-get 'magenta colors) box)
-                ("replace" ,(alist-get 'red-bg colors) (hbar . 2))
-                ("lisp" ,(alist-get 'cblk-ln-bg colors) box)
-                ("iedit" ,(alist-get 'act2 colors) box)
-                ("iedit-insert" ,(alist-get 'act2 colors) (bar . 2))))))))
+        (custom-set-variables
+         '(spacemacs-evil-cursors
+           `(("normal" ,(alist-get 'cursor colors) box)
+             ("insert" ,(alist-get 'green colors) (bar . 2))
+             ("emacs" ,(alist-get 'blue colors) box)
+             ("hybrid" ,(alist-get 'blue colors) (bar . 2))
+             ("evilified" ,(alist-get 'red colors) box)
+             ("visual" ,(alist-get 'foreground colors) (hbar . 2))
+             ("motion" ,(alist-get 'magenta colors) box)
+             ("replace" ,(alist-get 'red-bg colors) (hbar . 2))
+             ("lisp" ,(alist-get 'cblk-ln-bg colors) box)
+             ("iedit" ,(alist-get 'act2 colors) box)
+             ("iedit-insert" ,(alist-get 'act2 colors) (bar . 2)))))))))
 
 (defun wal-theme-customize-spacemacs-theme (&optional tty)
   "Use wal colors to customize spacemacs-theme.
@@ -374,8 +375,8 @@ TTY defualts to `wal-theme-force-tty-colors' or
                (or wal-theme-force-tty-colors
                    (display-graphic-p)))))
     (if tty
-        (custom-set-variables spacemacs-theme-custom-colors wal-theme-semantic-tty-colors))
-    (custom-set-variables spacemacs-theme-custom-colors wal-theme-semantic-gui-colors)))
+        (custom-set-variables '(spacemacs-theme-custom-colors wal-theme-semantic-tty-colors)))
+    (custom-set-variables '(spacemacs-theme-custom-colors wal-theme-semantic-gui-colors))))
 
 (provide 'wal-theme)
 ;;; wal-theme ends here
