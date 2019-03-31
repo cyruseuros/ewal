@@ -388,6 +388,23 @@ THEME-NAME gives a title to the generated theme."
           (class '((class color) (min-colors 89))))
 
       (progn
+        ;; spacemacs cursor color override if already present
+        ;; TODO: use add to list in case people defined their own cursors
+        (if (boundp 'spacemacs-evil-cursors)
+            (setq spacemacs-evil-cursors
+                  `(("normal" ,(alist-get 'cursor colors) box)
+                    ("insert" ,(alist-get 'green colors) (bar . 2))
+                    ("emacs" ,(alist-get 'blue colors) box)
+                    ("hybrid" ,(alist-get 'blue colors) (bar . 2))
+                    ("evilified" ,(alist-get 'red colors) box)
+                    ("visual" ,(alist-get 'foreground colors) (hbar . 2))
+                    ("motion" ,(alist-get 'magenta colors) box)
+                    ;; defaults
+                    ("replace" ,(alist-get 'red-bg colors) (hbar . 2))
+                    ("lisp" ,(alist-get 'cblk-ln-bg colors) box)
+                    ("iedit" ,(alist-get 'act2 colors) box)
+                    ("iedit-insert" ,(alist-get 'act2 colors) (bar . 2)))))
+
         (custom-theme-set-faces
         theme-name
 
@@ -1165,22 +1182,22 @@ THEME-NAME gives a title to the generated theme."
                                    ,(alist-get 'base colors)])
 
         ;; hl-todo
-        `(hl-todo-keyword-faces '(("TODO"   . ,(alist-get 'war colors))
+        `(hl-todo-keyword-faces '(("TODO"   . ,(alist-get 'red colors))
                                   ("NEXT"   . ,(alist-get 'war colors))
                                   ("THEM"   . ,(alist-get 'aqua colors))
                                   ("PROG"   . ,(alist-get 'blue colors))
-                                  ("OKAY"   . ,(alist-get 'blue colors))
-                                  ("DONT"   . ,(alist-get 'red colors))
-                                  ("FAIL"   . ,(alist-get 'red colors))
+                                  ("OKAY"   . ,(alist-get 'blue-bg-s colors))
+                                  ("DONT"   . ,(alist-get 'red-bg-s colors))
+                                  ("FAIL"   . ,(alist-get 'red-bg-s colors))
                                   ("DONE"   . ,(alist-get 'suc colors))
                                   ("NOTE"   . ,(alist-get 'yellow colors))
-                                  ("KLUDGE" . ,(alist-get 'yellow colors))
-                                  ("HACK"   . ,(alist-get 'yellow colors))
+                                  ("KLUDGE" . ,(alist-get 'yellow-bg colors))
+                                  ("HACK"   . ,(alist-get 'yellow-bg colors))
                                   ("TEMP"   . ,(alist-get 'yellow colors))
-                                  ("FIXME"  . ,(alist-get 'war colors))
-                                  ("XXX"    . ,(alist-get 'war colors))
-                                  ("XXXX"   . ,(alist-get 'war colors))
-                                  ("???"    . ,(alist-get 'war colors))))
+                                  ("FIXME"  . ,(alist-get 'red-bg colors))
+                                  ("XXX"    . ,(alist-get 'red-bg-s colors))
+                                  ("XXXX"   . ,(alist-get 'red-bg-s colors))
+                                  ("???"    . ,(alist-get 'aqua colors))))
 
         ;; pdf-tools
         `(pdf-view-midnight-colors `(,(alist-get 'base colors) . ,(alist-get 'bg1 colors))))))))
