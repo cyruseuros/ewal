@@ -515,19 +515,19 @@ to the generated theme."
 
         ;; company
         `(company-echo-common ((,class (:background ,(alist-get 'base colors) :foreground ,(alist-get 'bg1 colors)))))
-        `(company-preview ((,class (:background ,(alist-get 'ttip colors) :foreground ,(alist-get 'ttip colors)))))
-        `(company-preview-common ((,class (:background ,(alist-get 'ttip colors) :foreground ,(alist-get 'base colors)))))
+        `(company-preview ((,class (:background ,(alist-get 'ttip-bg colors) :foreground ,(alist-get 'ttip colors)))))
+        `(company-preview-common ((,class (:background ,(alist-get 'ttip-bg colors) :foreground ,(alist-get 'base colors)))))
         `(company-preview-search ((,class (:inherit match))))
         `(company-scrollbar-bg ((,class (:background ,(alist-get 'bg2 colors)))))
         `(company-scrollbar-fg ((,class (:background ,(alist-get 'act2 colors)))))
         `(company-template-field ((,class (:inherit region))))
-        `(company-tooltip ((,class (:background ,(alist-get 'ttip colors) :foreground ,(alist-get 'ttip colors)))))
+        `(company-tooltip ((,class (:background ,(alist-get 'ttip-bg colors) :foreground ,(alist-get 'ttip colors)))))
         `(company-tooltip-annotation ((,class (:foreground ,(alist-get 'type colors)))))
-        `(company-tooltip-common ((,class (:background ,(alist-get 'ttip colors) :foreground ,(alist-get 'keyword colors)))))
+        `(company-tooltip-common ((,class (:background ,(alist-get 'ttip-bg colors) :foreground ,(alist-get 'keyword colors)))))
         `(company-tooltip-common-selection ((,class (:foreground ,(alist-get 'base colors)))))
         `(company-tooltip-mouse ((,class (:inherit highlight))))
         `(company-tooltip-search ((,class (:inherit match))))
-        `(company-tooltip-selection ((,class (:background ,(alist-get 'ttip colors)l :foreground ,(alist-get 'base colors)))))
+        `(company-tooltip-selection ((,class (:background ,(alist-get 'highlight colors)l :foreground ,(alist-get 'base colors)))))
 
         ;; diff
         `(diff-added             ((,class :background nil :foreground ,(alist-get 'green colors))))
