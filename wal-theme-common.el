@@ -413,7 +413,7 @@ PRIMARY-ACCENT-COLOR defaults to `wal-theme-primary-accent-color'
 and `wal-theme-secondary-accent-color'. THEME-NAME gives a title
 to the generated theme."
   (wal-theme--load-own-theme)
-  (let ((tty (or tty wal-theme-force-tty-colors (display-graphic-p))))
+  (let ((tty (if (boundp tty) tty (or wal-theme-force-tty-colors (display-graphic-p)))))
     (let ((colors (if tty wal-theme-semantic-tty-colors wal-theme-semantic-gui-colors))
           (primary-accent-color (or primary-accent-color wal-theme-primary-accent-color))
           (secondary-accent-color (or secondary-accent-color wal-theme-secondary-accent-color))
