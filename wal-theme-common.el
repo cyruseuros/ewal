@@ -517,7 +517,7 @@ to the generated theme."
         ;; company
         `(company-echo-common ((,class (:background ,(alist-get 'base colors) :foreground ,(alist-get 'bg1 colors)))))
         `(company-preview ((,class (:background ,(alist-get 'ttip-bg colors) :foreground ,(alist-get 'ttip colors)))))
-        `(company-preview-common ((,class (:background ,(alist-get 'ttip-bg colors) :foreground ,(alist-get 'base colors)))))
+        `(company-preview-common ((,class (:background ,(alist-get 'ttip-bg colors) :foreground ,(alist-get 'ttip colors)))))
         `(company-preview-search ((,class (:inherit match))))
         `(company-scrollbar-bg ((,class (:background ,(alist-get 'bg2 colors)))))
         `(company-scrollbar-fg ((,class (:background ,(alist-get 'act2 colors)))))
