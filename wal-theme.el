@@ -337,6 +337,7 @@ using `spacemacs/add-evil-cursor'. This function only has and
 effect when applied inside `dotspacemacs/user-init', and should
 only be used with CAUTIOUS set to nil prior to any calls to
 `spacemacs-evil-cursors'."
+  (wal-theme--load-own-theme)
   (let ((cautious (or cautious t))
         (tty (if (boundp tty) tty
                (or wal-theme-force-tty-colors
@@ -368,6 +369,7 @@ only be used with CAUTIOUS set to nil prior to any calls to
 To be found at: <https://github.com/nashamri/spacemacs-theme>.
 TTY defualts to `wal-theme-force-tty-colors' or
 `display-graphic-p'."
+  (wal-theme--load-own-theme)
   (let ((tty (if (boundp tty) tty
                (or wal-theme-force-tty-colors
                    (display-graphic-p)))))
