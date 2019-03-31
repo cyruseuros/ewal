@@ -352,14 +352,11 @@ wal-theme by default, prefixed with the package name."
             (with-temp-file wal-theme--own-cache-semantic-gui-colors-json-file
               (insert (json-encode-list wal-theme-semantic-gui-colors))))))
 
-(defun wal-theme--load-own-theme (&optional load-from-cache)
-  "Load current wal-theme variables for use in `wal-theme-create-theme'.
-If LOAD-FROM-CACHE is t, then load from cache. Otherwise compute
-palettes and colors afresh and cache them."
-  (let ((load-from-cache (or load-from-cache
-                             (and (file-exists-p wal-theme--own-cache-base-palette-json-file))
-                             (file-newer-than-file-p wal-theme--own-cache-base-palette-json-file
-                                                     wal-theme--wal-cache-json-file))))
+(defun wal-theme--load-own-theme ()
+  "Load current wal-theme variables for use in `wal-theme-create-theme'."
+  (let ((load-from-cache (and (file-exists-p wal-theme--own-cache-base-palette-json-file)
+                              (file-newer-than-file-p wal-theme--own-cache-base-palette-json-file
+                                                      wal-theme--wal-cache-json-file))))
     (if load-from-cache
         (progn
           (setq wal-theme-base-palette (json-read-file wal-theme--own-cache-base-palette-json-file))
@@ -399,7 +396,6 @@ to `spacemacs-evil-cursors'."
               ("evilified" ,(alist-get 'red colors) box)
               ("visual" ,(alist-get 'foreground colors) (hbar . 2))
               ("motion" ,(alist-get 'magenta colors) box)
-              ;; defaults
               ("replace" ,(alist-get 'red-bg colors) (hbar . 2))
               ("lisp" ,(alist-get 'cblk-ln-bg colors) box)
               ("iedit" ,(alist-get 'act2 colors) box)
