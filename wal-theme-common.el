@@ -267,7 +267,7 @@ SECONDARY-ACCENT-COLOR"
         (secondary-accent-color (or secondary-accent-color wal-theme-secondary-accent-color)))
     (let ((theme-colors
           `((act1          . ,(wal-theme-get-color 'background -4 tty))
-            (act2          . ,(wal-theme-get-color primary-accent-color -4 tty))
+            (act2          . ,(wal-theme-get-color primary-accent-color 0 tty))
             (base          . ,(wal-theme-get-color 'foreground 0 tty))
             (base-dim      . ,(wal-theme-get-color 'foreground -4 tty))
             (bg1           . ,(wal-theme-get-color 'background 0 tty))
