@@ -1218,5 +1218,10 @@ to the generated theme."
         ;; pdf-tools
         `(pdf-view-midnight-colors `(,(alist-get 'base colors) . ,(alist-get 'bg1 colors))))))))
 
+;;;###autoload
+(when load-file-name
+  (add-to-list 'custom-theme-load-path
+               (file-name-as-directory (file-name-directory load-file-name))))
+
 (provide 'wal-theme-common)
 ;;; wal-theme-common ends here
