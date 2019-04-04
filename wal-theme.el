@@ -101,13 +101,13 @@ Meant for setting TTY theme regardless of GUI support."
   :type 'boolean
   :group 'wal-theme)
 
-(defcustom wal-theme-primary-accent-color 'cyan
+(defcustom wal-theme-primary-accent-color 'magenta
   "Predominant color in generated wal-theme.
 Must be one of `wal-theme-ansi-color-names'"
   :type 'symbol
   :group 'wal-theme)
 
-(defcustom wal-theme-secondary-accent-color 'yellow
+(defcustom wal-theme-secondary-accent-color 'blue
   "Second most predominant color in generated wal-theme.
 Must be one of `wal-theme-ansi-color-names'"
   :type 'symbol
@@ -232,14 +232,14 @@ SECONDARY-ACCENT-COLOR"
   (let ((primary-accent-color (or primary-accent-color wal-theme-primary-accent-color))
         (secondary-accent-color (or secondary-accent-color wal-theme-secondary-accent-color)))
     (let ((theme-colors
-          `((act1          . ,(wal-theme-get-color 'background -4 tty))
+          `((act1          . ,(wal-theme-get-color 'background -2 tty))
             (act2          . ,(wal-theme-get-color primary-accent-color 0 tty))
             (base          . ,(wal-theme-get-color 'foreground 0 tty))
             (base-dim      . ,(wal-theme-get-color 'foreground -4 tty))
             (bg1           . ,(wal-theme-get-color 'background 0 tty))
-            (bg2           . ,(wal-theme-get-color 'background -1 tty))
-            (bg3           . ,(wal-theme-get-color 'background -2 tty))
-            (bg4           . ,(wal-theme-get-color 'background -3 tty))
+            (bg2           . ,(wal-theme-get-color 'background -2 tty))
+            (bg3           . ,(wal-theme-get-color 'background -3 tty))
+            (bg4           . ,(wal-theme-get-color 'background -4 tty))
             (border        . ,(wal-theme-get-color 'background 0 tty))
             (cblk          . ,(wal-theme-get-color 'background 2 tty))
             (cblk-bg       . ,(wal-theme-get-color 'background -2 tty))
@@ -249,17 +249,17 @@ SECONDARY-ACCENT-COLOR"
             (const         . ,(wal-theme-get-color primary-accent-color 3 tty))
             (comment       . ,(wal-theme-get-color 'background 3 tty))
             (comment-bg    . ,(wal-theme-get-color 'background 0 tty))
-            (comp          . ,(wal-theme-get-color primary-accent-color 2 tty))
+            (comp          . ,(wal-theme-get-color secondary-accent-color 0 tty))
             (err           . ,(wal-theme-get-color 'red 4 tty))
-            (func          . ,(wal-theme-get-color primary-accent-color 2 tty))
-            (head1         . ,(wal-theme-get-color secondary-accent-color 0 tty))
-            (head1-bg      . ,(wal-theme-get-color 'background 0 tty))
-            (head2         . ,(wal-theme-get-color 'cyan 0 tty))
-            (head2-bg      . ,(wal-theme-get-color 'background 0 tty))
-            (head3         . ,(wal-theme-get-color 'green 0 tty))
-            (head3-bg      . ,(wal-theme-get-color 'background 0 tty))
-            (head4         . ,(wal-theme-get-color 'yellow 4 tty))
-            (head4-bg      . ,(wal-theme-get-color 'background 0 tty))
+            (func          . ,(wal-theme-get-color primary-accent-color 0 tty))
+            (head1         . ,(wal-theme-get-color primary-accent-color 0 tty))
+            (head1-bg      . ,(wal-theme-get-color 'background -2 tty))
+            (head2         . ,(wal-theme-get-color secondary-accent-color 0 tty))
+            (head2-bg      . ,(wal-theme-get-color 'background -2 tty))
+            (head3         . ,(wal-theme-get-color 'cyan 0 tty))
+            (head3-bg      . ,(wal-theme-get-color 'background -2 tty))
+            (head4         . ,(wal-theme-get-color 'yellow 0 tty))
+            (head4-bg      . ,(wal-theme-get-color 'background -2 tty))
             (highlight     . ,(wal-theme-get-color 'background 4 tty))
             (highlight-dim . ,(wal-theme-get-color 'background 3 tty))
             (keyword       . ,(wal-theme-get-color secondary-accent-color 2 tty))
