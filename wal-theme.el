@@ -61,7 +61,10 @@
   :group 'wal-theme)
 
 (defcustom wal-theme-ansi-color-names
-  '(black red green yellow blue magenta cyan white)
+  (mapcar 'intern
+          (cl-loop for (key . value)
+                   in tty-defined-color-alist
+                   collect key))
   "The 8 most universaly supported TTY color names.
 They will be extracted from `wal-theme--cache-json-file', and
 with the right escape sequences applied using
@@ -354,6 +357,7 @@ TTY specifies whether to use TTY or GUI colors."
              ("iedit" ,(wal-theme-get-color 'red 0 tty) box)
              ("iedit-insert" ,(wal-theme-get-color 'red 0 tty) (bar . 2)))))
 
+
 (defun wal-theme-get-spacemacs-theme-colors (&optional tty)
   "Use wal colors to customize spacemacs-theme.
 To be found at: <https://github.com/nashamri/spacemacs-theme>.
@@ -364,8 +368,8 @@ TTY defualts to `wal-theme-force-tty-colors' or
                (or wal-theme-force-tty-colors
                    (display-graphic-p)))))
     (if tty
-        wal-theme-semantic-tty-colors)
-    wal-theme-semantic-gui-colors))
-
+        wal-theme-semantic-tty-colors
+      wal-theme-semantic-gui-colors
+      )))
 (provide 'wal-theme)
 ;;; wal-theme ends here
