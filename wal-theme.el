@@ -351,10 +351,10 @@ TTY specifies whether to use TTY or GUI colors."
              ("evilified" ,(alist-get 'red colors) box)
              ("visual" ,(alist-get 'foreground colors) (hbar . 2))
              ("motion" ,(alist-get 'magenta colors) box)
-             ("replace" ,(alist-get 'red-bg colors) (hbar . 2))
-             ("lisp" ,(alist-get 'cblk-ln-bg colors) box)
-             ("iedit" ,(alist-get 'act2 colors) box)
-             ("iedit-insert" ,(alist-get 'act2 colors) (bar . 2))))))
+             ("replace" ,(alist-get 'war colors) (hbar . 2))
+             ("lisp" ,(alist-get 'cblk-ln colors) box)
+             ("iedit" ,(alist-get 'cblk-ln-bg colors) box)
+             ("iedit-insert" ,(alist-get 'cblk-ln-bg colors) (bar . 2))))))
 
 (defun wal-theme-get-spacemacs-theme-colors (&optional tty)
   "Use wal colors to customize spacemacs-theme.
