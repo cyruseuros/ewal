@@ -98,13 +98,15 @@ Meant for setting TTY theme regardless of GUI support."
   :type 'boolean
   :group 'wal-theme)
 
-(defcustom wal-theme-primary-accent-color 'magenta
-  "Predominant color in generated wal-theme."
+(defcustom wal-theme-primary-accent-color 'blue
+  "Predominant color in generated wal-theme.
+Must be one of `wal-theme-ansi-color-names'"
   :type 'symbol
   :group 'wal-theme)
 
-(defcustom wal-theme-secondary-accent-color 'blue
-  "Second most predominant color in generated wal-theme."
+(defcustom wal-theme-secondary-accent-color 'magenta
+  "Second most predominant color in generated wal-theme.
+Must be one of `wal-theme-ansi-color-names'"
   :type 'symbol
   :group 'wal-theme)
 
