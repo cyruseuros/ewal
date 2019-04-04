@@ -40,6 +40,7 @@
 ;; declare undetected functions
 (declare-function pairlis 'cl-lib)
 
+
 (defgroup wal-theme nil
   "Wal-theme options."
   :group 'faces)
@@ -136,6 +137,12 @@ Stored as a flat alist, and cached in `wal-theme--own-cache-semantic-gui-colors-
 Stored as a flat alist, and cached in `wal-theme--own-cache-semantic-tty-colors-json-file'."
   :type 'alist
   :group 'wal-theme)
+
+(defun wal-theme-clear-cache ()
+  "Clear wal-theme cache."
+  (interactive)
+  (delete-directory wal-theme-own-cache-dir t))
+
 
 (defun wal-theme--load-wal-theme (&optional json color-names)
   "Read JSON as the most complete of the cached wal files.
@@ -321,7 +328,11 @@ with the package name."
   "Load current wal-theme variables for use in `wal-theme-create-theme'."
   (let ((load-from-cache (and (file-exists-p wal-theme--own-cache-base-palette-json-file)
                               (file-newer-than-file-p wal-theme--own-cache-base-palette-json-file
-                                                      wal-theme--wal-cache-json-file)))
+                                                      wal-theme--wal-cache-json-file)
+                              (equal wal-theme-primary-accent-color
+                                     (cadar (get 'wal-theme-primary-accent-color 'standard-value)))
+                              (equal wal-theme-secondary-accent-color
+                                     (cadar (get 'wal-theme-secondary-accent-color 'standard-value)))))
         (json-object-type 'alist)
         (json-array-type 'list))
     (if load-from-cache
@@ -331,19 +342,12 @@ with the package name."
           (setq wal-theme-semantic-tty-colors (json-read-file wal-theme--own-cache-semantic-tty-colors-json-file))
           (setq wal-theme-semantic-gui-colors (json-read-file wal-theme--own-cache-semantic-gui-colors-json-file)))
       (progn
-        (delete-directory wal-theme-own-cache-dir t)
+        (wal-theme-clear-cache)
         (setq wal-theme-base-palette (wal-theme--load-wal-theme))
         (setq wal-theme-extended-palette (wal-theme--extend-base-palette 4 5))
         (setq wal-theme-semantic-gui-colors (wal-theme--generate-theme-colors nil))
         (setq wal-theme-semantic-tty-colors (wal-theme--generate-theme-colors t))
         (wal-theme--cache-own-theme)))))
-
-(defun wal-theme-clear-cache ()
-  "Clear wal-theme cache.
-Best used when accent colors are changed and no new wal theme has
-been applied"
-  (interactive)
-  (delete-directory wal-theme-own-cache-dir t))
 
 (defun wal-theme-get-spacemacs-cursors-colors (&optional tty)
   "Use wal colors to customize `spacemacs-evil-cursors'.
