@@ -55,7 +55,7 @@
   "Location of cached wal theme in json format.")
 
 (defcustom wal-theme-own-cache-dir
-  (file-name-as-directory (expand-file-name "./cache"))
+  (file-name-as-directory (expand-file-name "~/.cache/wal-theme"))
   "Location of wal-theme cache directory."
   :type 'string
   :group 'wal-theme)
@@ -304,7 +304,7 @@ with the package name."
         (gui-colors (or gui-colors wal-theme-semantic-gui-colors)))
           (progn
             (if (null (file-directory-p wal-theme-own-cache-dir))
-                (make-directory wal-theme-own-cache-dir))
+                (make-directory wal-theme-own-cache-dir t))
             (with-temp-file wal-theme--own-cache-base-palette-json-file
               (insert (json-encode-list base-palette)))
             (with-temp-file wal-theme--own-cache-extended-palette-json-file
