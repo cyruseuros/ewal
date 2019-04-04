@@ -338,6 +338,13 @@ with the package name."
         (setq wal-theme-semantic-tty-colors (wal-theme--generate-theme-colors t))
         (wal-theme--cache-own-theme)))))
 
+(defun wal-theme-clear-cache ()
+  "Clear wal-theme cache.
+Best used when accent colors are changed and no new wal theme has
+been applied"
+  (interactive)
+  (delete-directory wal-theme-own-cache-dir t))
+
 (defun wal-theme-get-spacemacs-cursors-colors (&optional tty)
   "Use wal colors to customize `spacemacs-evil-cursors'.
 TTY specifies whether to use TTY or GUI colors."
