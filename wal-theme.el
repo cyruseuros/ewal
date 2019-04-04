@@ -342,19 +342,17 @@ TTY specifies whether to use TTY or GUI colors."
   (let ((tty (if (boundp tty) tty
                (or wal-theme-force-tty-colors
                    (display-graphic-p)))))
-    (let ((colors (if tty wal-theme-semantic-tty-colors
-                   wal-theme-semantic-gui-colors)))
-           `(("normal" ,(alist-get 'cursor colors) box)
-             ("insert" ,(alist-get 'green colors) (bar . 2))
-             ("emacs" ,(alist-get 'blue colors) box)
-             ("hybrid" ,(alist-get 'blue colors) (bar . 2))
-             ("evilified" ,(alist-get 'red colors) box)
-             ("visual" ,(alist-get 'foreground colors) (hbar . 2))
-             ("motion" ,(alist-get 'magenta colors) box)
-             ("replace" ,(alist-get 'war colors) (hbar . 2))
-             ("lisp" ,(alist-get 'cblk-ln colors) box)
-             ("iedit" ,(alist-get 'cblk-ln-bg colors) box)
-             ("iedit-insert" ,(alist-get 'cblk-ln-bg colors) (bar . 2))))))
+           `(("normal" ,(wal-theme-get-color 'cursor 0 tty) box)
+             ("insert" ,(wal-theme-get-color 'green 0 tty) (bar . 2))
+             ("emacs" ,(wal-theme-get-color 'blue 0 tty) box)
+             ("hybrid" ,(wal-theme-get-color 'blue 0 tty) (bar . 2))
+             ("evilified" ,(wal-theme-get-color 'red 0 tty) box)
+             ("visual" ,(wal-theme-get-color 'white -4 tty) (hbar . 2))
+             ("motion" ,(wal-theme-get-color 'magenta 0) box)
+             ("replace" ,(wal-theme-get-color 'red -4 tty) (hbar . 2))
+             ("lisp" ,(wal-theme-get-color 'magenta 4 tty) box)
+             ("iedit" ,(wal-theme-get-color 'red 0 tty) box)
+             ("iedit-insert" ,(wal-theme-get-color 'red 0 tty) (bar . 2)))))
 
 (defun wal-theme-get-spacemacs-theme-colors (&optional tty)
   "Use wal colors to customize spacemacs-theme.
