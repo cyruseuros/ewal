@@ -335,32 +335,15 @@ with the package name."
         (setq wal-theme-semantic-tty-colors (wal-theme--generate-theme-colors t))
         (wal-theme--cache-own-theme)))))
 
-(defun wal-theme-customize-spacemacs-cursors (&optional tty cautious original-number-of-states)
+(defun wal-theme-get-spacemacs-cursors-colors (&optional tty)
   "Use wal colors to customize `spacemacs-evil-cursors'.
-TTY specifies whether to use TTY or GUI colors. If CAUTIOUS is
-not nil, check if `spacemacs-evil-cursors' has length of
-ORIGINAL-NUMBER-OF-STATES, and do not edit the variable if it
-does not, so as not to remove custom states added by the user
-using `spacemacs/add-evil-cursor'. This function only has and
-effect when applied inside `dotspacemacs/user-init', and should
-only be used with CAUTIOUS set to nil prior to any calls to
-`spacemacs-evil-cursors'."
+TTY specifies whether to use TTY or GUI colors."
   (wal-theme--load-own-theme)
-  (let ((cautious (or cautious t))
-        (tty (if (boundp tty) tty
+  (let ((tty (if (boundp tty) tty
                (or wal-theme-force-tty-colors
-                   (display-graphic-p))))
-        (num-states (or original-number-of-states 11)))
+                   (display-graphic-p)))))
     (let ((colors (if tty wal-theme-semantic-tty-colors
                    wal-theme-semantic-gui-colors)))
-      (if (and cautious
-              (or
-                (null (boundp 'spacemacs-evil-cursors))
-                (null (equal num-states (length spacemacs-evil-cursors)))))
-          (message "Not modifying `spacemacs-evil-cursors' as
-          either previously modified or unbound.")
-        (custom-set-variables
-         '(spacemacs-evil-cursors
            `(("normal" ,(alist-get 'cursor colors) box)
              ("insert" ,(alist-get 'green colors) (bar . 2))
              ("emacs" ,(alist-get 'blue colors) box)
@@ -371,9 +354,9 @@ only be used with CAUTIOUS set to nil prior to any calls to
              ("replace" ,(alist-get 'red-bg colors) (hbar . 2))
              ("lisp" ,(alist-get 'cblk-ln-bg colors) box)
              ("iedit" ,(alist-get 'act2 colors) box)
-             ("iedit-insert" ,(alist-get 'act2 colors) (bar . 2)))))))))
+             ("iedit-insert" ,(alist-get 'act2 colors) (bar . 2))))))
 
-(defun wal-theme-customize-spacemacs-theme (&optional tty)
+(defun wal-theme-get-spacemacs-theme-colors (&optional tty)
   "Use wal colors to customize spacemacs-theme.
 To be found at: <https://github.com/nashamri/spacemacs-theme>.
 TTY defualts to `wal-theme-force-tty-colors' or
@@ -383,8 +366,8 @@ TTY defualts to `wal-theme-force-tty-colors' or
                (or wal-theme-force-tty-colors
                    (display-graphic-p)))))
     (if tty
-        (custom-set-variables '(spacemacs-theme-custom-colors wal-theme-semantic-tty-colors)))
-    (custom-set-variables '(spacemacs-theme-custom-colors wal-theme-semantic-gui-colors))))
+        wal-theme-semantic-tty-colors)
+    wal-theme-semantic-gui-colors))
 
 (provide 'wal-theme)
 ;;; wal-theme ends here
