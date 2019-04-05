@@ -84,28 +84,26 @@ for more details). NOTE: Order matters."
 
 
 (defcustom ewal-force-tty-colors nil
-  "Whether to use TTY version of wall theme.
+  "Whether to use TTY version of `ewal' colors.
 Meant for setting TTY theme regardless of GUI support."
   :type 'boolean
   :group 'ewal)
 
 (defcustom ewal-primary-accent-color 'magenta
-  "Predominant color in generated ewal.
+  "Predominant `ewal' color.
 Must be one of `ewal-ansi-color-name-symbols'"
   :type 'symbol
   :group 'ewal)
 
 (defvar ewal-secondary-accent-color 'blue
-  "Second most predominant color in generated ewal.
+  "Second most predominant `ewal' color.
 Must be one of `ewal-ansi-color-name-symbols'")
 
 (defvar ewal-base-palette nil
-  "Current base palette extracted from `ewal--wal-cache-json-file'.
-Stored as a flat alist, and cached in `ewal--own-cache-base-palette-json-file'.")
+  "Current base palette extracted from `ewal--wal-cache-json-file'.")
 
 (defvar ewal-extended-palette nil
-  "Extended palette computed from `ewal--wal-cache-json-file'.
-Stored as a flat alist, and cached in `ewal--own-cache-extended-palette-json-file'.")
+  "Extended palette based on `ewal-base-palette'.")
 
 (defvar ewal-spacemacs-theme-gui-colors nil
   "`spacemacs-theme' compatible GUI colors.
@@ -117,17 +115,17 @@ Extracted from current `ewal' theme.")
 
 (defvar ewal-spacemacs-evil-cursors-gui-colors nil
   "`spacemacs-evil-cursors' compatible GUI colors.
-Extracted from current `ewal' theme.")
+Extracted from current `ewal' palette.")
 
 (defvar ewal-spacemacs-evil-cursors-tty-colors nil
   "`spacemacs-evil-cursors' compatible TTY colors.
-Extracted from current `ewal' theme.")
+Extracted from current `ewal' palette.")
 
-(defcustom ewal-use-pcache-p (require 'pcache nil t)
+(defcustom ewal-use-pcache-p (not (null (require 'pcache nil t)))
   "Whether to use pcache to store `ewal' variables.
 Since this fetaure depends on `pcache', and computing `ewal'
 variables is not all that costly, `ewal-use-pcache-p' defaults to
-the return value of \(require 'pcache nil t\)."
+the return value of \(not \(null \(require 'pcache nil t\)\)\)."
   :type 'boolean
   :group 'ewal)
 
@@ -153,8 +151,9 @@ Only set when `ewal-use-pcache-p' is t.")
   (file-newer-than-file-p ewal--wal-cache-json-file ewal--pcache-repo-file))
 
 (defun ewal--load-from-cache-p ()
-  "Check whether `ewal-use-pcache-p' is t.
-Also check whether `ewal--cache-expired-p'."
+  "Check whether `wal' variables should be loaded from cache.
+Do so by checking whether `ewal-use-pcache-p' is t, and whether
+`ewal--cache-expired-p'."
   (and ewal-use-pcache-p (ewal--cache-expired-p)))
 
 (defun ewal--use-tty-colors-p (tty)
