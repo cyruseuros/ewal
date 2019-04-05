@@ -1,14 +1,14 @@
-;;; wal-theme.el --- A wal-based automatic, terminal aware theme generator.
+;;; wal-theme.el --- A wal-based <https://github.com/dylanaraps/pywal>,
+;;; automatic, terminal aware theme generator.
 
-;; Copyright (C) 2015-2018 Nasser Alshammari
 ;; Copyright (C) 2019 Uros Perisic
 
-;; Author: Nasser Alshammari
-;; URL: <https://github.com/nashamri/spacemacs-theme>
+;; Author: Uros Perisic
+;; URL: <https://gitlab.com/jjzmajic/wal-theme.el>
 ;;
 ;; Version: 0.1
 ;; Keywords: color, theme, generator, wal, pywal
-;; Package-Requires: ((emacs "24") (cl-lib) (json) (color))
+;; Package-Requires: ((emacs "24") (cl-lib) (json) (color) (term/tty-colors))
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -28,7 +28,16 @@
 ;;; Commentary:
 
 ;; This is a color theme generator for Emacs with an eye towards Spacemacs
-;; <https://github.com/syl20bnr/spacemacs>.
+;; <https://github.com/syl20bnr/spacemacs>, and `spacemacs-theme'
+;; <https://github.com/nashamri/spacemacs-theme>, but no dependencies on either,
+;; so you can use it to colorize your vanilla Emacs as well.
+
+;; My hope is that `wal-theme' will remain theme agnostic, with people
+;; contributing functions like `wal-theme-get-spacemacs-theme-colors' for other
+;; popular themes such as `solarized-emacs'
+;; <https://github.com/bbatsov/solarized-emacs>, making it easy to keep the
+;; style of different themes, while adapting them to the rest of your theming
+;; setup. No problem should ever have to be solved twice!
 
 ;;; Code:
 (require 'json)
