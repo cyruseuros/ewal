@@ -335,9 +335,7 @@ SECONDARY-ACCENT-COLOR"
 (defun ewal--generate-spacemacs-evil-cursors-colors (&optional tty)
   "Use wal colors to customize `spacemacs-evil-cursors'.
 TTY specifies whether to use TTY or GUI colors."
-  (let ((tty (if (boundp tty) tty
-               (or ewal-force-tty-colors
-                   (display-graphic-p)))))
+  (let ((tty (ewal--use-tty-colors-p tty)))
     `(("normal" ,(ewal-get-color 'cursor 0 tty) box)
       ("insert" ,(ewal-get-color 'green 0 tty) (bar . 2))
       ("emacs" ,(ewal-get-color 'blue 0 tty) box)
