@@ -170,7 +170,6 @@ Do so by checking whether `ewal-use-pcache-p' is t, and whether
   (with-eval-after-load 'pcache
     (pcache-destroy-repository ewal--pcache-repo-name)))
 
-
 (defun ewal--load-wal-theme (&optional json color-names)
   "Read JSON as the most complete of the cached wal files.
 COLOR-NAMES will be associated with the first 8 colors of the
@@ -402,7 +401,8 @@ Otherwise regenerate palettes and colors."
             (ewal--generate-spacemacs-evil-cursors-colors nil))
       (setq ewal-spacemacs-evil-cursors-tty-colors
             (ewal--generate-spacemacs-evil-cursors-colors t))
-      (ewal--cache-ewal-theme))))
+      (when ewal-use-pcache-p
+        (ewal--cache-ewal-theme)))))
 
 (defun ewal-get-spacemacs-theme-colors (&optional tty)
   "Get `spacemacs-theme' colors.
