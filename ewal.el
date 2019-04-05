@@ -347,8 +347,8 @@ TTY specifies whether to use TTY or GUI colors."
       ("motion" ,(ewal-get-color 'magenta 0) box)
       ("replace" ,(ewal-get-color 'red -4 tty) (hbar . 2))
       ("lisp" ,(ewal-get-color 'magenta 4 tty) box)
-      ("iedit" ,(ewal-get-color 'red 0 tty) box)
-      ("iedit-insert" ,(ewal-get-color 'red 0 tty) (bar . 2)))))
+      ("iedit" ,(ewal-get-color 'magenta -4 tty) box)
+      ("iedit-insert" ,(ewal-get-color 'magenta -4 tty) (bar . 2)))))
 
 (defun ewal--cache-ewal-theme ()
   "Cache all `ewal' palettes and colors."
