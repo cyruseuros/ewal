@@ -165,7 +165,8 @@ Do so by checking whether `ewal-use-pcache-p' is t, and whether
 (defun ewal-clear-cache ()
   "Clear ewal cache."
   (interactive)
-  (pcache-destroy-repository ewal--pcache-repo-name))
+  (when (require 'pcache nil t)
+    (pcache-destroy-repository ewal--pcache-repo-name)))
 
 
 (defun ewal--load-wal-theme (&optional json color-names)
@@ -352,7 +353,7 @@ TTY specifies whether to use TTY or GUI colors."
             (pcache-put ewal--pcache-repo 'ewal-spacemacs-theme-gui-colors
                         ewal-spacemacs-theme-gui-colors)
             (pcache-put ewal--pcache-repo 'ewal-spacemacs-theme-tty-colors
-                        ewal-spacemacs-theme-gui-colors)
+                        ewal-spacemacs-theme-tty-colors)
             (pcache-put ewal--pcache-repo 'ewal-spacemacs-evil-cursors-gui-colors
                         ewal-spacemacs-evil-cursors-gui-colors)
             (pcache-put ewal--pcache-repo 'ewal-spacemacs-evil-cursors-tty-colors
@@ -367,7 +368,7 @@ Otherwise regenerate palettes and colors."
         (setq ewal-base-palette (pcache-get ewal--pcache-repo 'ewal-base-palette))
         (setq ewal-extended-palette (pcache-get ewal--pcache-repo 'ewal-extended-palette))
         (setq ewal-spacemacs-theme-gui-colors
-              (pcache-get ewal--pcache-repo 'ewal-spacemacs-evil-cursors-gui-colors))
+              (pcache-get ewal--pcache-repo 'ewal-spacemacs-theme-gui-colors))
         (setq ewal-spacemacs-theme-tty-colors
               (pcache-get ewal--pcache-repo 'ewal-spacemacs-theme-tty-colors))
         (setq ewal-spacemacs-evil-cursors-gui-colors
