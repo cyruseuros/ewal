@@ -146,15 +146,15 @@ Only set when `ewal-use-pcache-p' is t.")
   "`pcache' repository file used by `ewal'.
 Only set when `ewal-use-pcache-p' is t.")
 
-(defun ewal--cache-expired-p ()
+(defun ewal--cache-valid-p ()
   "Check whether `ewal' pcache has expired."
-  (file-newer-than-file-p ewal--wal-cache-json-file ewal--pcache-repo-file))
+  (file-newer-than-file-p ewal--pcache-repo-file ewal--wal-cache-json-file))
 
 (defun ewal--load-from-cache-p ()
   "Check whether `wal' variables should be loaded from cache.
 Do so by checking whether `ewal-use-pcache-p' is t, and whether
-`ewal--cache-expired-p'."
-  (and ewal-use-pcache-p (ewal--cache-expired-p)))
+`ewal--cache-valid-p'."
+  (and ewal-use-pcache-p (ewal--cache-valid-p)))
 
 (defun ewal--use-tty-colors-p (tty)
   "Utility function to check if TTY colors should be used."
