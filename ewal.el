@@ -121,7 +121,7 @@ Extracted from current `ewal' palette.")
   "`spacemacs-evil-cursors' compatible TTY colors.
 Extracted from current `ewal' palette.")
 
-(defcustom ewal-use-pcache-p (with-eval-after-load 'pcache t)
+(defcustom ewal-use-pcache-p (not (null (require 'pcache nil t)))
   "Whether to use pcache to store `ewal' variables.
 Since this fetaure depends on `pcache', and computing `ewal'
 variables is not all that costly, `ewal-use-pcache-p' defaults to
