@@ -151,28 +151,28 @@ the returned alist."
             (append special-colors cannonical-colors)))))))
 
 ;; Color helper functions, shamelessly *borrowed* from solarized
-(defun ewal--name-to-rgb (color)
+(defun ewal--color-name-to-rgb (color)
   "Retrieves the hex string represented the named COLOR (e.g. \"red\")."
   (cl-loop with div = (float (car (tty-color-standard-values "#ffffff")))
            for x in (tty-color-standard-values (downcase color))
            collect (/ x div)))
 
-(defun ewal--blend (color1 color2 alpha)
+(defun ewal--color-blend (color1 color2 alpha)
   "Blend COLOR1 and COLOR2 (hex strings) together by a coefficient ALPHA.
 \(a float between 0 and 1\)"
   (when (and color1 color2)
     (cond ((and color1 color2 (symbolp color1) (symbolp color2))
-           (ewal--blend (ewal--color color1) (ewal--color color2) alpha))
+           (ewal--color-blend (ewal--color color1) (ewal--color color2) alpha))
 
           ((or (listp color1) (listp color2))
            (cl-loop for x in color1
                     when (if (listp color2) (pop color2) color2)
-                    collect (ewal--blend x it alpha)))
+                    collect (ewal--color-blend x it alpha)))
 
           ((and (string-prefix-p "#" color1) (string-prefix-p "#" color2))
            (apply (lambda (r g b) (format "#%02x%02x%02x" (* r 255) (* g 255) (* b 255)))
-                  (cl-loop for it    in (ewal--name-to-rgb color1)
-                           for other in (ewal--name-to-rgb color2)
+                  (cl-loop for it    in (ewal--color-name-to-rgb color1)
+                           for other in (ewal--color-name-to-rgb color2)
                            collect (+ (* alpha it) (* other (- 1 alpha))))))
 
           (t color1))))
@@ -187,7 +187,7 @@ the returned alist."
          (cl-loop for c in color collect (ewal--color-darken c alpha)))
 
         (t
-         (ewal--blend color "#000000" (- 1 alpha)))))
+         (ewal--color-blend color "#000000" (- 1 alpha)))))
 
 (defun ewal--color-lighten (color alpha)
   "Brighten a COLOR (a hexidecimal string) by a coefficient ALPHA.
@@ -199,24 +199,26 @@ the returned alist."
          (cl-loop for c in color collect (ewal--color-lighten c alpha)))
 
         (t
-         (ewal--blend color "#FFFFFF" (- 1 alpha)))))
+         (ewal--color-blend color "#FFFFFF" (- 1 alpha)))))
 
-(defun ewal--extend-base-color (color num-degrees degree-size)
+(defun ewal--extend-base-color (color num-shades shade-percent-difference)
   "Extend \(darken \(-\) or lighten \(+\)\) COLOR.
 Do so by 2 * NUM-DEGREES \(NUM-DEGREES lighter, and NUM-DEGREES
 darker\), in increments of DEGREE-SIZE percentage points. Return
 list of extended colors"
   (let ((extended-color-list ()))
-    (dotimes (i (+ 1 num-degrees) extended-color-list)
+    (dotimes (i (+ 1 num-shades) extended-color-list)
       (add-to-list 'extended-color-list
-                   (ewal--color-darken color (/ (* i degree-size) (float 100)))))
+                   (ewal--color-darken
+                    color (/ (* i shade-percent-difference) (float 100)))))
     (add-to-list 'extended-color-list color t)
-    (dotimes (i (+ 1 num-degrees) extended-color-list)
+    (dotimes (i (+ 1 num-shades) extended-color-list)
       (add-to-list 'extended-color-list
-                   (ewal--color-lighten color (/ (* i degree-size) (float 100)))
+                   (ewal--color-lighten
+                    color (/ (* i shade-percent-difference) (float 100)))
                    t))))
 
-(defun ewal--extend-base-palette (num-degrees degree-size &optional palette)
+(defun ewal--extend-base-palette (num-shades shade-percent-difference &optional palette)
   "Use `ewal--extend-base-color' to extend entire base PALETTE.
 which defaults to `ewal-base-palette' and returns an
 extended palette alist intended to be stored in
@@ -229,8 +231,8 @@ percentage points."
     (cl-loop for (key . value)
              in palette
              collect `(,key . ,(ewal--extend-base-color
-                                value num-degrees
-                                degree-size)))))
+                                value num-shades
+                                shade-percent-difference)))))
 
 (defun ewal-get-color (color &optional shade tty approximate palette)
   "Return SHADE of COLOR from current `ewal' PALETTE.
@@ -250,11 +252,15 @@ default (non-extended) wal color."
       (let ((bound-color (if return-color
                              return-color
                            (car (last (alist-get color palette))))))
+        ;; pick TTY compatible color
         (if tty
             (if approximate
+                ;; pick closest of `tty-defined-color-alist'
                 (apply 'color-rgb-to-hex
                        (cddr (tty-color-approximate
                               (tty-color-standard-values bound-color))))
+              ;; pick unmodified wal color that should be supported in a TTY
+              ;; through wal sequences/login shell-script
               (nth middle (alist-get color palette)))
           bound-color)))))
 
