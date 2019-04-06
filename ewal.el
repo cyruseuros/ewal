@@ -10,7 +10,7 @@
 ;;
 ;; Version: 0.1
 ;; Keywords: color, theme, generator, wal, pywal
-;; Package-Requires: ((emacs "24") (cl-lib) (json) (term/tty-colors))
+;; Package-Requires: ((emacs "24") (cl-lib) (json))
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
