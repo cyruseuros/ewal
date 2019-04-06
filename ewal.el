@@ -162,7 +162,8 @@ the returned alist."
 \(a float between 0 and 1\)"
   (when (and color1 color2)
     (cond ((and color1 color2 (symbolp color1) (symbolp color2))
-           (ewal--color-blend (ewal--color color1) (ewal--color color2) alpha))
+           (ewal--color-blend (ewal-get-color color1 0)
+                              (ewal-get-color color2 0) alpha))
 
           ((or (listp color1) (listp color2))
            (cl-loop for x in color1
@@ -181,7 +182,7 @@ the returned alist."
   "Darken a COLOR \(a hexidecimal string\) by a coefficient ALPHA.
 \(a float between 0 and 1\)."
   (cond ((and color (symbolp color))
-         (ewal--color-darken (ewal--color color) alpha))
+         (ewal--color-darken (ewal-get-color color 0) alpha))
 
         ((listp color)
          (cl-loop for c in color collect (ewal--color-darken c alpha)))
@@ -193,7 +194,7 @@ the returned alist."
   "Brighten a COLOR (a hexidecimal string) by a coefficient ALPHA.
 \(a float between 0 and 1\)."
   (cond ((and color (symbolp color))
-         (ewal--color-lighten (ewal--color color) alpha))
+         (ewal--color-lighten (ewal-get-color color 0) alpha))
 
         ((listp color)
          (cl-loop for c in color collect (ewal--color-lighten c alpha)))
@@ -203,9 +204,9 @@ the returned alist."
 
 (defun ewal--extend-base-color (color num-shades shade-percent-difference)
   "Extend \(darken \(-\) or lighten \(+\)\) COLOR.
-Do so by 2 * NUM-DEGREES \(NUM-DEGREES lighter, and NUM-DEGREES
-darker\), in increments of DEGREE-SIZE percentage points. Return
-list of extended colors"
+Do so by 2 * NUM-SHADES \(NUM-SHADES lighter, and NUM-SHADES
+darker\), in increments of SHADE-PERCENT-DIFFERENCE percentage
+points. Return list of extended colors"
   (let ((extended-color-list ()))
     (dotimes (i (+ 1 num-shades) extended-color-list)
       (add-to-list 'extended-color-list
@@ -220,19 +221,26 @@ list of extended colors"
 
 (defun ewal--extend-base-palette (num-shades shade-percent-difference &optional palette)
   "Use `ewal--extend-base-color' to extend entire base PALETTE.
-which defaults to `ewal-base-palette' and returns an
-extended palette alist intended to be stored in
-`ewal-extended-palette'. Like
-`ewal--extend-base-color', extend \(darken \(-\) or
-lighten \(+\)\) COLOR. Do so by 2 * NUM-DEGREES \(NUM-DEGREES
-lighter, and NUM-DEGREES darker\), in increments of DEGREE-SIZE
-percentage points."
+which defaults to `ewal-base-palette' and returns an extended
+palette alist intended to be stored in `ewal-extended-palette'.
+Like `ewal--extend-base-color', extend \(darken \(-\) or lighten
+\(+\)\) COLOR. Do so by 2 * NUM-SHADES \(NUM-SHADES lighter, and
+NUM-SHADES darker\), in increments of SHADE-PERCENT-DIFFERENCE
+percentage points. Return list of extended colors"
   (let ((palette (or palette ewal-base-palette)))
     (cl-loop for (key . value)
              in palette
              collect `(,key . ,(ewal--extend-base-color
                                 value num-shades
                                 shade-percent-difference)))))
+
+(defun ewal--tty-color-approximate-hex (color)
+  "Use `tty-color-approximate' to approximate COLOR.
+Find closest color to COLOR in `tty-defined-color-alist', and
+return it."
+  (apply 'color-rgb-to-hex
+         (cddr (tty-color-approximate
+                (tty-color-standard-values color)))))
 
 (defun ewal-get-color (color &optional shade tty approximate palette)
   "Return SHADE of COLOR from current `ewal' PALETTE.
@@ -242,27 +250,24 @@ defaults to 0, returning original wal COLOR. If SHADE exceeds
 number of available shades, the darkest/lightest shade is
 returned. If TTY is t, return original, TTY compatible `wal'
 color regardless od SHADE. If APPROXIMATE is set, approximate
-color using `tty-color-approximate', otherwise return
+color using `ewal--tty-color-approximate-hex', otherwise return
 default (non-extended) wal color."
   (let ((palette (or palette ewal-extended-palette))
         (tty (or tty nil))
         (middle (/ (- (length (car ewal-extended-palette)) 1) 2))
         (shade (or shade 0)))
     (let ((return-color (nth (+ middle shade) (alist-get color palette))))
-      (let ((bound-color (if return-color
-                             return-color
-                           (car (last (alist-get color palette))))))
-        ;; pick TTY compatible color
+      (let ((bound-return-color (if return-color
+                                    return-color
+                                  (car (last (alist-get color palette))))))
+        ;; TTY compatible color
         (if tty
             (if approximate
-                ;; pick closest of `tty-defined-color-alist'
-                (apply 'color-rgb-to-hex
-                       (cddr (tty-color-approximate
-                              (tty-color-standard-values bound-color))))
-              ;; pick unmodified wal color that should be supported in a TTY
-              ;; through wal sequences/login shell-script
+                ;; closest of `tty-defined-color-alist'
+                (ewal--tty-color-approximate-hex bound-return-color)
+              ;; unmodified color that should be supported in a TTY by wal.
               (nth middle (alist-get color palette)))
-          bound-color)))))
+          bound-return-color)))))
 
 (defun ewal--generate-spacemacs-theme-colors (&optional tty
                                                         primary-accent-color
@@ -369,20 +374,36 @@ Otherwise regenerate palettes and colors."
     (setq ewal-spacemacs-evil-cursors-tty-colors
           (ewal--generate-spacemacs-evil-cursors-colors t)))
 
-(defun ewal-get-spacemacs-theme-colors (&optional tty)
+(defun ewal--vars-loaded-p ()
+  "Check if all `ewal' variables have been set."
+  (or
+   (null 'ewal-base-palette)
+   (null 'ewal-extended-palette)
+   (null 'ewal-spacemacs-theme-gui-colors)
+   (null 'ewal-spacemacs-theme-tty-colors)
+   (null 'ewal-spacemacs-evil-cursors-gui-colors)
+   (null 'ewal-spacemacs-evil-cursors-tty-colors)))
+
+(defun ewal-get-spacemacs-theme-colors (&optional force-reload tty)
   "Get `spacemacs-theme' colors.
-For usage see: <https://github.com/nashamri/spacemacs-theme>.
-TTY defaults to return value of `ewal--use-tty-colors-p'."
-  (ewal-load-ewal-theme)
+For usage see: <https://github.com/nashamri/spacemacs-theme>. To
+reload `ewal' environment variables before returning colors even
+if they have already been computed, set FORCE-RELOAD to t. TTY
+defaults to return value of `ewal--use-tty-colors-p'."
+  (when (or (not (ewal--vars-loaded-p)) force-reload)
+    (ewal-load-ewal-theme))
   (let ((tty (ewal--use-tty-colors-p tty)))
     (if tty
         ewal-spacemacs-theme-tty-colors
       ewal-spacemacs-theme-gui-colors)))
 
-(defun ewal-get-spacemacs-evil-cursors-colors (&optional tty)
+(defun ewal-get-spacemacs-evil-cursors-colors (&optional force-reload tty)
   "Get `spacemacs-evil-cursors' colors.
+To reload `ewal' environment variables before returning colors
+even if they have already been computed, set FORCE-RELOAD to t.
 TTY defaults to return value of `ewal--use-tty-colors-p'."
-  (ewal-load-ewal-theme)
+  (when (or (not (ewal--vars-loaded-p)) force-reload)
+    (ewal-load-ewal-theme))
   (let ((tty (ewal--use-tty-colors-p tty)))
     (if tty
         ewal-spacemacs-evil-cursors-tty-colors
