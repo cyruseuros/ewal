@@ -9,7 +9,7 @@
 ;;
 ;; Version: 0.1
 ;; Keywords: color, theme, generator, wal, pywal
-;; Package-Requires: ((emacs "24") (cl-lib) (json) (color) (term/tty-colors))
+;; Package-Requires: ((emacs "24") (cl-lib) (json) (term/tty-colors))
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -45,7 +45,6 @@
 ;; deps
 (require 'json)
 (require 'cl-lib)
-(require 'color)
 (require 'term/tty-colors)
 
 (defgroup ewal nil
@@ -207,7 +206,7 @@ Do so by 2 * NUM-DEGREES \(NUM-DEGREES lighter, and NUM-DEGREES
 darker\), in increments of DEGREE-SIZE percentage points. Return
 list of extended colors"
   (let ((extended-color-list ()))
-    (dotimes (i num-degrees extended-color-list)
+    (dotimes (i (+ 1 num-degrees) extended-color-list)
       (add-to-list 'extended-color-list
                    (ewal--color-darken color (/ (* i degree-size) (float 100)))))
     (add-to-list 'extended-color-list color t)
@@ -226,14 +225,11 @@ lighten \(+\)\) COLOR. Do so by 2 * NUM-DEGREES \(NUM-DEGREES
 lighter, and NUM-DEGREES darker\), in increments of DEGREE-SIZE
 percentage points."
   (let ((palette (or palette ewal-base-palette)))
-    (cl-loop for
-             (key . value)
-             in
-             palette
-             collect
-             `(,key
-               . ,(ewal--extend-base-color value num-degrees
-                                                degree-size)))))
+    (cl-loop for (key . value)
+             in palette
+             collect `(,key . ,(ewal--extend-base-color
+                                value num-degrees
+                                degree-size)))))
 
 (defun ewal-get-color (color &optional shade tty approximate palette)
   "Return SHADE of COLOR from current `ewal' PALETTE.
