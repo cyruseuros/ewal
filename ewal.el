@@ -3,6 +3,7 @@
 
 ;; Copyright (C) 2019 Uros Perisic
 ;; Copyright (C) 2019 Grant Shangreaux
+;; Copyright (C) 2016-2018 Henrik Lissner
 
 ;; Author: Uros Perisic
 ;; URL: <https://gitlab.com/jjzmajic/ewal.el>
