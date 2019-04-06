@@ -47,9 +47,6 @@
 (require 'cl-lib)
 (require 'color)
 (require 'term/tty-colors)
-;; optional deps
-(require 'pcache nil t)
-;; declare undetected functions
 
 (defgroup ewal nil
   "ewal options."
@@ -121,54 +118,11 @@ Extracted from current `ewal' palette.")
   "`spacemacs-evil-cursors' compatible TTY colors.
 Extracted from current `ewal' palette.")
 
-(defcustom ewal-use-pcache-p (with-eval-after-load 'pcache t)
-  "Whether to use pcache to store `ewal' variables.
-Since this fetaure depends on `pcache', and computing `ewal'
-variables is not all that costly, `ewal-use-pcache-p' defaults to
-the return value of \(not \(null \(require 'pcache nil t\)\)\)."
-  :type 'boolean
-  :group 'ewal)
-
-(defvar ewal--pcache-repo-name
-  (when ewal-use-pcache-p "ewal")
-  "`pcache' repository name used by `ewal'.
-Only set when `ewal-use-pcache-p' is t.")
-
-(defvar ewal--pcache-repo
-  (when ewal-use-pcache-p
-    (pcache-repository ewal--pcache-repo-name))
-  "`pcache' repository used by `ewal'.
-Only set when `ewal-use-pcache-p' is t.")
-
-(defvar ewal--pcache-repo-file
-  (when ewal-use-pcache-p
-    (concat (file-name-as-directory pcache-directory)
-            ewal--pcache-repo-name))
-  "`pcache' repository file used by `ewal'.
-Only set when `ewal-use-pcache-p' is t.")
-
-(defun ewal--cache-valid-p ()
-  "Check whether `ewal' pcache has expired."
-  (file-newer-than-file-p ewal--pcache-repo-file
-                          ewal--wal-cache-json-file))
-
-(defun ewal--load-from-cache-p ()
-  "Check whether `wal' variables should be loaded from cache.
-Do so by checking whether `ewal-use-pcache-p' is t, and whether
-`ewal--cache-valid-p'."
-  (and ewal-use-pcache-p (ewal--cache-valid-p)))
-
 (defun ewal--use-tty-colors-p (tty)
   "Utility function to check if TTY colors should be used."
   (if (boundp tty) tty
     (or ewal-force-tty-colors
         (display-graphic-p))))
-
-(defun ewal-clear-cache ()
-  "Clear ewal cache."
-  (interactive)
-  (when ewal-use-pcache-p
-    (pcache-destroy-repository ewal--pcache-repo-name)))
 
 (defun ewal--load-wal-theme (&optional json color-names)
   "Read JSON as the most complete of the cached wal files.
@@ -348,52 +302,20 @@ TTY specifies whether to use TTY or GUI colors."
       ("iedit" ,(ewal-get-color 'magenta -4 tty) box)
       ("iedit-insert" ,(ewal-get-color 'magenta -4 tty) (bar . 2)))))
 
-(defun ewal--cache-ewal-theme ()
-  "Cache all `ewal' palettes and colors."
-  (let ((json-encoding-pretty-print t))
-    (progn
-      (pcache-put ewal--pcache-repo 'ewal-base-palette
-                  ewal-base-palette)
-      (pcache-put ewal--pcache-repo 'ewal-extended-palette
-                  ewal-extended-palette)
-      (pcache-put ewal--pcache-repo 'ewal-spacemacs-theme-gui-colors
-                  ewal-spacemacs-theme-gui-colors)
-      (pcache-put ewal--pcache-repo 'ewal-spacemacs-theme-tty-colors
-                  ewal-spacemacs-theme-tty-colors)
-      (pcache-put ewal--pcache-repo 'ewal-spacemacs-evil-cursors-gui-colors
-                  ewal-spacemacs-evil-cursors-gui-colors)
-      (pcache-put ewal--pcache-repo 'ewal-spacemacs-evil-cursors-tty-colors
-                  ewal-spacemacs-evil-cursors-tty-colors))))
-
 (defun ewal-load-ewal-theme ()
   "Load all `ewal' palettes and colors.
 If `ewal--load-from-cache-p' returns t, load from cache.
 Otherwise regenerate palettes and colors."
-  (if (ewal--load-from-cache-p)
-      (progn
-        (setq ewal-base-palette (pcache-get ewal--pcache-repo 'ewal-base-palette))
-        (setq ewal-extended-palette (pcache-get ewal--pcache-repo 'ewal-extended-palette))
-        (setq ewal-spacemacs-theme-gui-colors
-              (pcache-get ewal--pcache-repo 'ewal-spacemacs-theme-gui-colors))
-        (setq ewal-spacemacs-theme-tty-colors
-              (pcache-get ewal--pcache-repo 'ewal-spacemacs-theme-tty-colors))
-        (setq ewal-spacemacs-evil-cursors-gui-colors
-              (pcache-get ewal--pcache-repo 'ewal-spacemacs-evil-cursors-gui-colors))
-        (setq ewal-spacemacs-evil-cursors-tty-colors
-              (pcache-get ewal--pcache-repo 'ewal-spacemacs-evil-cursors-tty-colors)))
-    (progn
-      (when ewal-use-pcache-p (ewal-clear-cache))
-      (setq ewal-base-palette (ewal--load-wal-theme))
-      (setq ewal-extended-palette (ewal--extend-base-palette 4 5))
-      (setq ewal-spacemacs-theme-gui-colors
-            (ewal--generate-spacemacs-theme-colors nil))
-      (setq ewal-spacemacs-theme-tty-colors
-            (ewal--generate-spacemacs-theme-colors t))
-      (setq ewal-spacemacs-evil-cursors-gui-colors
-            (ewal--generate-spacemacs-evil-cursors-colors nil))
-      (setq ewal-spacemacs-evil-cursors-tty-colors
-            (ewal--generate-spacemacs-evil-cursors-colors t))
-      (when ewal-use-pcache-p (ewal--cache-ewal-theme)))))
+    (setq ewal-base-palette (ewal--load-wal-theme))
+    (setq ewal-extended-palette (ewal--extend-base-palette 4 5))
+    (setq ewal-spacemacs-theme-gui-colors
+          (ewal--generate-spacemacs-theme-colors nil))
+    (setq ewal-spacemacs-theme-tty-colors
+          (ewal--generate-spacemacs-theme-colors t))
+    (setq ewal-spacemacs-evil-cursors-gui-colors
+          (ewal--generate-spacemacs-evil-cursors-colors nil))
+    (setq ewal-spacemacs-evil-cursors-tty-colors
+          (ewal--generate-spacemacs-evil-cursors-colors t)))
 
 (defun ewal-get-spacemacs-theme-colors (&optional tty)
   "Get `spacemacs-theme' colors.
