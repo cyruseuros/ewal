@@ -1,0 +1,47 @@
+* Summary
+
+This is a [[https://github.com/dylanaraps/pywal][=pywal=]]based theme generator for Emacs with an eye towards Spacemacs
+[[https://github.com/syl20bnr/spacemacs][=Spacemacs=]], and [[https://github.com/nashamri/spacemacs-theme][=Spacemacs-theme=]], but no dependencies on either (or any
+external dependencies for that matter), so you can use it to colorize your
+vanilla Emacs as well (using the lower-level =`ewal-get-color'= utility
+function).
+
+=ewal= doesn't only extract special and regular colors from =pywal=, it adds
+extra shades to them which it can intelligently suppress in a TTY
+context. =ewal= will only return base =pywal= colors in a TTY, which would
+ordinarily not be supported, but can be displayed if the following command is
+run:
+#+BEGIN_SRC shell
+source ~/.cache/wal/colors-tty.sh
+#+END_SRC
+
+If don't want to do that, it also supports approximating colors returned by
+=`tty-color-alist'=.
+
+It currently fully supports =Spacemacs-theme=, colorizing everything it does,
+with very fine grained control if you want it, or using an automatic setup
+function if you don't. It can even customize spacemac cursor colors! Here's the
+config I have in my =`spacemacs/user-init'=:
+#+BEGIN_SRC emacs-lisp :tangle yes
+(load-file "~/projects/ewal/ewal.el")
+(setq spacemacs-evil-cursors (ewal-get-spacemacs-evil-cursors-colors))
+(setq spacemacs-theme-custom-colors (ewal-get-spacemacs-theme-colors))
+(setq spacemacs-theme-org-highlight t)
+(setq theming-modifications
+      `((spacemacs-dark
+          (page-break-lines :background ,(ewal-get-color 'background -2))
+          (line-number :background ,(ewal-get-color 'background 0)))))
+(load-theme 'spacemacs-dark t t)
+#+END_SRC
+
+My hope is that =`ewal'= will remain theme agnostic, with people contributing
+functions like =`ewal-get-spacemacs-theme-colors'= for other popular themes such
+as [[https://github.com/bbatsov/solarized-emacs][Solarized-emacs]], making it easy to keep the style of your preferred theme,
+while adapting it to the rest of your theming setup. No problem should ever have
+to be solved twice, so PRs are more than welcome!
+
+* Screenshots
+[[./scrots/sexy-material.png]]
+[[./scrots/base16-material.png]]
+[[./scrots/base16-onedark.png]]
+[[./scrots/gruvbox.png]]
