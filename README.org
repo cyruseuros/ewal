@@ -1,10 +1,9 @@
 * Summary
 
-This is a [[https://github.com/dylanaraps/pywal][=pywal=]]based theme generator for Emacs with an eye towards Spacemacs
-[[https://github.com/syl20bnr/spacemacs][=Spacemacs=]], and [[https://github.com/nashamri/spacemacs-theme][=Spacemacs-theme=]], but no dependencies on either (or any
-external dependencies for that matter), so you can use it to colorize your
-vanilla Emacs as well (using the lower-level =`ewal-get-color'= utility
-function).
+This is a [[https://github.com/dylanaraps/pywal][pywal]]based theme generator for Emacs with an eye towards [[https://github.com/syl20bnr/spacemacs][Spacemacs]],
+and [[https://github.com/nashamri/spacemacs-theme][spacemacs-theme]], but no dependencies on either (or any external dependencies
+for that matter), so you can use it to colorize your vanilla Emacs as well
+(using the lower-level =ewal-get-color= utility function).
 
 =ewal= doesn't only extract special and regular colors from =pywal=, it adds
 extra shades to them which it can intelligently suppress in a TTY
@@ -15,13 +14,13 @@ run:
 source ~/.cache/wal/colors-tty.sh
 #+END_SRC
 
-If don't want to do that, it also supports approximating colors returned by
-=`tty-color-alist'=.
+If you don't want to do that, it also supports approximating colors returned by
+=tty-color-alist=.
 
-It currently fully supports =Spacemacs-theme=, colorizing everything it does,
-with very fine grained control if you want it, or using an automatic setup
-function if you don't. It can even customize spacemac cursor colors! Here's the
-config I have in my =`spacemacs/user-init'=:
+It currently fully supports =spacemacs-theme=, colorizing everything it does,
+with fine grained control if you want it, or using an automatic setup function
+if you don't. It can even customize Spacemacs cursor colors! Here's the config I
+have in my =spacemacs/user-init=:
 #+BEGIN_SRC emacs-lisp :tangle yes
 (load-file "~/projects/ewal/ewal.el")
 (setq spacemacs-evil-cursors (ewal-get-spacemacs-evil-cursors-colors))
@@ -34,14 +33,34 @@ config I have in my =`spacemacs/user-init'=:
 (load-theme 'spacemacs-dark t t)
 #+END_SRC
 
-My hope is that =`ewal'= will remain theme agnostic, with people contributing
-functions like =`ewal-get-spacemacs-theme-colors'= for other popular themes such
-as [[https://github.com/bbatsov/solarized-emacs][Solarized-emacs]], making it easy to keep the style of your preferred theme,
-while adapting it to the rest of your theming setup. No problem should ever have
-to be solved twice, so PRs are more than welcome!
+My hope is that =ewal= will remain theme agnostic, with people contributing
+functions like =ewal-get-spacemacs-theme-colors= for other popular themes such
+as [[https://github.com/bbatsov/solarized-emacs][solarized-emacs]], making it easy to keep the style of your preferred theme,
+while adapting it to the rest of your theming setup. But, of course, it's FOSS!
+Do whatever you want with it, just make the world a little niftier in the
+process ;)
+
+PRs are more than welcome!
+
+** Note to =Spacemacs= and =spacemacs-theme= Users and Maintainers 
+If you're using =Spacemacs-theme= as jut another package in vanilla =Emacs=, you
+should experience no problems.
+
+However, since =spacemacs-theme= is part of the =spacemacs-bootstrap= layer, it
+is loaded before everything else. And since =spacemacs/user-init= is called
+before =load-path= is fully populated, it's impossible to =require= this
+package, while using =with-eval-after-load= sets the requisite environment
+variables long after =spacemacs-theme= is loaded.
+
+Do you have any advice on integrating this into the =Spacemacs= boot process,
+and eventually into the repo itself?
 
 * Screenshots
+#+ATTR_HTML: :width 1000px
 [[./scrots/sexy-material.png]]
+#+ATTR_HTML: :width 1000px
 [[./scrots/base16-material.png]]
+#+ATTR_HTML: :width 1000px
 [[./scrots/base16-onedark.png]]
+#+ATTR_HTML: :width 1000px
 [[./scrots/gruvbox.png]]
