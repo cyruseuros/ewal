@@ -150,6 +150,57 @@ the returned alist."
                  (cl-pairlis color-names regular-color-values)))
             (append special-colors cannonical-colors)))))))
 
+;; Color helper functions, shamelessly *borrowed* from solarized
+(defun ewal--name-to-rgb (color)
+  "Retrieves the hex string represented the named COLOR (e.g. \"red\")."
+  (cl-loop with div = (float (car (tty-color-standard-values "#ffffff")))
+           for x in (tty-color-standard-values (downcase color))
+           collect (/ x div)))
+
+(defun ewal--blend (color1 color2 alpha)
+  "Blend COLOR1 and COLOR2 (hex strings) together by a coefficient ALPHA.
+\(a float between 0 and 1\)"
+  (when (and color1 color2)
+    (cond ((and color1 color2 (symbolp color1) (symbolp color2))
+           (ewal--blend (ewal--color color1) (ewal--color color2) alpha))
+
+          ((or (listp color1) (listp color2))
+           (cl-loop for x in color1
+                    when (if (listp color2) (pop color2) color2)
+                    collect (ewal--blend x it alpha)))
+
+          ((and (string-prefix-p "#" color1) (string-prefix-p "#" color2))
+           (apply (lambda (r g b) (format "#%02x%02x%02x" (* r 255) (* g 255) (* b 255)))
+                  (cl-loop for it    in (ewal--name-to-rgb color1)
+                           for other in (ewal--name-to-rgb color2)
+                           collect (+ (* alpha it) (* other (- 1 alpha))))))
+
+          (t color1))))
+
+(defun ewal--color-darken (color alpha)
+  "Darken a COLOR \(a hexidecimal string\) by a coefficient ALPHA.
+\(a float between 0 and 1\)."
+  (cond ((and color (symbolp color))
+         (ewal--color-darken (ewal--color color) alpha))
+
+        ((listp color)
+         (cl-loop for c in color collect (ewal--color-darken c alpha)))
+
+        (t
+         (ewal--blend color "#000000" (- 1 alpha)))))
+
+(defun ewal--color-lighten (color alpha)
+  "Brighten a COLOR (a hexidecimal string) by a coefficient ALPHA.
+\(a float between 0 and 1\)."
+  (cond ((and color (symbolp color))
+         (ewal--color-lighten (ewal--color color) alpha))
+
+        ((listp color)
+         (cl-loop for c in color collect (ewal--color-lighten c alpha)))
+
+        (t
+         (ewal--blend color "#FFFFFF" (- 1 alpha)))))
+
 (defun ewal--extend-base-color (color num-degrees degree-size)
   "Extend \(darken \(-\) or lighten \(+\)\) COLOR.
 Do so by 2 * NUM-DEGREES \(NUM-DEGREES lighter, and NUM-DEGREES
@@ -158,13 +209,11 @@ list of extended colors"
   (let ((extended-color-list ()))
     (dotimes (i num-degrees extended-color-list)
       (add-to-list 'extended-color-list
-                   (color-darken-name color
-                                      (* i degree-size))))
+                   (ewal--color-darken color (/ (* i degree-size) (float 100)))))
     (add-to-list 'extended-color-list color t)
     (dotimes (i (+ 1 num-degrees) extended-color-list)
       (add-to-list 'extended-color-list
-                   (color-lighten-name color
-                                      (* i degree-size))
+                   (ewal--color-lighten color (/ (* i degree-size) (float 100)))
                    t))))
 
 (defun ewal--extend-base-palette (num-degrees degree-size &optional palette)
