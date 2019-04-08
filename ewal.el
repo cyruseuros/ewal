@@ -124,7 +124,7 @@ Extracted from current `ewal' palette.")
     (or ewal-force-tty-colors
         (display-graphic-p))))
 
-(defun ewal--load-wal-theme (&optional json color-names)
+(defun ewal--load-wal-colors (&optional json color-names)
   "Read JSON as the most complete of the cached wal files.
 COLOR-NAMES will be associated with the first 8 colors of the
 cached wal colors. COLOR-NAMES are meant to be used in
@@ -355,11 +355,11 @@ TTY specifies whether to use TTY or GUI colors."
       ("iedit" ,(ewal-get-color 'magenta -4 tty) box)
       ("iedit-insert" ,(ewal-get-color 'magenta -4 tty) (bar . 2)))))
 
-(defun ewal-load-ewal-theme ()
+(defun ewal-load-ewal-colors ()
   "Load all `ewal' palettes and colors.
 If `ewal--load-from-cache-p' returns t, load from cache.
 Otherwise regenerate palettes and colors."
-  (setf ewal-base-palette (ewal--load-wal-theme)
+  (setf ewal-base-palette (ewal--load-wal-colors)
         ewal-extended-palette (ewal--extend-base-palette 4 5)
         ewal-spacemacs-theme-gui-colors
         (ewal--generate-spacemacs-theme-colors nil)
@@ -387,7 +387,7 @@ reload `ewal' environment variables before returning colors even
 if they have already been computed, set FORCE-RELOAD to t. TTY
 defaults to return value of `ewal--use-tty-colors-p'."
   (when (or (not (ewal--vars-loaded-p)) force-reload)
-    (ewal-load-ewal-theme))
+    (ewal-load-ewal-colors))
   (let ((tty (ewal--use-tty-colors-p tty)))
     (if tty
         ewal-spacemacs-theme-tty-colors
@@ -399,7 +399,7 @@ To reload `ewal' environment variables before returning colors
 even if they have already been computed, set FORCE-RELOAD to t.
 TTY defaults to return value of `ewal--use-tty-colors-p'."
   (when (or (not (ewal--vars-loaded-p)) force-reload)
-    (ewal-load-ewal-theme))
+    (ewal-load-ewal-colors))
   (let ((tty (ewal--use-tty-colors-p tty)))
     (if tty
         ewal-spacemacs-evil-cursors-tty-colors
