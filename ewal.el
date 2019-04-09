@@ -1,5 +1,4 @@
-;;; ewal.el --- A wal-based <https://github.com/dylanaraps/pywal>, automatic,
-;;; terminal-aware Emacs theme generator.
+;;; ewal.el --- A pywal-based theme generator -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Uros Perisic
 ;; Copyright (C) 2019 Grant Shangreaux
