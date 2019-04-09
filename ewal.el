@@ -64,7 +64,7 @@
   "Location of cached wal theme in json format.")
 
 (defcustom ewal-ansi-color-name-symbols
-  (mapcar 'intern
+  (mapcar #'intern
           (cl-loop for (key . value)
                    in tty-defined-color-alist
                    collect key))
