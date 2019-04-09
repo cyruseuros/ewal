@@ -10,7 +10,7 @@
 ;;
 ;; Version: 0.1
 ;; Keywords: color, theme, generator, wal, pywal
-;; Package-Requires: ((emacs "24") (cl-lib) (json))
+;; Package-Requires: ((emacs "24") (cl-lib) (color) (json))
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -44,8 +44,9 @@
 ;;; Code:
 
 ;; deps
-(require 'json)
 (require 'cl-lib)
+(require 'color)
+(require 'json)
 (require 'term/tty-colors)
 
 (defgroup ewal nil
@@ -237,10 +238,11 @@ percentage points. Return list of extended colors"
   "Use `tty-color-approximate' to approximate COLOR.
 Find closest color to COLOR in `tty-defined-color-alist', and
 return it."
-  (apply 'color-rgb-to-hex
+  (apply #'color-rgb-to-hex
          (cddr (tty-color-approximate
                 (tty-color-standard-values color)))))
 
+;;;###autoload
 (defun ewal-get-color (color &optional shade tty approximate palette)
   "Return SHADE of COLOR from current `ewal' PALETTE.
 Choose color that is darker (-) or lightener (+) than COLOR
@@ -355,6 +357,7 @@ TTY specifies whether to use TTY or GUI colors."
       ("iedit" ,(ewal-get-color 'magenta -4 tty) box)
       ("iedit-insert" ,(ewal-get-color 'magenta -4 tty) (bar . 2)))))
 
+;;;###autoload
 (defun ewal-load-ewal-colors ()
   "Load all `ewal' palettes and colors.
 If `ewal--load-from-cache-p' returns t, load from cache.
@@ -380,6 +383,7 @@ Otherwise regenerate palettes and colors."
    (null 'ewal-spacemacs-evil-cursors-gui-colors)
    (null 'ewal-spacemacs-evil-cursors-tty-colors)))
 
+;;;###autoload
 (defun ewal-get-spacemacs-theme-colors (&optional force-reload tty)
   "Get `spacemacs-theme' colors.
 For usage see: <https://github.com/nashamri/spacemacs-theme>. To
@@ -393,6 +397,7 @@ defaults to return value of `ewal--use-tty-colors-p'."
         ewal-spacemacs-theme-tty-colors
       ewal-spacemacs-theme-gui-colors)))
 
+;;;###autoload
 (defun ewal-get-spacemacs-evil-cursors-colors (&optional force-reload tty)
   "Get `spacemacs-evil-cursors' colors.
 To reload `ewal' environment variables before returning colors
