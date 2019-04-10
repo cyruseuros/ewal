@@ -227,42 +227,32 @@ percentage points. Return list of extended colors"
              collect `(,key . ,(ewal--extend-base-color
                                 value num-shades shade-percent-difference)))))
 
-(defun ewal--tty-color-approximate-hex (color)
-  "Use `tty-color-approximate' to approximate COLOR.
-Find closest color to COLOR in `tty-defined-color-alist', and
-return it."
-  (apply #'color-rgb-to-hex
-         (cddr (tty-color-approximate
-                (tty-color-standard-values color)))))
-
 ;;;###autoload
-(defun ewal-get-color (color &optional shade tty approximate palette)
+(defun ewal-get-color (color &optional shade tty palette)
   "Return SHADE of COLOR from current `ewal' PALETTE.
 Choose color that is darker (-) or lightener (+) than COLOR
 \(must be one of `ewal-ansi-color-name-symbols'\) by SHADE. SHADE
 defaults to 0, returning original wal COLOR. If SHADE exceeds
 number of available shades, the darkest/lightest shade is
 returned. If TTY is t, return original, TTY compatible `wal'
-color regardless od SHADE. If APPROXIMATE is set, approximate
-color using `ewal--tty-color-approximate-hex', otherwise return
-default (non-extended) wal color."
+color regardless od SHADE."
   (let* ((palette (or palette ewal-extended-palette))
          (tty (or tty nil))
          (middle (/ (- (length (car ewal-extended-palette)) 1) 2))
          (shade (or shade 0))
-         (return-color (nth (+ middle shade) (alist-get color palette)))
-         (bound-return-color (if return-color
-                                 return-color
+         (original-color (nth middle (alist-get color palette)))
+         (requested-color (nth (+ middle shade) (alist-get color palette)))
+         (defined-requested-color (if requested-color
+                                 requested-color
                                (car (last (alist-get color palette))))))
     ;; TTY compatible color
     (if tty
-        (if approximate
-            ;; closest of `tty-defined-color-alist'
-            (ewal--tty-color-approximate-hex bound-return-color)
-          ;; unmodified color that should be supported in a TTY by wal.
-          (nth middle
-               (alist-get color palette)))
-      bound-return-color)))
+        (cond ((equal color 'background) "black")
+              ((equal color 'foreground) "white")
+              ;; let Emacs guess as pywal is inconsistent here
+              ((equal color 'cursor) original-color)
+              (t (symbol-name color)))
+      defined-requested-color)))
 
 (defun ewal--generate-spacemacs-theme-colors (&optional tty primary-accent-color secondary-accent-color)
   "Make theme colorscheme from theme palettes.
@@ -272,6 +262,7 @@ PRIMARY-ACCENT-COLOR sets the main theme color---defaults to
 SECONDARY-ACCENT-COLOR"
   (let* ((primary-accent-color (or primary-accent-color ewal-primary-accent-color))
          (secondary-accent-color (or secondary-accent-color ewal-secondary-accent-color))
+         (tty (ewal--use-tty-colors-p tty))
          (theme-colors
           `((act1          . ,(ewal-get-color 'background -3 tty))
             (act2          . ,(ewal-get-color primary-accent-color 0 tty))
