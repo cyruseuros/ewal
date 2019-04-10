@@ -11,18 +11,18 @@
 ;; Keywords: color, theme, generator, wal, pywal
 ;; Package-Requires: ((emacs "24") (cl-lib) (color) (json))
 
-;; This program is free software: you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
-;; (at your option) any later version.
+;; This program is free software: you can redistribute it and/or modify it under
+;; the terms of the GNU General Public License as published by the Free Software
+;; Foundation, either version 3 of the License, or (at your option) any later
+;; version.
 
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-;; GNU General Public License for more details.
+;; This program is distributed in the hope that it will be useful, but WITHOUT
+;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+;; FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+;; details.
 
-;; You should have received a copy of the GNU General Public License
-;; along with this program. If not, see <http://www.gnu.org/licenses/>.
+;; You should have received a copy of the GNU General Public License along with
+;; this program. If not, see <http://www.gnu.org/licenses/>.
 
 ;; This file is not part of Emacs.
 
@@ -33,12 +33,12 @@
 ;; <https://github.com/nashamri/spacemacs-theme>, but no dependencies on either,
 ;; so you can use it to colorize your vanilla Emacs as well.
 
-;; My hope is that `ewal' will remain theme agnostic, with people
-;; contributing functions like `ewal-get-spacemacs-theme-colors' for other
-;; popular themes such as `solarized-emacs'
-;; <https://github.com/bbatsov/solarized-emacs>, making it easy to keep the
-;; style of different themes, while adapting them to the rest of your theming
-;; setup. No problem should ever have to be solved twice!
+;; My hope is that `ewal' will remain theme agnostic, with people contributing
+;; functions like `ewal-get-spacemacs-theme-colors' for other popular themes
+;; such as `solarized-emacs' <https://github.com/bbatsov/solarized-emacs>,
+;; making it easy to keep the style of different themes, while adapting them to
+;; the rest of your theming setup. No problem should ever have to be solved
+;; twice!
 
 ;;; Code:
 
@@ -64,15 +64,15 @@
 
 (defcustom ewal-ansi-color-name-symbols
   (mapcar #'intern
-          (cl-loop for (key . value)
+          (cl-loop for (key . _value)
                    in tty-defined-color-alist
                    collect key))
   "The 8 most universaly supported TTY color names.
 They will be extracted from `ewal--cache-json-file', and
 with the right escape sequences applied using
-
+#+BEGIN_SRC shell
 source ${HOME}/.cache/wal/colors-tty.sh
-
+#+END_SRC
 should be viewable even in the Linux console (See
 https://github.com/dylanaraps/pywal/wiki/Getting-Started#applying-the-theme-to-new-terminals
 for more details). NOTE: Order matters."
@@ -140,12 +140,9 @@ the returned alist."
          (colors (json-read-file json))
          (special-colors (alist-get 'special colors))
          (regular-colors (alist-get 'colors colors))
-         (regular-color-values (cl-loop for
-                                        (key . value)
-                                        in
-                                        regular-colors
-                                        collect
-                                        value))
+         (regular-color-values (cl-loop for (_key . value)
+                                        in regular-colors
+                                        collect value))
         (cannonical-colors (cl-pairlis color-names regular-color-values)))
                                  (append special-colors cannonical-colors)))
 
@@ -182,10 +179,8 @@ the returned alist."
 \(a float between 0 and 1\)."
   (cond ((and color (symbolp color))
          (ewal--color-darken (ewal-get-color color 0) alpha))
-
         ((listp color)
          (cl-loop for c in color collect (ewal--color-darken c alpha)))
-
         (t
          (ewal--color-blend color "#000000" (- 1 alpha)))))
 
@@ -194,10 +189,8 @@ the returned alist."
 \(a float between 0 and 1\)."
   (cond ((and color (symbolp color))
          (ewal--color-lighten (ewal-get-color color 0) alpha))
-
         ((listp color)
          (cl-loop for c in color collect (ewal--color-lighten c alpha)))
-
         (t
          (ewal--color-blend color "#FFFFFF" (- 1 alpha)))))
 
@@ -206,14 +199,16 @@ the returned alist."
 Do so by 2 * NUM-SHADES \(NUM-SHADES lighter, and NUM-SHADES
 darker\), in increments of SHADE-PERCENT-DIFFERENCE percentage
 points. Return list of extended colors"
-  (let ((darker-colors (cl-loop for i from num-shades downto 1 by 1
-                                 collect (ewal--color-darken
-                                          color (/ (* i shade-percent-difference)
-                                                   (float 100)))))
-        (lighter-colors (cl-loop for i from 1 upto num-shades by 1
-                                collect (ewal--color-lighten
-                                         color (/ (* i shade-percent-difference)
-                                                  (float 100))))))
+  (let ((darker-colors
+         (cl-loop for i from num-shades downto 1 by 1
+                  collect (ewal--color-darken
+                          color (/ (* i shade-percent-difference)
+                                    (float 100)))))
+        (lighter-colors
+         (cl-loop for i from 1 upto num-shades by 1
+                  collect (ewal--color-lighten
+                            color (/ (* i shade-percent-difference)
+                                    (float 100))))))
     (append darker-colors (list color) lighter-colors)))
 
 (defun ewal--extend-base-palette (num-shades shade-percent-difference &optional palette)
@@ -228,8 +223,7 @@ percentage points. Return list of extended colors"
     (cl-loop for (key . value)
              in palette
              collect `(,key . ,(ewal--extend-base-color
-                                value num-shades
-                                shade-percent-difference)))))
+                                value num-shades shade-percent-difference)))))
 
 (defun ewal--tty-color-approximate-hex (color)
   "Use `tty-color-approximate' to approximate COLOR.
