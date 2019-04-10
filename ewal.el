@@ -206,17 +206,15 @@ the returned alist."
 Do so by 2 * NUM-SHADES \(NUM-SHADES lighter, and NUM-SHADES
 darker\), in increments of SHADE-PERCENT-DIFFERENCE percentage
 points. Return list of extended colors"
-  (let ((extended-color-list ()))
-    (dotimes (i (+ 1 num-shades) extended-color-list)
-      (add-to-list 'extended-color-list
-                   (ewal--color-darken
-                    color (/ (* i shade-percent-difference) (float 100)))))
-    (add-to-list 'extended-color-list color t)
-    (dotimes (i (+ 1 num-shades) extended-color-list)
-      (add-to-list 'extended-color-list
-                   (ewal--color-lighten
-                    color (/ (* i shade-percent-difference) (float 100)))
-                   t))))
+  (let ((darker-colors (cl-loop for i from num-shades downto 1 by 1
+                                 collect (ewal--color-darken
+                                          color (/ (* i shade-percent-difference)
+                                                   (float 100)))))
+        (lighter-colors (cl-loop for i from 1 upto num-shades by 1
+                                collect (ewal--color-lighten
+                                         color (/ (* i shade-percent-difference)
+                                                  (float 100))))))
+    (append darker-colors (list color) lighter-colors)))
 
 (defun ewal--extend-base-palette (num-shades shade-percent-difference &optional palette)
   "Use `ewal--extend-base-color' to extend entire base PALETTE.
