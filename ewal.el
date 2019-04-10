@@ -245,13 +245,8 @@ color regardless od SHADE."
          (defined-requested-color (if requested-color
                                  requested-color
                                (car (last (alist-get color palette))))))
-    ;; TTY compatible color
     (if tty
-        (cond ((equal color 'background) "black")
-              ((equal color 'foreground) "white")
-              ;; let Emacs guess as pywal is inconsistent here
-              ((equal color 'cursor) original-color)
-              (t (symbol-name color)))
+        original-color
       defined-requested-color)))
 
 (defun ewal--generate-spacemacs-theme-colors (&optional tty primary-accent-color secondary-accent-color)
