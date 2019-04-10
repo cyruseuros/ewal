@@ -5,11 +5,11 @@
 ;; Copyright (C) 2016-2018 Henrik Lissner
 
 ;; Author: Uros Perisic
-;; URL: <https://gitlab.com/jjzmajic/ewal.el>
+;; URL: https://gitlab.com/jjzmajic/ewal.el
 ;;
 ;; Version: 0.1
-;; Keywords: color, theme, generator, wal, pywal
-;; Package-Requires: ((emacs "24") (cl-lib) (color) (json))
+;; Keywords: faces
+;; Package-Requires: ((emacs "25"))
 
 ;; This program is free software: you can redistribute it and/or modify it under
 ;; the terms of the GNU General Public License as published by the Free Software
@@ -402,4 +402,5 @@ TTY defaults to return value of `ewal--use-tty-colors-p'."
       ewal-spacemacs-evil-cursors-gui-colors)))
 
 (provide 'ewal)
-;;; ewal ends here
+
+;;; ewal.el ends here
