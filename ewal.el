@@ -363,31 +363,42 @@ Otherwise regenerate palettes and colors."
    (null 'ewal-spacemacs-evil-cursors-tty-colors)))
 
 ;;;###autoload
-(defun ewal-get-spacemacs-theme-colors (&optional force-reload tty)
+(defun ewal-get-spacemacs-theme-colors (&optional apply force-reload tty)
   "Get `spacemacs-theme' colors.
-For usage see: <https://github.com/nashamri/spacemacs-theme>. To
+For usage see: <https://github.com/nashamri/spacemacs-theme>. If
+APPLY is t, set relevant environment variable for the user. To
 reload `ewal' environment variables before returning colors even
 if they have already been computed, set FORCE-RELOAD to t. TTY
 defaults to return value of `ewal--use-tty-colors-p'."
+
   (when (or (not (ewal--vars-loaded-p)) force-reload)
     (ewal-load-ewal-colors))
   (let ((tty (ewal--use-tty-colors-p tty)))
-    (if tty
-        ewal-spacemacs-theme-tty-colors
-      ewal-spacemacs-theme-gui-colors)))
+    (let ((colors
+           (if tty
+               ewal-spacemacs-theme-tty-colors
+             ewal-spacemacs-theme-gui-colors)))
+      (if apply
+          (setq spacemacs-theme-custom-colors colors)
+        colors))))
 
 ;;;###autoload
-(defun ewal-get-spacemacs-evil-cursors-colors (&optional force-reload tty)
+(defun ewal-get-spacemacs-evil-cursors-colors (&optional apply force-reload tty)
   "Get `spacemacs-evil-cursors' colors.
+If APPLY is t, set relevant environment variable for the user.
 To reload `ewal' environment variables before returning colors
 even if they have already been computed, set FORCE-RELOAD to t.
 TTY defaults to return value of `ewal--use-tty-colors-p'."
   (when (or (not (ewal--vars-loaded-p)) force-reload)
     (ewal-load-ewal-colors))
   (let ((tty (ewal--use-tty-colors-p tty)))
-    (if tty
-        ewal-spacemacs-evil-cursors-tty-colors
-      ewal-spacemacs-evil-cursors-gui-colors)))
+    (let ((colors
+           (if tty
+               ewal-spacemacs-evil-cursors-tty-colors
+             ewal-spacemacs-evil-cursors-gui-colors)))
+      (if apply
+          (setq spacemacs-evil-cursors colors)
+        colors))))
 
 (provide 'ewal)
 
