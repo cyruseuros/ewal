@@ -341,7 +341,7 @@ TTY specifies whether to use TTY or GUI colors."
       ("hybrid" ,(ewal-get-color 'blue 0 tty) (bar . 2))
       ("evilified" ,(ewal-get-color 'red 0 tty) box)
       ("visual" ,(ewal-get-color 'white -4 tty) (hbar . 2))
-      ("motion" ,(ewal-get-color 'magenta 0) box)
+      ("motion" ,(ewal-get-color 'magenta 0 tty) box)
       ("replace" ,(ewal-get-color 'red -4 tty) (hbar . 2))
       ("lisp" ,(ewal-get-color 'magenta 4 tty) box)
       ("iedit" ,(ewal-get-color 'magenta -4 tty) box)
@@ -351,12 +351,17 @@ TTY specifies whether to use TTY or GUI colors."
   "Use wal colors to customize vanilla Emacs Evil cursor colors.
 TTY specifies whether to use TTY or GUI colors."
   (let ((tty (ewal--use-tty-colors-p tty)))
-    `('evil-normal-state-cursor (,(ewal-get-color 'cursor 0 tty) box)
-      'evil-insert-state-cursor (,(ewal-get-color 'green 0 tty) (bar . 2))
-      'evil-emacs-state-cursor (,(ewal-get-color 'blue 0 tty) box)
-      'evil-visual-state-cursor (,(ewal-get-color 'white -4 tty) (hbar . 2))
-      'evil-motion-state-cursor (,(ewal-get-color 'magenta 0) box)
-      'evil-replace-state-cursor (,(ewal-get-color 'red -4 tty) (hbar . 2)))))
+    `((evil-normal-state-cursor (,(ewal-get-color 'cursor 0 tty) box))
+      (evil-insert-state-cursor (,(ewal-get-color 'green 0 tty) (bar . 2)))
+      (evil-emacs-state-cursor (,(ewal-get-color 'blue 0 tty) box))
+      (evil-hybrid-state-cursor (,(ewal-get-color 'blue 0 tty) (bar . 2)))
+      (evil-evilified-state-cursor (,(ewal-get-color 'red 0 tty) box))
+      (evil-visual-state-cursor (,(ewal-get-color 'white -4 tty) (hbar . 2)))
+      (evil-motion-state-cursor (,(ewal-get-color 'magenta 0 tty) box))
+      (evil-replace-state-cursor (,(ewal-get-color 'red -4 tty) (hbar . 2)))
+      (evil-lisp-state-cursor (,(ewal-get-color 'magenta 4 tty) box))
+      (evil-iedit-state-cursor (,(ewal-get-color 'magenta -4 tty) box))
+      (evil-iedit-insert-state-cursor (,(ewal-get-color 'magenta -4 tty) (bar . 2))))))
 
 ;;;###autoload
 (defun ewal-load-ewal-colors ()
@@ -441,7 +446,8 @@ TTY defaults to return value of `ewal--use-tty-colors-p'."
                ewal-emacs-evil-cursors-tty-colors
              ewal-emacs-evil-cursors-gui-colors)))
       (if apply
-          (apply #'setq colors)
+          (cl-loop for (key . value) in colors
+                   do (set key value))
         colors))))
 
 (provide 'ewal)
