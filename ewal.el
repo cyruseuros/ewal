@@ -391,7 +391,9 @@ Otherwise regenerate palettes and colors."
    (null 'ewal-spacemacs-theme-gui-colors)
    (null 'ewal-spacemacs-theme-tty-colors)
    (null 'ewal-spacemacs-evil-cursors-gui-colors)
-   (null 'ewal-spacemacs-evil-cursors-tty-colors)))
+   (null 'ewal-spacemacs-evil-cursors-tty-colors)
+   (null 'ewal-emacs-evil-cursors-gui-colors)
+   (null 'ewal-emacs-evil-cursors-tty-colors)))
 
 ;;;###autoload
 (defun ewal-get-spacemacs-theme-colors (&optional apply force-reload tty)
