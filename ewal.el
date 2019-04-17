@@ -145,7 +145,7 @@ the returned alist."
                                             collect value))
              (cannonical-colors (cl-pairlis color-names regular-color-values)))
         (append special-colors cannonical-colors))
-    (warn "Wal cache seems to be empty. `ewal' variables will not load correctly")))
+    (warn "Wal cache is empty. `ewal' variables will not load correctly")))
 
 ;; Color helper functions, shamelessly *borrowed* from solarized
 (defun ewal--color-name-to-rgb (color)
@@ -168,7 +168,8 @@ the returned alist."
                     collect (ewal--color-blend x it alpha)))
 
           ((and (string-prefix-p "#" color1) (string-prefix-p "#" color2))
-           (apply (lambda (r g b) (format "#%02x%02x%02x" (* r 255) (* g 255) (* b 255)))
+           (apply (lambda (r g b) (format "#%02x%02x%02x"
+                                          (* r 255) (* g 255) (* b 255)))
                   (cl-loop for it    in (ewal--color-name-to-rgb color1)
                            for other in (ewal--color-name-to-rgb color2)
                            collect (+ (* alpha it) (* other (- 1 alpha))))))
@@ -212,7 +213,8 @@ points. Return list of extended colors"
                                     (float 100))))))
     (append darker-colors (list color) lighter-colors)))
 
-(defun ewal--extend-base-palette (num-shades shade-percent-difference &optional palette)
+(defun ewal--extend-base-palette (num-shades shade-percent-difference
+                                             &optional palette)
   "Use `ewal--extend-base-color' to extend entire base PALETTE.
 which defaults to `ewal-base-palette' and returns an extended
 palette alist intended to be stored in `ewal-extended-palette'.
@@ -248,14 +250,18 @@ color regardless od SHADE."
         original-color
       defined-requested-color)))
 
-(defun ewal--generate-spacemacs-theme-colors (&optional tty primary-accent-color secondary-accent-color)
+(defun ewal--generate-spacemacs-theme-colors (&optional tty
+                                                        primary-accent-color
+                                                        secondary-accent-color)
   "Make theme colorscheme from theme palettes.
 If TTY is t, colorscheme is reduced to basic tty supported colors.
 PRIMARY-ACCENT-COLOR sets the main theme color---defaults to
 `ewal-primary-accent-color'. Ditto for
 SECONDARY-ACCENT-COLOR"
-  (let* ((primary-accent-color (or primary-accent-color ewal-primary-accent-color))
-         (secondary-accent-color (or secondary-accent-color ewal-secondary-accent-color))
+  (let* ((primary-accent-color (or primary-accent-color
+                                   ewal-primary-accent-color))
+         (secondary-accent-color (or secondary-accent-color
+                                     ewal-secondary-accent-color))
          (tty (ewal--use-tty-colors-p tty))
          (theme-colors
           `((act1          . ,(ewal-get-color 'background -3 tty))
@@ -349,7 +355,8 @@ TTY specifies whether to use TTY or GUI colors."
       (evil-replace-state-cursor (,(ewal-get-color 'red -4 tty) (hbar . 2)))
       (evil-lisp-state-cursor (,(ewal-get-color 'magenta 4 tty) box))
       (evil-iedit-state-cursor (,(ewal-get-color 'magenta -4 tty) box))
-      (evil-iedit-insert-state-cursor (,(ewal-get-color 'magenta -4 tty) (bar . 2))))))
+      (evil-iedit-insert-state-cursor (,(ewal-get-color 'magenta -4 tty)
+                                       (bar . 2))))))
 
 ;;;###autoload
 (defun ewal-load-ewal-vars (&optional tty force-reload &rest args)
