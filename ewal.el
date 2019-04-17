@@ -103,29 +103,17 @@ Must be one of `ewal-ansi-color-name-symbols'")
   "Extended palette based on `ewal-base-palette'.")
 
 ;; store everything in global variables for easy viewing
-(defvar ewal-spacemacs-theme-gui-colors nil
-  "`spacemacs-theme' compatible GUI colors.
+;; only set when colors schemes are generated
+(defvar ewal-spacemacs-theme-colors nil
+  "`spacemacs-theme' compatible colors.
 Extracted from current `ewal' theme.")
 
-(defvar ewal-spacemacs-theme-tty-colors nil
-  "`spacemacs-theme' compatible TTY colors.
-Extracted from current `ewal' theme.")
-
-(defvar ewal-spacemacs-evil-cursors-gui-colors nil
-  "`spacemacs-evil-cursors' compatible GUI colors.
+(defvar ewal-spacemacs-evil-cursors-colors nil
+  "`spacemacs-evil-cursors' compatible colors.
 Extracted from current `ewal' palette.")
 
-(defvar ewal-spacemacs-evil-cursors-tty-colors nil
-  "`spacemacs-evil-cursors' compatible TTY colors.
-Extracted from current `ewal' palette.")
-
-(defvar ewal-emacs-evil-cursors-gui-colors nil
-  "Vanilla Emacs Evil compatible GUI colors.
-Extracted from current `ewal' palette, and stored in a plist for
-easy application.")
-
-(defvar ewal-emacs-evil-cursors-tty-colors nil
-  "Vanilla Emacs Evil compatible TTY colors.
+(defvar ewal-emacs-evil-cursors-colors nil
+  "Vanilla Emacs Evil compatible colors.
 Extracted from current `ewal' palette, and stored in a plist for
 easy application.")
 
@@ -135,7 +123,7 @@ easy application.")
     (or ewal-force-tty-colors
         (display-graphic-p))))
 
-(defun ewal--load-wal-colors (&optional json color-names)
+(defun ewal--load-wal-palette (&optional json color-names)
   "Read JSON as the most complete of the cached wal files.
 COLOR-NAMES will be associated with the first 8 colors of the
 cached wal colors. COLOR-NAMES are meant to be used in
@@ -364,36 +352,18 @@ TTY specifies whether to use TTY or GUI colors."
       (evil-iedit-insert-state-cursor (,(ewal-get-color 'magenta -4 tty) (bar . 2))))))
 
 ;;;###autoload
-(defun ewal-load-ewal-colors ()
+(defun ewal-load-ewal-palettes ()
   "Load all `ewal' palettes and colors.
 If `ewal--load-from-cache-p' returns t, load from cache.
 Otherwise regenerate palettes and colors."
-  (setf ewal-base-palette (ewal--load-wal-colors)
-        ewal-extended-palette (ewal--extend-base-palette 4 5)
-        ewal-spacemacs-theme-gui-colors
-        (ewal--generate-spacemacs-theme-colors nil)
-        ewal-spacemacs-theme-tty-colors
-        (ewal--generate-spacemacs-theme-colors t)
-        ewal-spacemacs-evil-cursors-gui-colors
-        (ewal--generate-spacemacs-evil-cursors-colors nil)
-        ewal-spacemacs-evil-cursors-tty-colors
-        (ewal--generate-spacemacs-evil-cursors-colors t)
-        ewal-emacs-evil-cursors-gui-colors
-        (ewal--generate-emacs-evil-cursors-colors nil)
-        ewal-emacs-evil-cursors-tty-colors
-        (ewal--generate-emacs-evil-cursors-colors t)))
+  (setq ewal-base-palette (ewal--load-wal-palette)
+        ewal-extended-palette (ewal--extend-base-palette 4 5)))
 
-(defun ewal--vars-loaded-p ()
+(defun ewal--palettes-loaded-p ()
   "Check if all `ewal' variables have been set."
   (or
    (null 'ewal-base-palette)
-   (null 'ewal-extended-palette)
-   (null 'ewal-spacemacs-theme-gui-colors)
-   (null 'ewal-spacemacs-theme-tty-colors)
-   (null 'ewal-spacemacs-evil-cursors-gui-colors)
-   (null 'ewal-spacemacs-evil-cursors-tty-colors)
-   (null 'ewal-emacs-evil-cursors-gui-colors)
-   (null 'ewal-emacs-evil-cursors-tty-colors)))
+   (null 'ewal-extended-palette)))
 
 ;;;###autoload
 (defun ewal-get-spacemacs-theme-colors (&optional apply force-reload tty)
@@ -404,13 +374,14 @@ reload `ewal' environment variables before returning colors even
 if they have already been computed, set FORCE-RELOAD to t. TTY
 defaults to return value of `ewal--use-tty-colors-p'."
 
-  (when (or (not (ewal--vars-loaded-p)) force-reload)
-    (ewal-load-ewal-colors))
+  (when (or (not (ewal--palettes-loaded-p)) force-reload)
+    (ewal-load-ewal-palettes))
   (let ((tty (ewal--use-tty-colors-p tty)))
     (let ((colors
-           (if tty
-               ewal-spacemacs-theme-tty-colors
-             ewal-spacemacs-theme-gui-colors)))
+           (setq ewal-spacemacs-theme-colors
+                 (if tty
+                     (ewal--generate-spacemacs-theme-colors t)
+                   (ewal--generate-spacemacs-theme-colors nil)))))
       (if apply
           (setq spacemacs-theme-custom-colors colors)
         colors))))
@@ -422,13 +393,14 @@ If APPLY is t, set relevant environment variable for the user.
 To reload `ewal' environment variables before returning colors
 even if they have already been computed, set FORCE-RELOAD to t.
 TTY defaults to return value of `ewal--use-tty-colors-p'."
-  (when (or (not (ewal--vars-loaded-p)) force-reload)
-    (ewal-load-ewal-colors))
+  (when (or (not (ewal--palettes-loaded-p)) force-reload)
+    (ewal-load-ewal-palettes))
   (let ((tty (ewal--use-tty-colors-p tty)))
     (let ((colors
-           (if tty
-               ewal-spacemacs-evil-cursors-tty-colors
-             ewal-spacemacs-evil-cursors-gui-colors)))
+           (setq ewal-spacemacs-evil-cursors-colors
+                 (if tty
+                     (ewal--generate-spacemacs-evil-cursors-colors t)
+                   (ewal--generate-spacemacs-evil-cursors-colors nil)))))
       (if apply
           (setq spacemacs-evil-cursors colors)
         colors))))
@@ -440,13 +412,14 @@ If APPLY is t, set relevant environment variables for the user.
 To reload `ewal' environment variables before returning colors
 even if they have already been computed, set FORCE-RELOAD to t.
 TTY defaults to return value of `ewal--use-tty-colors-p'."
-  (when (or (not (ewal--vars-loaded-p)) force-reload)
-    (ewal-load-ewal-colors))
+  (when (or (not (ewal--palettes-loaded-p)) force-reload)
+    (ewal-load-ewal-palettes))
   (let ((tty (ewal--use-tty-colors-p tty)))
     (let ((colors
-           (if tty
-               ewal-emacs-evil-cursors-tty-colors
-             ewal-emacs-evil-cursors-gui-colors)))
+           (setq ewal-emacs-evil-cursors-colors
+                 (if tty
+                     (ewal--generate-emacs-evil-cursors-colors t)
+                   (ewal--generate-emacs-evil-cursors-colors nil)))))
       (if apply
           (cl-loop for (key . value) in colors
                    do (set key value))
