@@ -251,17 +251,20 @@ color regardless od SHADE."
       defined-requested-color)))
 
 (defun ewal--generate-spacemacs-theme-colors (&optional tty
+                                                        borders
                                                         primary-accent-color
                                                         secondary-accent-color)
   "Make theme colorscheme from theme palettes.
-If TTY is t, colorscheme is reduced to basic tty supported colors.
-PRIMARY-ACCENT-COLOR sets the main theme color---defaults to
-`ewal-primary-accent-color'. Ditto for
-SECONDARY-ACCENT-COLOR"
+If TTY is t, colorscheme is reduced to basic tty supported
+colors. If BORDERS is t use `ewal-primary-accent-color' for
+borders. I prefer to remove them. PRIMARY-ACCENT-COLOR sets the
+main theme color---defaults to `ewal-primary-accent-color'. Ditto
+for SECONDARY-ACCENT-COLOR"
   (let* ((primary-accent-color (or primary-accent-color
                                    ewal-primary-accent-color))
          (secondary-accent-color (or secondary-accent-color
                                      ewal-secondary-accent-color))
+         (border-color (if borders primary-accent-color 'background))
          (tty (ewal--use-tty-colors-p tty))
          (theme-colors
           `((act1          . ,(ewal-get-color 'background -3 tty))
@@ -272,7 +275,7 @@ SECONDARY-ACCENT-COLOR"
             (bg2           . ,(ewal-get-color 'background -2 tty))
             (bg3           . ,(ewal-get-color 'background -3 tty))
             (bg4           . ,(ewal-get-color 'background -4 tty))
-            (border        . ,(ewal-get-color 'background 0 tty))
+            (border        . ,(ewal-get-color border-color 0 tty))
             (cblk          . ,(ewal-get-color 'foreground -3 tty))
             (cblk-bg       . ,(ewal-get-color 'background -3 tty))
             (cblk-ln       . ,(ewal-get-color primary-accent-color 4 tty))
