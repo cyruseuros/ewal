@@ -102,6 +102,8 @@ set of tables should get you started:
 #+CAPTION: Functions
 | Function                                | Description                                                                                                                                                   |
 |-----------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| =ewal-load-wal-colors=                  | Load =pywal= colors from cache. Return =ewal-base-palette=-format alist on success, and nil on failure.                                                       |
+| =ewal-load-ewal-colors=                 | Load =ewal= colors and populate global relevant variables. Return =ewal-extended-palette= on completion.                                                      |
 | =ewal-get-color=                        | Choose color from =ewal-extended-palette= by symbol name and shade, choosing whether to only approximate it.                                                  |
 | =ewal-get-spacemacs-theme-colors=       | Get =ewal= colors in =spacemacs-theme-custom-colors= format, mostly preserving theme style, except for a slightly more modern look.                           |
 | =ewal-get-spacemacs-evil-cursor-colors= | Get =ewal= colors in =spacemacs-evil-cursors= format.                                                                                                         |

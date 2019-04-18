@@ -372,7 +372,8 @@ argument\) called with EXTRARGS after its first argument. `&rest'
 arguments should take the form of a plist without enclosing
 parentheses. Use TTY argument to determine how variables that are
 not `ewal' palettes should be set. If FORCE-RELOAD is t, load all
-variables from scratch.
+variables from scratch. Return `ewal-extended-palette' upon
+completion.
 
 \(fn &optional TTY FORCE-RELOAD EXTRARGS &rest [EXTRAVAR EXTRAFUNC]...\)"
   (let ((tty (ewal--use-tty-colors-p tty)))
@@ -392,7 +393,8 @@ variables from scratch.
                              tty (if (not (listp extrargs))
                                      (list extrargs)
                                    extrargs))
-                    (funcall (plist-get args var) tty))))))
+                    (funcall (plist-get args var) tty)))))
+  ewal-extended-palette)
 
 
 ;;;###autoload
