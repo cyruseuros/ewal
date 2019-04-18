@@ -1,6 +1,8 @@
+#+ATTR_HTML: :style margin-left: auto; margin-right: auto;
+[[./scrots/ewal.gif]]
 * Summary
 
-This is a [[https://github.com/dylanaraps/pywal][pywal]]-based theme generator for Emacs with an eye towards [[https://github.com/syl20bnr/spacemacs][Spacemacs]],
+=ewal= is a [[https://github.com/dylanaraps/pywal][pywal]]-based theme generator for Emacs with an eye towards [[https://github.com/syl20bnr/spacemacs][Spacemacs]],
 and [[https://github.com/nashamri/spacemacs-theme][spacemacs-theme]], but no dependencies on either (or any external dependencies
 for that matter), so you can use it to colorize your vanilla Emacs as well
 (using the lower-level =ewal-get-color= utility function).
@@ -14,10 +16,10 @@ run in a TTY:
 source ~/.cache/wal/colors-tty.sh
 #+END_SRC
 
-=ewal= currently fully supports =spacemacs-theme=, colorizing everything it does,
-with fine grained control if you want it, or using an automatic setup function
-if you don't. It can even customize Spacemacs cursor colors! Here's the config I
-have in my =spacemacs/user-init=:
+=ewal= currently fully supports =spacemacs-theme=, colorizing everything it
+does, with fine grained control if you want it, or using an automatic setup
+function if you don't. It can even customize Spacemacs & Emacs Evil cursor
+colors! Here's the config I have in my =spacemacs/user-init=:
 #+BEGIN_SRC emacs-lisp :tangle yes
   (load-file "~/projects/ewal/ewal.el")
   (setq spacemacs-evil-cursors (ewal-get-spacemacs-evil-cursors-colors)
@@ -58,11 +60,11 @@ process ;)
 PRs are more than welcome!
 
 * Functions & Variables
-For more a more detailed description of =ewal='s capabilities, please consult the
-source docstrings, as they are quite extensive for every function and variable,
-and offer the benefit of code navigation to related functionality (which is
-dutifully referenced wherever possible). Nevertheless, the following---though
-not exhaustive---set of tables should get you started:
+For more a more detailed description of =ewal='s capabilities, please consult
+the source docstrings, as they are quite extensive for every function and
+variable, and offer the benefit of code navigation to related functionality
+(which is dutifully referenced wherever possible). Nevertheless, the following
+set of tables should get you started:
 
 #+CAPTION: Variables
 | Variable                             | Description                                                                                                        |
@@ -99,13 +101,3 @@ variables long after =spacemacs-theme= is loaded.
 
 Get in touch if you have any advice on integrating this into the =Spacemacs=
 boot process, and eventually into the repo itself!
-
-* Screenshots
-#+ATTR_HTML: :width 1000px
-[[./scrots/sexy-material.png]]
-#+ATTR_HTML: :width 1000px
-[[./scrots/base16-material.png]]
-#+ATTR_HTML: :width 1000px
-[[./scrots/base16-onedark.png]]
-#+ATTR_HTML: :width 1000px
-[[./scrots/gruvbox.png]]
