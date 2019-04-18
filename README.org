@@ -39,6 +39,7 @@ cursor colors! Here's the config I have in my =spacemacs/user-init=:
         theming-modifications
         `((spacemacs-dark (page-break-lines :background ,(ewal-get-color 'background -2))
                           (line-number :background ,(ewal-get-color 'background 0)))))
+  ;; reload theme
   (load-theme 'spacemacs-dark t t)
 #+END_SRC
 
@@ -52,6 +53,7 @@ You can also use the =APPLY= argument of =ewal='s =get= functions like so:
         theming-modifications
         `((spacemacs-dark (page-break-lines :background ,(ewal-get-color 'background -2))
                           (line-number :background ,(ewal-get-color 'background 0)))))
+  ;; reload theme
   (load-theme 'spacemacs-dark t t)
 #+END_SRC
 
@@ -68,14 +70,6 @@ argument to =ewal-get-spacemacs-theme-colors= like so:
 This argument will eventually grow into a list of additional options, but the
 function already handles both list and atom parameters so your config doesn't
 break.
-
-If you do not wish to use any of the higher-level functions and are only
-interested in =ewal-get-color=, you must first call =ewal-load-ewal-vars= like
-so:
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (ewal-load-ewal-vars)
-  (setq foo (ewal-get-color 'magenta 0))
-#+END_SRC
 
 ** Functions & Variables
 For more a more detailed description of =ewal='s capabilities, please consult
@@ -98,13 +92,12 @@ set of tables should get you started:
 | =ewal-emacs-evil-cursors-colors=     | colors for vanilla Emacs Evil cursors                                                                              |
 
 #+CAPTION: Functions
-| Function                                | Description                                                                                                                                 |
-|-----------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------|
-| =ewal-get-color=                        | Choose color from =ewal-extended-palette= by symbol name and shade, choosing whether to only approximate it.                                |
-| =ewal-load-ewal-colors=                 | Populate global variables storing =ewal= colors. Must be called before =ewal-get-color= to save checking overhead, but not other functions. |
-| =ewal-get-spacemacs-theme-colors=       | Get =ewal= colors in =spacemacs-theme-custom-colors= format, mostly preserving theme style, except for a slightly more modern look.         |
-| =ewal-get-spacemacs-evil-cursor-colors= | Get =ewal= colors in =spacemacs-evil-cursors= format.                                                                                       |
-| =ewal-get-emacs-evil-cursor-colors=     | Get =ewal= colors as an alist, each element of which is in vanilla Emacs Evil format.                                                       |
+| Function                                | Description                                                                                                                                                   |
+|-----------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| =ewal-get-color=                        | Choose color from =ewal-extended-palette= by symbol name and shade, choosing whether to only approximate it.                                                  |
+| =ewal-get-spacemacs-theme-colors=       | Get =ewal= colors in =spacemacs-theme-custom-colors= format, mostly preserving theme style, except for a slightly more modern look.                           |
+| =ewal-get-spacemacs-evil-cursor-colors= | Get =ewal= colors in =spacemacs-evil-cursors= format.                                                                                                         |
+| =ewal-get-emacs-evil-cursor-colors=     | Get =ewal= colors as an alist, each element of which is in vanilla Emacs Evil format. Advisable to use =APPLY= argument, as manual application is convoluted. |
 
 
 * Note to Spacemacs and Spacemacs-Theme Users and Maintainers 

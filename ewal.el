@@ -159,8 +159,8 @@ the returned alist."
 \(a float between 0 and 1\)"
   (when (and color1 color2)
     (cond ((and color1 color2 (symbolp color1) (symbolp color2))
-           (ewal--color-blend (ewal-get-color color1 0)
-                              (ewal-get-color color2 0) alpha))
+           (ewal--color-blend (ewal--get-color color1 0)
+                              (ewal--get-color color2 0) alpha))
 
           ((or (listp color1) (listp color2))
            (cl-loop for x in color1
@@ -180,7 +180,7 @@ the returned alist."
   "Darken a COLOR \(a hexidecimal string\) by a coefficient ALPHA.
 \(a float between 0 and 1\)."
   (cond ((and color (symbolp color))
-         (ewal--color-darken (ewal-get-color color 0) alpha))
+         (ewal--color-darken (ewal--get-color color 0) alpha))
         ((listp color)
          (cl-loop for c in color collect (ewal--color-darken c alpha)))
         (t
@@ -190,7 +190,7 @@ the returned alist."
   "Brighten a COLOR (a hexidecimal string) by a coefficient ALPHA.
 \(a float between 0 and 1\)."
   (cond ((and color (symbolp color))
-         (ewal--color-lighten (ewal-get-color color 0) alpha))
+         (ewal--color-lighten (ewal--get-color color 0) alpha))
         ((listp color)
          (cl-loop for c in color collect (ewal--color-lighten c alpha)))
         (t
@@ -228,8 +228,7 @@ percentage points. Return list of extended colors"
              collect `(,key . ,(ewal--extend-base-color
                                 value num-shades shade-percent-difference)))))
 
-;;;###autoload
-(defun ewal-get-color (color &optional shade tty palette)
+(defun ewal--get-color (color &optional shade tty palette)
   "Return SHADE of COLOR from current `ewal' PALETTE.
 Choose color that is darker (-) or lightener (+) than COLOR
 \(must be one of `ewal-ansi-color-name-symbols'\) by SHADE. SHADE
@@ -267,102 +266,101 @@ for SECONDARY-ACCENT-COLOR"
          (border-color (if borders primary-accent-color 'background))
          (tty (ewal--use-tty-colors-p tty))
          (theme-colors
-          `((act1          . ,(ewal-get-color 'background -3 tty))
-            (act2          . ,(ewal-get-color primary-accent-color 0 tty))
-            (base          . ,(ewal-get-color 'foreground 0 tty))
-            (base-dim      . ,(ewal-get-color 'foreground -4 tty))
-            (bg1           . ,(ewal-get-color 'background 0 tty))
-            (bg2           . ,(ewal-get-color 'background -2 tty))
-            (bg3           . ,(ewal-get-color 'background -3 tty))
-            (bg4           . ,(ewal-get-color 'background -4 tty))
-            (border        . ,(ewal-get-color border-color 0 tty))
-            (cblk          . ,(ewal-get-color 'foreground -3 tty))
-            (cblk-bg       . ,(ewal-get-color 'background -3 tty))
-            (cblk-ln       . ,(ewal-get-color primary-accent-color 4 tty))
-            (cblk-ln-bg    . ,(ewal-get-color primary-accent-color -4 tty))
-            (cursor        . ,(ewal-get-color 'cursor 0 tty))
-            (const         . ,(ewal-get-color primary-accent-color 4 tty))
-            (comment       . ,(ewal-get-color 'background 4 tty))
-            (comment-bg    . ,(ewal-get-color 'background 0 tty))
-            (comp          . ,(ewal-get-color secondary-accent-color 0 tty))
-            (err           . ,(ewal-get-color 'red 0 tty))
-            (func          . ,(ewal-get-color primary-accent-color 0 tty))
-            (head1         . ,(ewal-get-color primary-accent-color 0 tty))
-            (head1-bg      . ,(ewal-get-color 'background -3 tty))
-            (head2         . ,(ewal-get-color secondary-accent-color 0 tty))
-            (head2-bg      . ,(ewal-get-color 'background -3 tty))
-            (head3         . ,(ewal-get-color 'cyan 0 tty))
-            (head3-bg      . ,(ewal-get-color 'background -3 tty))
-            (head4         . ,(ewal-get-color 'yellow 0 tty))
-            (head4-bg      . ,(ewal-get-color 'background -3 tty))
-            (highlight     . ,(ewal-get-color 'background 4 tty))
-            (highlight-dim . ,(ewal-get-color 'background 2 tty))
-            (keyword       . ,(ewal-get-color secondary-accent-color 0 tty))
-            (lnum          . ,(ewal-get-color 'background 2 tty))
-            (mat           . ,(ewal-get-color 'green 0 tty))
-            (meta          . ,(ewal-get-color 'yellow 4 tty))
-            (str           . ,(ewal-get-color 'cyan 0 tty))
-            (suc           . ,(ewal-get-color 'green 4 tty))
-            (ttip          . ,(ewal-get-color 'background 2 tty))
-            (ttip-sl       . ,(ewal-get-color 'background 4 tty))
-            (ttip-bg       . ,(ewal-get-color 'background 0 tty))
-            (type          . ,(ewal-get-color 'red 2 tty))
-            (var           . ,(ewal-get-color secondary-accent-color 4 tty))
-            (war           . ,(ewal-get-color 'red 4 tty))
+          `((act1          . ,(ewal--get-color 'background -3 tty))
+            (act2          . ,(ewal--get-color primary-accent-color 0 tty))
+            (base          . ,(ewal--get-color 'foreground 0 tty))
+            (base-dim      . ,(ewal--get-color 'foreground -4 tty))
+            (bg1           . ,(ewal--get-color 'background 0 tty))
+            (bg2           . ,(ewal--get-color 'background -2 tty))
+            (bg3           . ,(ewal--get-color 'background -3 tty))
+            (bg4           . ,(ewal--get-color 'background -4 tty))
+            (border        . ,(ewal--get-color border-color 0 tty))
+            (cblk          . ,(ewal--get-color 'foreground -3 tty))
+            (cblk-bg       . ,(ewal--get-color 'background -3 tty))
+            (cblk-ln       . ,(ewal--get-color primary-accent-color 4 tty))
+            (cblk-ln-bg    . ,(ewal--get-color primary-accent-color -4 tty))
+            (cursor        . ,(ewal--get-color 'cursor 0 tty))
+            (const         . ,(ewal--get-color primary-accent-color 4 tty))
+            (comment       . ,(ewal--get-color 'background 4 tty))
+            (comment-bg    . ,(ewal--get-color 'background 0 tty))
+            (comp          . ,(ewal--get-color secondary-accent-color 0 tty))
+            (err           . ,(ewal--get-color 'red 0 tty))
+            (func          . ,(ewal--get-color primary-accent-color 0 tty))
+            (head1         . ,(ewal--get-color primary-accent-color 0 tty))
+            (head1-bg      . ,(ewal--get-color 'background -3 tty))
+            (head2         . ,(ewal--get-color secondary-accent-color 0 tty))
+            (head2-bg      . ,(ewal--get-color 'background -3 tty))
+            (head3         . ,(ewal--get-color 'cyan 0 tty))
+            (head3-bg      . ,(ewal--get-color 'background -3 tty))
+            (head4         . ,(ewal--get-color 'yellow 0 tty))
+            (head4-bg      . ,(ewal--get-color 'background -3 tty))
+            (highlight     . ,(ewal--get-color 'background 4 tty))
+            (highlight-dim . ,(ewal--get-color 'background 2 tty))
+            (keyword       . ,(ewal--get-color secondary-accent-color 0 tty))
+            (lnum          . ,(ewal--get-color 'background 2 tty))
+            (mat           . ,(ewal--get-color 'green 0 tty))
+            (meta          . ,(ewal--get-color 'yellow 4 tty))
+            (str           . ,(ewal--get-color 'cyan 0 tty))
+            (suc           . ,(ewal--get-color 'green 4 tty))
+            (ttip          . ,(ewal--get-color 'background 2 tty))
+            (ttip-sl       . ,(ewal--get-color 'background 4 tty))
+            (ttip-bg       . ,(ewal--get-color 'background 0 tty))
+            (type          . ,(ewal--get-color 'red 2 tty))
+            (var           . ,(ewal--get-color secondary-accent-color 4 tty))
+            (war           . ,(ewal--get-color 'red 4 tty))
             ;; colors
-            (aqua          . ,(ewal-get-color 'cyan 0 tty))
-            (aqua-bg       . ,(ewal-get-color 'cyan -3 tty))
-            (green         . ,(ewal-get-color 'green 0 tty))
-            (green-bg      . ,(ewal-get-color 'green -3 tty))
-            (green-bg-s    . ,(ewal-get-color 'green -4 tty))
+            (aqua          . ,(ewal--get-color 'cyan 0 tty))
+            (aqua-bg       . ,(ewal--get-color 'cyan -3 tty))
+            (green         . ,(ewal--get-color 'green 0 tty))
+            (green-bg      . ,(ewal--get-color 'green -3 tty))
+            (green-bg-s    . ,(ewal--get-color 'green -4 tty))
             ;; literally the same as aqua in web development
-            (cyan          . ,(ewal-get-color 'cyan 0 tty))
-            (red           . ,(ewal-get-color 'red 0 tty))
-            (red-bg        . ,(ewal-get-color 'red -3 tty))
-            (red-bg-s      . ,(ewal-get-color 'red -4 tty))
-            (blue          . ,(ewal-get-color 'blue 0 tty))
-            (blue-bg       . ,(ewal-get-color 'blue -3 tty))
-            (blue-bg-s     . ,(ewal-get-color 'blue -4 tty))
-            (magenta       . ,(ewal-get-color 'magenta 0 tty))
-            (yellow        . ,(ewal-get-color 'yellow 0 tty))
-            (yellow-bg     . ,(ewal-get-color 'yellow -3 tty)))))
+            (cyan          . ,(ewal--get-color 'cyan 0 tty))
+            (red           . ,(ewal--get-color 'red 0 tty))
+            (red-bg        . ,(ewal--get-color 'red -3 tty))
+            (red-bg-s      . ,(ewal--get-color 'red -4 tty))
+            (blue          . ,(ewal--get-color 'blue 0 tty))
+            (blue-bg       . ,(ewal--get-color 'blue -3 tty))
+            (blue-bg-s     . ,(ewal--get-color 'blue -4 tty))
+            (magenta       . ,(ewal--get-color 'magenta 0 tty))
+            (yellow        . ,(ewal--get-color 'yellow 0 tty))
+            (yellow-bg     . ,(ewal--get-color 'yellow -3 tty)))))
          theme-colors))
 
 (defun ewal--generate-spacemacs-evil-cursors-colors (&optional tty)
   "Use wal colors to customize `spacemacs-evil-cursors'.
 TTY specifies whether to use TTY or GUI colors."
   (let ((tty (ewal--use-tty-colors-p tty)))
-    `(("normal" ,(ewal-get-color 'cursor 0 tty) box)
-      ("insert" ,(ewal-get-color 'green 0 tty) (bar . 2))
-      ("emacs" ,(ewal-get-color 'blue 0 tty) box)
-      ("hybrid" ,(ewal-get-color 'blue 0 tty) (bar . 2))
-      ("evilified" ,(ewal-get-color 'red 0 tty) box)
-      ("visual" ,(ewal-get-color 'white -4 tty) (hbar . 2))
-      ("motion" ,(ewal-get-color 'magenta 0 tty) box)
-      ("replace" ,(ewal-get-color 'red -4 tty) (hbar . 2))
-      ("lisp" ,(ewal-get-color 'magenta 4 tty) box)
-      ("iedit" ,(ewal-get-color 'magenta -4 tty) box)
-      ("iedit-insert" ,(ewal-get-color 'magenta -4 tty) (bar . 2)))))
+    `(("normal" ,(ewal--get-color 'cursor 0 tty) box)
+      ("insert" ,(ewal--get-color 'green 0 tty) (bar . 2))
+      ("emacs" ,(ewal--get-color 'blue 0 tty) box)
+      ("hybrid" ,(ewal--get-color 'blue 0 tty) (bar . 2))
+      ("evilified" ,(ewal--get-color 'red 0 tty) box)
+      ("visual" ,(ewal--get-color 'white -4 tty) (hbar . 2))
+      ("motion" ,(ewal--get-color 'magenta 0 tty) box)
+      ("replace" ,(ewal--get-color 'red -4 tty) (hbar . 2))
+      ("lisp" ,(ewal--get-color 'magenta 4 tty) box)
+      ("iedit" ,(ewal--get-color 'magenta -4 tty) box)
+      ("iedit-insert" ,(ewal--get-color 'magenta -4 tty) (bar . 2)))))
 
 (defun ewal--generate-emacs-evil-cursors-colors (&optional tty)
   "Use wal colors to customize vanilla Emacs Evil cursor colors.
 TTY specifies whether to use TTY or GUI colors."
   (let ((tty (ewal--use-tty-colors-p tty)))
-    `((evil-normal-state-cursor (,(ewal-get-color 'cursor 0 tty) box))
-      (evil-insert-state-cursor (,(ewal-get-color 'green 0 tty) (bar . 2)))
-      (evil-emacs-state-cursor (,(ewal-get-color 'blue 0 tty) box))
-      (evil-hybrid-state-cursor (,(ewal-get-color 'blue 0 tty) (bar . 2)))
-      (evil-evilified-state-cursor (,(ewal-get-color 'red 0 tty) box))
-      (evil-visual-state-cursor (,(ewal-get-color 'white -4 tty) (hbar . 2)))
-      (evil-motion-state-cursor (,(ewal-get-color 'magenta 0 tty) box))
-      (evil-replace-state-cursor (,(ewal-get-color 'red -4 tty) (hbar . 2)))
-      (evil-lisp-state-cursor (,(ewal-get-color 'magenta 4 tty) box))
-      (evil-iedit-state-cursor (,(ewal-get-color 'magenta -4 tty) box))
-      (evil-iedit-insert-state-cursor (,(ewal-get-color 'magenta -4 tty)
+    `((evil-normal-state-cursor (,(ewal--get-color 'cursor 0 tty) box))
+      (evil-insert-state-cursor (,(ewal--get-color 'green 0 tty) (bar . 2)))
+      (evil-emacs-state-cursor (,(ewal--get-color 'blue 0 tty) box))
+      (evil-hybrid-state-cursor (,(ewal--get-color 'blue 0 tty) (bar . 2)))
+      (evil-evilified-state-cursor (,(ewal--get-color 'red 0 tty) box))
+      (evil-visual-state-cursor (,(ewal--get-color 'white -4 tty) (hbar . 2)))
+      (evil-motion-state-cursor (,(ewal--get-color 'magenta 0 tty) box))
+      (evil-replace-state-cursor (,(ewal--get-color 'red -4 tty) (hbar . 2)))
+      (evil-lisp-state-cursor (,(ewal--get-color 'magenta 4 tty) box))
+      (evil-iedit-state-cursor (,(ewal--get-color 'magenta -4 tty) box))
+      (evil-iedit-insert-state-cursor (,(ewal--get-color 'magenta -4 tty)
                                        (bar . 2))))))
 
-;;;###autoload
-(defun ewal-load-ewal-vars (&optional tty force-reload extrargs &rest args)
+(defun ewal--load-ewal-vars (&optional tty force-reload extrargs &rest args)
   "Load all relevant `ewal' palettes and colors.
 Process remaining ARGS, setting all instances of EXTRAVAR using
 EXTRAFUNC \(which should follow the format of e.g.
@@ -393,18 +391,27 @@ variables from scratch.
                                    extrargs))
                     (funcall (plist-get args var) tty))))))
 
+
+;;;###autoload
+(defun ewal-get-color (color &optional shade tty palette)
+  "Same as `ewal--get-color' but call `ewal--load-ewal-vars' first.
+Pass COLOR, SHADE, TTY, and PALETTE to `ewal--get-color'. Meant
+to be called from user config."
+  (ewal--load-ewal-vars)
+  (ewal--get-color color shade tty palette))
+
 ;;;###autoload
 (defun ewal-get-spacemacs-theme-colors (&optional apply extrargs
                                                   force-reload tty)
   "Get `spacemacs-theme' colors.
 For usage see: <https://github.com/nashamri/spacemacs-theme>.
-Pass EXTRARGS to `ewal-load-ewal-vars'. If APPLY is t, set
+Pass EXTRARGS to `ewal--load-ewal-vars'. If APPLY is t, set
 relevant environment variable for the user. To reload `ewal'
 environment variables before returning colors even if they have
 already been computed, set FORCE-RELOAD to t. TTY defaults to
 return value of `ewal--use-tty-colors-p'."
   (let ((tty (ewal--use-tty-colors-p tty)))
-    (ewal-load-ewal-vars tty force-reload extrargs
+    (ewal--load-ewal-vars tty force-reload extrargs
                          'ewal-spacemacs-theme-colors
                          #'ewal--generate-spacemacs-theme-colors)
       (if apply
@@ -415,13 +422,13 @@ return value of `ewal--use-tty-colors-p'."
 (defun ewal-get-spacemacs-evil-cursors-colors (&optional apply extrargs
                                                          force-reload tty)
   "Get `spacemacs-evil-cursors' colors.
-Pass EXTRARGS to `ewal-load-ewal-vars'. If APPLY is t, set
+Pass EXTRARGS to `ewal--load-ewal-vars'. If APPLY is t, set
 relevant environment variable for the user. To reload `ewal'
 environment variables before returning colors even if they have
 already been computed, set FORCE-RELOAD to t. TTY defaults to
 return value of `ewal--use-tty-colors-p'."
   (let ((tty (ewal--use-tty-colors-p tty)))
-    (ewal-load-ewal-vars tty force-reload extrargs
+    (ewal--load-ewal-vars tty force-reload extrargs
                          'ewal-spacemacs-evil-cursors-colors
                          #'ewal--generate-spacemacs-evil-cursors-colors)
     (if apply
@@ -432,13 +439,13 @@ return value of `ewal--use-tty-colors-p'."
 (defun ewal-get-emacs-evil-cursors-colors (&optional apply extrargs
                                                      force-reload tty)
   "Get vanilla Emacs Evil cursor colors.
-Pass EXTRARGS to `ewal-load-ewal-vars'. If APPLY is t, set
+Pass EXTRARGS to `ewal--load-ewal-vars'. If APPLY is t, set
 relevant environment variables for the user. To reload `ewal'
 environment variables before returning colors even if they have
 already been computed, set FORCE-RELOAD to t. TTY defaults to
 return value of `ewal--use-tty-colors-p'."
   (let ((tty (ewal--use-tty-colors-p tty)))
-    (ewal-load-ewal-vars tty force-reload extrargs
+    (ewal--load-ewal-vars tty force-reload extrargs
                          'ewal-spacemacs-evil-cursors-colors
                          #'ewal--generate-spacemacs-evil-cursors-colors)
     (if apply
