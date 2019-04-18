@@ -62,6 +62,14 @@ the problem with =spacemacs-theme='s =dyn-let= macro discussed [[https://github.
 submitting a PR to fix it shortly, which should also enable =Spacemacs= users to
 use =ewal= as a library in their =user-init= as discussed [[Note to Spacemacs and Spacemacs-Theme Users and Maintainers][here]].
 
+To check if =ewal= can load your =pywal= theme first, wrap your config in the
+following block:
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (when (ewal-load-wal-colors)
+    (ewal-get-spacemacs-theme-colors t)
+    (ewal-get-emacs-evil-cursors-colors t))
+#+END_SRC
+
 If you prefer =spacemacs-theme= with borders, simply pass the =EXTRARGS=
 argument to =ewal-get-spacemacs-theme-colors= like so:
 #+BEGIN_SRC emacs-lisp :tangle yes
