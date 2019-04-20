@@ -46,8 +46,8 @@ cursor colors! Here's the config I have in my =spacemacs/user-init=:
 You can also use the =APPLY= argument of =ewal='s =get= functions like so:
 #+BEGIN_SRC emacs-lisp :tangle yes
   (load-file "~/projects/ewal/ewal.el")
-  (ewal-get-spacemacs-theme-colors t)
-  (ewal-get-spacemacs-evil-cursor-colors t)
+  (ewal-get-spacemacs-theme-colors :apply t)
+  (ewal-get-spacemacs-evil-cursor-colors :apply t)
   ;; personal taste
   (setq spacemacs-theme-org-highlight t
         theming-modifications
@@ -71,11 +71,12 @@ following block:
 #+END_SRC
 
 If you prefer =spacemacs-theme= with borders, simply pass the 4_th, =BORDERS=
-argument to =ewal-get-spacemacs-theme-colors= like so (the preceding 3 are up
-to you):
+argument to =ewal-get-spacemacs-theme-colors= like so:
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (ewal-get-spacemacs-theme-colors nil nil nil t)
+  (ewal-get-spacemacs-theme-colors :borders '(t))
 #+END_SRC
+The argument still needs to be a list due to some implementation details I will
+resolve promptly (suggestions for elegant solutions are welcome).
 
 ** Functions & Variables
 For more a more detailed description of =ewal='s capabilities, please consult
