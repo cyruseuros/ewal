@@ -401,10 +401,10 @@ to be called from user config."
   (ewal--get-color color shade tty palette))
 
 ;;;###autoload
-(defun ewal-get-spacemacs-theme-colors (&optional apply force-reload
-                                                  tty borders
-                                                  primary-accent-color
-                                                  secondary-accent-color)
+(cl-defun ewal-get-spacemacs-theme-colors (&key apply force-reload
+                                                tty borders
+                                                primary-accent-color
+                                                secondary-accent-color)
   "Get `spacemacs-theme' colors.
 For usage see: <https://github.com/nashamri/spacemacs-theme>. If
 APPLY is t, set relevant environment variable for the user.
@@ -422,7 +422,7 @@ t, use TTY colors."
         ewal-spacemacs-theme-colors)))
 
 ;;;###autoload
-(defun ewal-get-spacemacs-evil-cursors-colors (&optional apply force-reload tty)
+(cl-defun ewal-get-spacemacs-evil-cursors-colors (&key apply force-reload tty)
   "Get `spacemacs-evil-cursors' colors.
 If APPLY is t, set relevant environment variable for the user.
 Reload `ewal' environment variables before returning colors even
@@ -439,7 +439,7 @@ t, use TTY colors."
       ewal-spacemacs-evil-cursors-colors)))
 
 ;;;###autoload
-(defun ewal-get-emacs-evil-cursors-colors (&optional apply force-reload tty)
+(cl-defun ewal-get-emacs-evil-cursors-colors (&key apply force-reload tty)
   "Get vanilla Emacs Evil cursor colors.
 If APPLY is t, set relevant environment variables for the user.
 Reload `ewal' environment variables before returning colors even
