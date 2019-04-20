@@ -382,9 +382,9 @@ TTY as their first parameter."
     ;; let errors propagate if only some args are set
     (when (or vars funcs args)
       ;; accept atoms as well as lists
-      (let ((vars (if (listp vars) vars (list vars)))
-            (funcs (if (listp funcs) funcs (list funcs)))
-            (args (if (listp args) args (list args))))
+      (let ((vars (if (atom vars) (list vars) vars))
+            (funcs (if (atom funcs) (list funcs) funcs))
+            (args (if (atom args) (list args) args)))
         (cl-loop for var in vars
                  for func in funcs
                  for arglist in args
@@ -432,7 +432,8 @@ t, use TTY colors."
   (let ((tty (ewal--use-tty-colors-p tty)))
     (ewal-load-ewal-colors tty force-reload
                          'ewal-spacemacs-evil-cursors-colors
-                         #'ewal--generate-spacemacs-evil-cursors-colors)
+                         #'ewal--generate-spacemacs-evil-cursors-colors
+                         nil)
     (if apply
         (setq spacemacs-evil-cursors ewal-spacemacs-evil-cursors-colors)
       ewal-spacemacs-evil-cursors-colors)))
@@ -448,7 +449,8 @@ t, use TTY colors."
   (let ((tty (ewal--use-tty-colors-p tty)))
     (ewal-load-ewal-colors tty force-reload
                          'ewal-spacemacs-evil-cursors-colors
-                         #'ewal--generate-spacemacs-evil-cursors-colors)
+                         #'ewal--generate-spacemacs-evil-cursors-colors
+                         nil)
     (if apply
         (cl-loop for (key . value) in ewal-emacs-evil-cursors-colors
                  do (set key value))
