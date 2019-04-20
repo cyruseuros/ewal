@@ -363,19 +363,15 @@ TTY specifies whether to use TTY or GUI colors."
                                        (bar . 2))))))
 
 ;;;###autoload
-(defun ewal-load-ewal-colors (&optional tty force-reload extrargs &rest args)
-  "Load all relevant `ewal' palettes and colors.
-Process remaining ARGS, setting all instances of EXTRAVAR using
-EXTRAFUNC \(which should follow the format of e.g.
-`ewal--generate-spacemacs-theme-colors', taking TTY as its first
-argument\) called with EXTRARGS after its first argument. `&rest'
-arguments should take the form of a plist without enclosing
-parentheses. Use TTY argument to determine how variables that are
-not `ewal' palettes should be set. If FORCE-RELOAD is t, load all
-variables from scratch. Return `ewal-extended-palette' upon
-completion.
-
-\(fn &optional TTY FORCE-RELOAD EXTRARGS &rest [EXTRAVAR EXTRAFUNC]...\)"
+(defun ewal-load-ewal-colors (&optional tty force-reload vars funcs args)
+  "Load all relevant `ewal' palettes and colors as environment variables.
+Use TTY to determine whether to use TTY colors. Reload
+environment variables even if they have already been set if
+FORCE-RELOAD is t. Set all extra variables specified in ordered
+list VARS, using ordered list FUNCS, applying extra arguments
+from nested, ordered list ARGS. VARS, FUNCS, and ARGS must be of
+the same length if passed at all. FUNCS must all take TTY as their
+first parameter."
   (let ((tty (ewal--use-tty-colors-p tty)))
     (when (or (null ewal-base-palette)
               (null ewal-extended-palette)
@@ -383,17 +379,16 @@ completion.
       ;; always set together
       (setq ewal-base-palette (ewal-load-wal-colors)
             ewal-extended-palette (ewal--extend-base-palette 4 5)))
-    (cl-loop for var in
-             (cl-loop for key in args by #'cddr collect key)
-             ;; reload all if force-reload is t, otherwise just missing
-             if (if force-reload t (null (eval var)))
-             do (set var
-                  (if extrargs
-                      (apply (plist-get args var)
-                             tty (if (not (listp extrargs))
-                                     (list extrargs)
-                                   extrargs))
-                    (funcall (plist-get args var) tty)))))
+    ;; all 3 must be set
+    (when (and vars funcs args)
+      ;; accept atoms as well as lists
+      (let ((vars (if (listp vars) vars (list vars)))
+            (funcs (if (listp funcs) funcs (list funcs)))
+            (args (if (listp args) args (list args))))
+        (cl-loop for var in vars
+                 for func in funcs
+                 for arglist in args
+                 do (set var (apply #'func tty arglist))))))
   ewal-extended-palette)
 
 
@@ -406,8 +401,10 @@ to be called from user config."
   (ewal--get-color color shade tty palette))
 
 ;;;###autoload
-(defun ewal-get-spacemacs-theme-colors (&optional apply extrargs
-                                                  force-reload tty)
+(defun ewal-get-spacemacs-theme-colors (&optional apply force-reload
+                                                  tty borders
+                                                  primary-accent-color
+                                                  secondary-accent-color)
   "Get `spacemacs-theme' colors.
 For usage see: <https://github.com/nashamri/spacemacs-theme>.
 Pass EXTRARGS to `ewal-load-ewal-colors'. If APPLY is t, set
@@ -416,24 +413,23 @@ environment variables before returning colors even if they have
 already been computed, set FORCE-RELOAD to t. TTY defaults to
 return value of `ewal--use-tty-colors-p'."
   (let ((tty (ewal--use-tty-colors-p tty)))
-    (ewal-load-ewal-colors tty force-reload extrargs
+    (ewal-load-ewal-colors tty force-reload
                          'ewal-spacemacs-theme-colors
-                         #'ewal--generate-spacemacs-theme-colors)
+                         #'ewal--generate-spacemacs-theme-colors
+                         (list borders primary-accent-color secondary-accent-color))
       (if apply
           (setq spacemacs-theme-custom-colors ewal-spacemacs-theme-colors)
         ewal-spacemacs-theme-colors)))
 
 ;;;###autoload
-(defun ewal-get-spacemacs-evil-cursors-colors (&optional apply extrargs
-                                                         force-reload tty)
+(defun ewal-get-spacemacs-evil-cursors-colors (&optional apply force-reload tty)
   "Get `spacemacs-evil-cursors' colors.
-Pass EXTRARGS to `ewal-load-ewal-colors'. If APPLY is t, set
-relevant environment variable for the user. To reload `ewal'
-environment variables before returning colors even if they have
-already been computed, set FORCE-RELOAD to t. TTY defaults to
-return value of `ewal--use-tty-colors-p'."
+If APPLY is t, set relevant environment variable for the user. To
+reload `ewal' environment variables before returning colors even
+if they have already been computed, set FORCE-RELOAD to t. TTY
+defaults to return value of `ewal--use-tty-colors-p'."
   (let ((tty (ewal--use-tty-colors-p tty)))
-    (ewal-load-ewal-colors tty force-reload extrargs
+    (ewal-load-ewal-colors tty force-reload
                          'ewal-spacemacs-evil-cursors-colors
                          #'ewal--generate-spacemacs-evil-cursors-colors)
     (if apply
@@ -441,16 +437,14 @@ return value of `ewal--use-tty-colors-p'."
       ewal-spacemacs-evil-cursors-colors)))
 
 ;;;###autoload
-(defun ewal-get-emacs-evil-cursors-colors (&optional apply extrargs
-                                                     force-reload tty)
+(defun ewal-get-emacs-evil-cursors-colors (&optional apply force-reload tty)
   "Get vanilla Emacs Evil cursor colors.
-Pass EXTRARGS to `ewal-load-ewal-colors'. If APPLY is t, set
-relevant environment variables for the user. To reload `ewal'
-environment variables before returning colors even if they have
-already been computed, set FORCE-RELOAD to t. TTY defaults to
-return value of `ewal--use-tty-colors-p'."
+If APPLY is t, set relevant environment variables for the user.
+To reload `ewal' environment variables before returning colors
+even if they have already been computed, set FORCE-RELOAD to t.
+TTY defaults to return value of `ewal--use-tty-colors-p'."
   (let ((tty (ewal--use-tty-colors-p tty)))
-    (ewal-load-ewal-colors tty force-reload extrargs
+    (ewal-load-ewal-colors tty force-reload
                          'ewal-spacemacs-evil-cursors-colors
                          #'ewal--generate-spacemacs-evil-cursors-colors)
     (if apply
