@@ -70,14 +70,12 @@ following block:
     (ewal-get-emacs-evil-cursors-colors t))
 #+END_SRC
 
-If you prefer =spacemacs-theme= with borders, simply pass the =EXTRARGS=
-argument to =ewal-get-spacemacs-theme-colors= like so:
+If you prefer =spacemacs-theme= with borders, simply pass the 4_th, =BORDERS=
+argument to =ewal-get-spacemacs-theme-colors= like so (the preceding 3 are up
+to you):
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (ewal-get-spacemacs-theme-colors nil t)
+  (ewal-get-spacemacs-theme-colors nil nil nil t)
 #+END_SRC
-This argument will eventually grow into a list of additional options, but the
-function already handles both list and atom parameters so your config doesn't
-break.
 
 ** Functions & Variables
 For more a more detailed description of =ewal='s capabilities, please consult
