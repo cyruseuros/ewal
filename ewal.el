@@ -362,7 +362,7 @@ TTY specifies whether to use TTY or GUI colors."
                                        (bar . 2))))))
 
 ;;;###autoload
-(defun ewal-load-ewal-colors (&optional tty force-reload vars funcs args)
+(defun ewal-load-ewal-colors (&optional force-reload tty vars funcs args)
   "Load all relevant `ewal' palettes and colors as environment variables.
 Use TTY to determine whether to use TTY colors. Reload
 environment variables even if they have already been set if
@@ -388,7 +388,15 @@ TTY as their first parameter."
         (cl-loop for var in vars
                  for func in funcs
                  for arglist in args
-                 do (set var (apply func tty arglist))))))
+                 do (set var (if (atom arglist)
+                                 (if (null arglist)
+                                     ;; deal with functions
+                                     ;; that only take tty parameter
+                                     (funcall func tty)
+                                   ;; arglist will only be non-nil
+                                   ;; if more args are expected
+                                   (funcall func tty arglist))
+                               (apply func tty arglist)))))))
   ewal-extended-palette)
 
 
@@ -413,7 +421,7 @@ if they have already been computed if FORCE-RELOAD is t. TTY
 defaults to return value of `ewal--use-tty-colors-p'. if TTY is
 t, use TTY colors."
   (let ((tty (ewal--use-tty-colors-p tty)))
-    (ewal-load-ewal-colors tty force-reload
+    (ewal-load-ewal-colors force-reload tty
                          'ewal-spacemacs-theme-colors
                          #'ewal--generate-spacemacs-theme-colors
                          (list borders primary-accent-color secondary-accent-color))
