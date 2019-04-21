@@ -253,19 +253,13 @@ color regardless od SHADE."
         original-color
       defined-requested-color)))
 
-(defun ewal--generate-spacemacs-theme-colors (&optional  borders
-                                                        primary-accent-color
-                                                        secondary-accent-color)
+(defun ewal--generate-spacemacs-theme-colors (&optional borders)
   "Make theme colorscheme from theme palettes.
 If TTY is t, colorscheme is reduced to basic  supported
 colors. If BORDERS is t use `ewal-primary-accent-color' for
-borders. I prefer to remove them. PRIMARY-ACCENT-COLOR sets the
-main theme color---defaults to `ewal-primary-accent-color'. Ditto
-for SECONDARY-ACCENT-COLOR"
-  (let* ((primary-accent-color (or primary-accent-color
-                                   ewal-primary-accent-color))
-         (secondary-accent-color (or secondary-accent-color
-                                     ewal-secondary-accent-color))
+borders. I prefer to remove them."
+  (let* ((primary-accent-color ewal-primary-accent-color)
+         (secondary-accent-color ewal-secondary-accent-color)
          (border-color (if borders primary-accent-color 'background))
          (theme-colors
           `((act1          . ,(ewal--get-color 'background -3))
@@ -402,8 +396,7 @@ from user config."
 
 ;;;###autoload
 (cl-defun ewal-get-spacemacs-theme-colors
-    (&key apply force-reload borders primary-accent-color
-          secondary-accent-color)
+    (&key apply force-reload borders)
   "Get `spacemacs-theme' colors.
 For usage see: <https://github.com/nashamri/spacemacs-theme>. If
 APPLY is t, set relevant environment variable for the user.
@@ -414,7 +407,7 @@ t, use TTY colors."
   (ewal-load-ewal-colors force-reload
                          'ewal-spacemacs-theme-colors
                          #'ewal--generate-spacemacs-theme-colors
-                         (list borders primary-accent-color secondary-accent-color))
+                         borders)
   (if apply
       (setq spacemacs-theme-custom-colors ewal-spacemacs-theme-colors)
     ewal-spacemacs-theme-colors))
@@ -448,7 +441,8 @@ t, use TTY colors."
                          #'ewal--generate-spacemacs-evil-cursors-colors
                          nil)
   (if apply
-      (cl-loop for (key . value) in ewal-emacs-evil-cursors-colors
+      (cl-loop for (key . value)
+               in ewal-emacs-evil-cursors-colors
                do (set key value))
     ewal-emacs-evil-cursors-colors))
 
