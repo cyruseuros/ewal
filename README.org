@@ -87,7 +87,8 @@ set of tables should get you started:
 | Variable                             | Description                                                                                                        |
 |--------------------------------------+--------------------------------------------------------------------------------------------------------------------|
 | =ewal-wal-cache-dir=                 | the directory where =pywal= caches its colorschemes                                                                |
-| =ewal-force-tty-colors=              | force TTY colors even in a GUI                                                                                     |
+| =ewal-wal-cache-json-file=           | the basename of the json file containing the =pywal= colorscheme (it's the most complete of the ones supplied)     |
+| =ewal-use-tty-colors=                | force TTY colors even in a GUI                                                                                     |
 | =ewal-primary-accent-color=          | most predominant color returned by =ewal-get-spacemacs-theme-colors=                                               |
 | =ewal-secondary-accent-color=        | second most predominant color returned by =ewal-get-spacemacs-theme-colors=                                        |
 | =ewal-base-palette=                  | base colors extracted from =pywals= cache                                                                          |
