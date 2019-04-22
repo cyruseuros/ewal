@@ -148,6 +148,8 @@ the returned alist. Return nil on failure."
                                             in regular-colors
                                             collect value))
              (cannonical-colors (cl-pairlis color-names regular-color-values)))
+        ;; unofficial comment color (always used as such)
+        (cl-pushnew (cons 'comment (nth 8 regular-color-values)) special-colors)
         (append special-colors cannonical-colors))
     (error nil)))
 
@@ -267,6 +269,7 @@ borders. I prefer to remove them."
             (base          . ,(ewal--get-color 'foreground 0))
             (base-dim      . ,(ewal--get-color 'foreground -4))
             (bg1           . ,(ewal--get-color 'background 0))
+            ;; used to highlight current line
             (bg2           . ,(ewal--get-color 'background -2))
             (bg3           . ,(ewal--get-color 'background -3))
             (bg4           . ,(ewal--get-color 'background -4))
@@ -277,7 +280,7 @@ borders. I prefer to remove them."
             (cblk-ln-bg    . ,(ewal--get-color primary-accent-color -4))
             (cursor        . ,(ewal--get-color 'cursor 0))
             (const         . ,(ewal--get-color primary-accent-color 4))
-            (comment       . ,(ewal--get-color 'background 4))
+            (comment       . ,(ewal--get-color 'comment 0))
             (comment-bg    . ,(ewal--get-color 'background 0))
             (comp          . ,(ewal--get-color secondary-accent-color 0))
             (err           . ,(ewal--get-color 'red 0))
@@ -293,13 +296,14 @@ borders. I prefer to remove them."
             (highlight     . ,(ewal--get-color 'background 4))
             (highlight-dim . ,(ewal--get-color 'background 2))
             (keyword       . ,(ewal--get-color secondary-accent-color 0))
-            (lnum          . ,(ewal--get-color 'background 2))
+            (lnum          . ,(ewal--get-color 'comment 0))
             (mat           . ,(ewal--get-color 'green 0))
             (meta          . ,(ewal--get-color 'yellow 4))
             (str           . ,(ewal--get-color 'cyan 0))
             (suc           . ,(ewal--get-color 'green 4))
-            (ttip          . ,(ewal--get-color 'background 2))
-            (ttip-sl       . ,(ewal--get-color 'background 4))
+            (ttip          . ,(ewal--get-color 'comment 0))
+            ;; same as `bg2'
+            (ttip-sl       . ,(ewal--get-color 'background -2))
             (ttip-bg       . ,(ewal--get-color 'background 0))
             (type          . ,(ewal--get-color 'red 2))
             (var           . ,(ewal--get-color secondary-accent-color 4))
@@ -310,7 +314,7 @@ borders. I prefer to remove them."
             (green         . ,(ewal--get-color 'green 0))
             (green-bg      . ,(ewal--get-color 'green -3))
             (green-bg-s    . ,(ewal--get-color 'green -4))
-            ;; literally the same as aqua in web development
+            ;; literally the same as `aqua' in web development
             (cyan          . ,(ewal--get-color 'cyan 0))
             (red           . ,(ewal--get-color 'red 0))
             (red-bg        . ,(ewal--get-color 'red -3))
