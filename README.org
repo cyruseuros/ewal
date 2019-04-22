@@ -88,7 +88,8 @@ set of tables should get you started:
 |--------------------------------------+--------------------------------------------------------------------------------------------------------------------|
 | =ewal-wal-cache-dir=                 | the directory where =pywal= caches its colorschemes                                                                |
 | =ewal-wal-cache-json-file=           | the basename of the json file containing the =pywal= colorscheme (it's the most complete of the ones supplied)     |
-| =ewal-use-tty-colors=                | force TTY colors even in a GUI                                                                                     |
+| =ewal-daemon-use-tty-colors=         | whether to use TTY colors when Emacs is running as a daemon                                                        |
+| =ewal-use-tty-colors=                | manually set to =t= to use TTY colors everywhere                                                                   |
 | =ewal-primary-accent-color=          | most predominant color returned by =ewal-get-spacemacs-theme-colors=                                               |
 | =ewal-secondary-accent-color=        | second most predominant color returned by =ewal-get-spacemacs-theme-colors=                                        |
 | =ewal-base-palette=                  | base colors extracted from =pywals= cache                                                                          |

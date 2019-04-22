@@ -81,8 +81,17 @@ for more details). NOTE: Order matters."
   :type 'list
   :group 'ewal)
 
+(defcustom ewal-daemon-use-tty-colors nil
+  "Whether to use TTY version of `ewal' colors in Emacs daemon.
+It's a numbers game. Set to t if you connect to your Emacs server
+from a TTY most of the time, unless you want to run `ewal' every
+time you connect with `emacsclient'."
+  :type 'boolean
+  :group 'ewal)
 
-(defcustom ewal-use-tty-colors (not (display-graphic-p))
+(defcustom ewal-use-tty-colors (if (daemonp)
+                                   ewal-daemon-use-tty-colors
+                                 (not (display-graphic-p)))
   "Whether to use TTY version of `ewal' colors.
 Meant for setting TTY theme regardless of GUI support."
   :type 'boolean
