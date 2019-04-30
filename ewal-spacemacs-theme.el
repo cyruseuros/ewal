@@ -31,14 +31,14 @@
 ;; if you want to contribute other `ewal' customized themes.
 
 ;;; Code:
-(require 'ewal)
+(require 'ewal "./ewal.el")
 (require 'spacemacs-common)
 
 (defvar ewal-spacemacs-theme-colors nil
   "`spacemacs-theme' compatible colors.
 Extracted from current `ewal' theme.")
 
-(defun ewal-spacemacs-theme--generate-theme-colors (&optional borders)
+(defun ewal-spacemacs-theme--generate-colors (&optional borders)
   "Make theme colorscheme from theme palettes.
 If TTY is t, colorscheme is reduced to basic  supported
 colors. If BORDERS is t use `ewal-primary-accent-color' for
@@ -122,7 +122,7 @@ defaults to return value of `ewal--use-tty-colors-p'. if TTY is
 t, use TTY colors."
   (ewal-load-ewal-colors force-reload
                          'ewal-spacemacs-theme-colors
-                         #'ewal-spacemacs-theme--generate-theme-colors
+                         #'ewal-spacemacs-theme--generate-colors
                          borders)
   (if apply
       (setq spacemacs-theme-custom-colors ewal-spacemacs-theme-colors)
