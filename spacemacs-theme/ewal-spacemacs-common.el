@@ -1,4 +1,4 @@
-;;; ewal-spacemacs-theme.el --- An `ewal'-based theme -*- lexical-binding: t; -*-
+;;; ewal-spacemacs-common.el --- An `ewal'-based theme -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Uros Perisic
 
@@ -128,5 +128,6 @@ t, use TTY colors."
       (setq spacemacs-theme-custom-colors ewal-spacemacs-theme-colors)
     ewal-spacemacs-theme-colors))
 
-(provide-theme 'ewal-spacemacs-theme)
-;;; ewal-spacemacs-theme.el ends here
+(provide 'ewal-spacemacs-common)
+
+;;; ewal-spacemacs-common.el ends here
