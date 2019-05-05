@@ -1,4 +1,4 @@
-;;; ewal-spacemacs-common.el --- An `ewal'-based theme -*- lexical-binding: t; -*-
+;;; ewal-spacemacs.el --- An `ewal'-based theme -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Uros Perisic
 
@@ -7,7 +7,7 @@
 ;;
 ;; Version: 0.1
 ;; Keywords: faces
-;; Package-Requires: ((emacs "25") (ewal "0.1") (spacemacs-theme "0.1"))
+;; Package-Requires: ((emacs "25") (ewal "0.1"))
 
 ;; This program is free software: you can redistribute it and/or modify it under
 ;; the terms of the GNU General Public License as published by the Free Software
@@ -32,13 +32,12 @@
 
 ;;; Code:
 (require 'ewal "./ewal.el")
-(require 'spacemacs-common)
 
-(defvar ewal-spacemacs-theme-colors nil
+(defvar ewal-spacemacs-colors nil
   "`spacemacs-theme' compatible colors.
 Extracted from current `ewal' theme.")
 
-(defun ewal-spacemacs-theme--generate-colors (&optional borders)
+(defun ewal-spacemacs--generate-colors (&optional borders)
   "Make theme colorscheme from theme palettes.
 If TTY is t, colorscheme is reduced to basic  supported
 colors. If BORDERS is t use `ewal-primary-accent-color' for
@@ -111,7 +110,7 @@ borders. I prefer to remove them."
          theme-colors))
 
 ;;;###autoload
-(cl-defun ewal-spacemacs-theme-get-colors
+(cl-defun ewal-spacemacs-get-colors
     (&key apply force-reload borders)
   "Get `spacemacs-theme' colors.
 For usage see: <https://github.com/nashamri/spacemacs-theme>. If
@@ -121,13 +120,13 @@ if they have already been computed if FORCE-RELOAD is t. TTY
 defaults to return value of `ewal--use-tty-colors-p'. if TTY is
 t, use TTY colors."
   (ewal-load-ewal-colors force-reload
-                         'ewal-spacemacs-theme-colors
-                         #'ewal-spacemacs-theme--generate-colors
+                         'ewal-spacemacs-colors
+                         #'ewal-spacemacs--generate-colors
                          borders)
   (if apply
-      (setq spacemacs-theme-custom-colors ewal-spacemacs-theme-colors)
-    ewal-spacemacs-theme-colors))
+      (setq spacemacs-theme-custom-colors ewal-spacemacs-colors)
+    ewal-spacemacs-colors))
 
-(provide 'ewal-spacemacs-common)
+(provide 'ewal-spacemacs)
 
-;;; ewal-spacemacs-common.el ends here
+;;; ewal-spacemacs.el ends here
