@@ -113,21 +113,6 @@ Must be one of `ewal-ansi-color-name-symbols'")
 (defvar ewal-extended-palette nil
   "Extended palette based on `ewal-base-palette'.")
 
-;; store everything in global variables for easy viewing
-;; only set when colors schemes are generated
-(defvar ewal-spacemacs-theme-colors nil
-  "`spacemacs-theme' compatible colors.
-Extracted from current `ewal' theme.")
-
-(defvar ewal-spacemacs-evil-cursors-colors nil
-  "`spacemacs-evil-cursors' compatible colors.
-Extracted from current `ewal' palette.")
-
-(defvar ewal-emacs-evil-cursors-colors nil
-  "Vanilla Emacs Evil compatible colors.
-Extracted from current `ewal' palette, and stored in a plist for
-easy application.")
-
 (defun ewal--use-tty-colors-p (tty)
   "Utility function to check if TTY colors should be used."
   (if (boundp tty) tty
@@ -264,108 +249,6 @@ color regardless od SHADE."
         original-color
       defined-requested-color)))
 
-(defun ewal--generate-spacemacs-theme-colors (&optional borders)
-  "Make theme colorscheme from theme palettes.
-If TTY is t, colorscheme is reduced to basic  supported
-colors. If BORDERS is t use `ewal-primary-accent-color' for
-borders. I prefer to remove them."
-  (let* ((primary-accent-color ewal-primary-accent-color)
-         (secondary-accent-color ewal-secondary-accent-color)
-         (border-color (if borders primary-accent-color 'background))
-         (theme-colors
-          `((act1          . ,(ewal--get-color 'background -3))
-            (act2          . ,(ewal--get-color primary-accent-color 0))
-            (base          . ,(ewal--get-color 'foreground 0))
-            (base-dim      . ,(ewal--get-color 'foreground -4))
-            (bg1           . ,(ewal--get-color 'background 0))
-            ;; used to highlight current line
-            (bg2           . ,(ewal--get-color 'background -2))
-            (bg3           . ,(ewal--get-color 'background -3))
-            (bg4           . ,(ewal--get-color 'background -4))
-            (border        . ,(ewal--get-color border-color 0))
-            (cblk          . ,(ewal--get-color 'foreground -3))
-            (cblk-bg       . ,(ewal--get-color 'background -3))
-            (cblk-ln       . ,(ewal--get-color primary-accent-color 4))
-            (cblk-ln-bg    . ,(ewal--get-color primary-accent-color -4))
-            (cursor        . ,(ewal--get-color 'cursor 0))
-            (const         . ,(ewal--get-color primary-accent-color 4))
-            (comment       . ,(ewal--get-color 'comment 0))
-            (comment-bg    . ,(ewal--get-color 'background 0))
-            (comp          . ,(ewal--get-color secondary-accent-color 0))
-            (err           . ,(ewal--get-color 'red 0))
-            (func          . ,(ewal--get-color primary-accent-color 0))
-            (head1         . ,(ewal--get-color primary-accent-color 0))
-            (head1-bg      . ,(ewal--get-color 'background -3))
-            (head2         . ,(ewal--get-color secondary-accent-color 0))
-            (head2-bg      . ,(ewal--get-color 'background -3))
-            (head3         . ,(ewal--get-color 'cyan 0))
-            (head3-bg      . ,(ewal--get-color 'background -3))
-            (head4         . ,(ewal--get-color 'yellow 0))
-            (head4-bg      . ,(ewal--get-color 'background -3))
-            (highlight     . ,(ewal--get-color 'background 4))
-            (highlight-dim . ,(ewal--get-color 'background 2))
-            (keyword       . ,(ewal--get-color secondary-accent-color 0))
-            (lnum          . ,(ewal--get-color 'comment 0))
-            (mat           . ,(ewal--get-color 'green 0))
-            (meta          . ,(ewal--get-color 'yellow 4))
-            (str           . ,(ewal--get-color 'cyan 0))
-            (suc           . ,(ewal--get-color 'green 4))
-            (ttip          . ,(ewal--get-color 'comment 0))
-            ;; same as `bg2'
-            (ttip-sl       . ,(ewal--get-color 'background -2))
-            (ttip-bg       . ,(ewal--get-color 'background 0))
-            (type          . ,(ewal--get-color 'red 2))
-            (var           . ,(ewal--get-color secondary-accent-color 4))
-            (war           . ,(ewal--get-color 'red 4))
-            ;; colors
-            (aqua          . ,(ewal--get-color 'cyan 0))
-            (aqua-bg       . ,(ewal--get-color 'cyan -3))
-            (green         . ,(ewal--get-color 'green 0))
-            (green-bg      . ,(ewal--get-color 'green -3))
-            (green-bg-s    . ,(ewal--get-color 'green -4))
-            ;; literally the same as `aqua' in web development
-            (cyan          . ,(ewal--get-color 'cyan 0))
-            (red           . ,(ewal--get-color 'red 0))
-            (red-bg        . ,(ewal--get-color 'red -3))
-            (red-bg-s      . ,(ewal--get-color 'red -4))
-            (blue          . ,(ewal--get-color 'blue 0))
-            (blue-bg       . ,(ewal--get-color 'blue -3))
-            (blue-bg-s     . ,(ewal--get-color 'blue -4))
-            (magenta       . ,(ewal--get-color 'magenta 0))
-            (yellow        . ,(ewal--get-color 'yellow 0))
-            (yellow-bg     . ,(ewal--get-color 'yellow -3)))))
-         theme-colors))
-
-(defun ewal--generate-spacemacs-evil-cursors-colors ()
-  "Use wal colors to customize `spacemacs-evil-cursors'.
-TTY specifies whether to use TTY or GUI colors."
-  `(("normal" ,(ewal--get-color 'cursor 0) box)
-    ("insert" ,(ewal--get-color 'green 0) (bar . 2))
-    ("emacs" ,(ewal--get-color 'blue 0) box)
-    ("hybrid" ,(ewal--get-color 'blue 0) (bar . 2))
-    ("evilified" ,(ewal--get-color 'red 0) box)
-    ("visual" ,(ewal--get-color 'white -4) (hbar . 2))
-    ("motion" ,(ewal--get-color ewal-primary-accent-color 0) box)
-    ("replace" ,(ewal--get-color 'red -4) (hbar . 2))
-    ("lisp" ,(ewal--get-color 'magenta 4) box)
-    ("iedit" ,(ewal--get-color 'magenta -4) box)
-    ("iedit-insert" ,(ewal--get-color 'magenta -4) (bar . 2))))
-
-(defun ewal--generate-emacs-evil-cursors-colors ()
-  "Use wal colors to customize vanilla Emacs Evil cursor colors.
-TTY specifies whether to use or GUI colors."
-  `((evil-normal-state-cursor (,(ewal--get-color 'cursor 0) box))
-    (evil-insert-state-cursor (,(ewal--get-color 'green 0) (bar . 2)))
-    (evil-emacs-state-cursor (,(ewal--get-color 'blue 0) box))
-    (evil-hybrid-state-cursor (,(ewal--get-color 'blue 0) (bar . 2)))
-    (evil-evilified-state-cursor (,(ewal--get-color 'red 0) box))
-    (evil-visual-state-cursor (,(ewal--get-color 'white -4) (hbar . 2)))
-    (evil-motion-state-cursor (,(ewal--get-color ewal-primary-accent-color 0) box))
-    (evil-replace-state-cursor (,(ewal--get-color 'red -4) (hbar . 2)))
-    (evil-lisp-state-cursor (,(ewal--get-color 'magenta 4) box))
-    (evil-iedit-state-cursor (,(ewal--get-color 'magenta -4) box))
-    (evil-iedit-insert-state-cursor (,(ewal--get-color 'magenta -4) (bar . 2)))))
-
 ;;;###autoload
 (defun ewal-load-ewal-colors (&optional force-reload vars funcs args)
   "Load all relevant `ewal' palettes and colors as environment variables.
@@ -406,58 +289,6 @@ Pass COLOR and SHADE to `ewal--get-color'. Meant to be called
 from user config."
   (ewal-load-ewal-colors)
   (ewal--get-color color shade))
-
-;;;###autoload
-(cl-defun ewal-get-spacemacs-theme-colors
-    (&key apply force-reload borders)
-  "Get `spacemacs-theme' colors.
-For usage see: <https://github.com/nashamri/spacemacs-theme>. If
-APPLY is t, set relevant environment variable for the user.
-Reload `ewal' environment variables before returning colors even
-if they have already been computed if FORCE-RELOAD is t. TTY
-defaults to return value of `ewal--use-tty-colors-p'. if TTY is
-t, use TTY colors."
-  (ewal-load-ewal-colors force-reload
-                         'ewal-spacemacs-theme-colors
-                         #'ewal--generate-spacemacs-theme-colors
-                         borders)
-  (if apply
-      (setq spacemacs-theme-custom-colors ewal-spacemacs-theme-colors)
-    ewal-spacemacs-theme-colors))
-
-;;;###autoload
-(cl-defun ewal-get-spacemacs-evil-cursors-colors
-    (&key apply force-reload)
-  "Get `spacemacs-evil-cursors' colors.
-If APPLY is t, set relevant environment variable for the user.
-Reload `ewal' environment variables before returning colors even
-if they have already been computed if FORCE-RELOAD is t. TTY
-defaults to return value of `ewal--use-tty-colors-p'. If TTY is
-t, use TTY colors."
-  (ewal-load-ewal-colors force-reload 'ewal-spacemacs-evil-cursors-colors
-                         #'ewal--generate-spacemacs-evil-cursors-colors
-                         nil)
-  (if apply
-      (setq spacemacs-evil-cursors ewal-spacemacs-evil-cursors-colors)
-    ewal-spacemacs-evil-cursors-colors))
-
-;;;###autoload
-(cl-defun ewal-get-emacs-evil-cursors-colors
-    (&key apply force-reload)
-  "Get vanilla Emacs Evil cursor colors.
-If APPLY is t, set relevant environment variables for the user.
-Reload `ewal' environment variables before returning colors even
-if they have already been computed if FORCE-RELOAD is t. TTY
-defaults to return value of `ewal--use-tty-colors-p'. If TTY is
-t, use TTY colors."
-  (ewal-load-ewal-colors force-reload 'ewal-spacemacs-evil-cursors-colors
-                         #'ewal--generate-spacemacs-evil-cursors-colors
-                         nil)
-  (if apply
-      (cl-loop for (key . value)
-               in ewal-emacs-evil-cursors-colors
-               do (set key value))
-    ewal-emacs-evil-cursors-colors))
 
 (provide 'ewal)
 
