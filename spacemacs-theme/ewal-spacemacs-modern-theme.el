@@ -7,10 +7,13 @@
 
 (create-spacemacs-theme 'dark 'ewal-spacemacs-modern)
 
-;; (custom-theme-set-faces
-;;  'ewal-spacemacs-modern
-;;  (let ((class '((class color) (min-colors 89))))
-;;    `(page-break-lines ((,class (:background ,(ewal-get-color 'background -2)))) t)
-;;    `(line-number ((,class (:background ,(ewal-get-color 'background 0)))) t)))
+(with-eval-after-load 'ewal-spacemacs-modern-theme
+  (custom-theme-set-faces
+   'ewal-spacemacs-modern
+   (let ((class '((class color) (min-colors 89))))
+     `(line-number
+       ((,class (:background ,(ewal-get-color 'background 0)))))
+     `(page-break-lines
+       ((,class (:background ,(ewal-get-color 'background -2))))))))
 
 (provide-theme 'ewal-spacemacs-modern)
