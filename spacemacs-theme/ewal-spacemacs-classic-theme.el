@@ -4,5 +4,7 @@
 (require 'spacemacs-common)
 
 (deftheme ewal-spacemacs-classic)
+
 (create-spacemacs-theme 'dark 'ewal-spacemacs-classic)
+
 (provide-theme 'ewal-spacemacs-classic)

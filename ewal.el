@@ -381,7 +381,7 @@ must be of the same length if passed at all."
               force-reload)
       ;; always set together
       (setq ewal-base-palette (ewal-load-wal-colors)
-            ewal-extended-palette (ewal--extend-base-palette 4 5)))
+            ewal-extended-palette (ewal--extend-base-palette 8 5)))
     ;; let errors propagate if only some args are set
     (when (or vars funcs args)
       ;; accept atoms as well as lists
