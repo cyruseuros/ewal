@@ -81,7 +81,7 @@ for more details). NOTE: Order matters."
   :type 'list
   :group 'ewal)
 
-(defcustom ewal-daemon-use-tty-colors nil
+(defcustom ewal-force-tty-colors-daemon nil
   "Whether to use TTY version of `ewal' colors in Emacs daemon.
 It's a numbers game. Set to t if you connect to your Emacs server
 from a TTY most of the time, unless you want to run `ewal' every
@@ -89,9 +89,7 @@ time you connect with `emacsclient'."
   :type 'boolean
   :group 'ewal)
 
-(defcustom ewal-use-tty-colors (if (daemonp)
-                                   ewal-daemon-use-tty-colors
-                                 (not (display-graphic-p)))
+(defcustom ewal-force-tty-colors nil
   "Whether to use TTY version of `ewal' colors.
 Meant for setting TTY theme regardless of GUI support."
   :type 'boolean
@@ -112,13 +110,6 @@ Must be one of `ewal-ansi-color-name-symbols'")
 
 (defvar ewal-extended-palette nil
   "Extended palette based on `ewal-base-palette'.")
-
-(defun ewal--use-tty-colors-p (tty)
-  "Utility function to check if TTY colors should be used."
-  (if (boundp tty) tty
-    (or ewal-use-tty-colors
-        (display-graphic-p))))
-
 
 ;;;###autoload
 (defun ewal-load-wal-colors (&optional json color-names)
@@ -237,7 +228,11 @@ number of available shades, the darkest/lightest shade is
 returned. If TTY is t, return original, TTY compatible `wal'
 color regardless od SHADE."
   (let* ((palette (or palette ewal-extended-palette))
-         (tty (or tty ewal-use-tty-colors))
+         ;; override, broad, narrow, fallback
+         (tty (or tty
+                  ewal-force-tty-colors
+                  (and (daemonp) ewal-force-tty-colors-daemon)
+                  (and (not (daemonp)) (not (display-graphic-p)))))
          (middle (/ (- (length (car ewal-extended-palette)) 1) 2))
          (shade (or shade 0))
          (original-color (nth middle (alist-get color palette)))
