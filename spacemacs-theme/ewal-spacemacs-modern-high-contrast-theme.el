@@ -11,6 +11,8 @@
    'ewal-spacemacs-modern-high-contrast
    (let ((class '((class color) (min-colors 89))))
      `(line-number
-       ((,class (:background ,(ewal-get-color 'background 0))))))))
+       ((,class (:foreground ,(alist-get 'lnum spacemacs-theme-custom-colors)
+                 :background ,(alist-get 'bg1 spacemacs-theme-custom-colors)
+                 :inherit default)))))))
 
 (provide-theme 'ewal-spacemacs-modern-high-contrast)
