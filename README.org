@@ -1,66 +1,63 @@
 #+ATTR_HTML: :style margin-left: auto; margin-right: auto;
 [[./scrots/ewal.gif]]
 * Summary
-=ewal= is a [[https://github.com/dylanaraps/pywal][pywal]]-based theme generator for Emacs with an eye towards [[https://github.com/syl20bnr/spacemacs][Spacemacs]],
-and [[https://github.com/nashamri/spacemacs-theme][spacemacs-theme]], but no dependencies on either (or any external dependencies
-for that matter), so you can use it to colorize your vanilla Emacs as well
-(using the lower-level =ewal-get-color= utility function).
-
-=ewal= doesn't only extract special and regular colors from =pywal=, it adds
-extra shades to them which it can intelligently suppress in a TTY
-context. =ewal= will only return base =pywal= colors in a TTY, which would
-ordinarily not be supported, but can be displayed if the following command is
-run in a TTY:
+=ewal= is a [[https://github.com/dylanaraps/pywal][pywal]]-based theme generator for Emacs. =ewal= doesn't only extract
+special and regular colors from =pywal=, it adds extra shades to them which it
+can intelligently suppress in a TTY context. =ewal= will only return base
+=pywal= colors in a TTY, which would ordinarily not be supported, but can be
+displayed if the following command is run in a TTY:
 #+BEGIN_SRC shell
 source ~/.cache/wal/colors-tty.sh
 #+END_SRC
 
+It currently provides:
++ A package for customizing =Evil= cursor colors in both vanilla and =Spacemacs=
+  format
++ 4 themes based on =spacemacs-theme=:
+  + =ewal-spacemacs-classic=
+  + =ewal-spacemacs-classic-high-contrast=
+  + =ewal-spacemacs-modern=
+  + =ewal-spacemacs-modern-high-contrast=
++ Low-level functions for customizing you current setup using =pywal= colors
+
 My hope is that =ewal= will remain theme agnostic, with people contributing
-functions like =ewal-get-spacemacs-theme-colors= for other popular themes such
-as [[https://github.com/bbatsov/solarized-emacs][solarized-emacs]], making it easy to keep the style of your preferred theme,
-while adapting it to the rest of your theming setup. But, of course, it's FOSS!
-Do whatever you want with it, just make the world a little cooler in the
-process ;)
+packages like =ewal-spacememacs-modern-theme= for other popular themes such as
+[[https://github.com/bbatsov/solarized-emacs][solarized-emacs]], making it easy to keep the style of your preferred theme, while
+adapting it to you colorscheme of choice. But, of course, it's FOSS! Do whatever
+you want with it, just make the world a little cooler in the process.
 
 PRs are more than welcome!
 
 * Usage
 ** Examples
 =ewal= currently fully supports =spacemacs-theme=, colorizing everything it
-does, with fine grained control if you want it, or using an automatic setup
-function if you don't. It can even customize Spacemacs & vanilla Emacs Evil
-cursor colors! Here's the config I have in my =spacemacs/user-init=:
+does, with fine grained control if you want it, or using pre-made-theme if you
+don't. It can even customize Spacemacs & vanilla Emacs Evil cursor colors!
+Here's the config I have in my =spacemacs/user-init=:
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (load-file "~/projects/ewal/ewal.el")
-  (setq spacemacs-evil-cursors (ewal-get-spacemacs-evil-cursors-colors)
-        spacemacs-theme-custom-colors (ewal-get-spacemacs-theme-colors)
-        ;; personal taste
-        spacemacs-theme-org-highlight t
-        theming-modifications
-        `((spacemacs-dark (page-break-lines :background ,(ewal-get-color 'background -2))
-                          (line-number :background ,(ewal-get-color 'background 0)))))
-  ;; reload theme
-  (load-theme 'spacemacs-dark t t)
+  ;; theme
+  (add-to-list 'load-path "~/projects/ewal")
+  (add-to-list 'load-path "~/projects/ewal/spacemacs-theme")
+  (add-to-list 'custom-theme-load-path "~/projects/ewal/spacemacs-theme")
+  (load-theme 'ewal-spacemacs-modern t)
+
+  ;; cursors
+  (add-to-list 'load-path "~/projects/ewal/evil-cursors")
+  (require 'ewal-evil-cursors)
+  (ewal-evil-cursors-get-spacemacs-colors :apply t)
 #+END_SRC
 
-You can also use the =:apply= keyword argument of =ewal='s =get= functions like so:
+I also enable the theme in my =spacemacs/user-config= (because you cannot enable
+a theme in =spacemacs/user-init=):
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (load-file "~/projects/ewal/ewal.el")
-  (ewal-get-spacemacs-theme-colors :apply t)
-  (ewal-get-spacemacs-evil-cursor-colors :apply t)
-  ;; personal taste
-  (setq spacemacs-theme-org-highlight t
-        theming-modifications
-        `((spacemacs-dark (page-break-lines :background ,(ewal-get-color 'background -2))
-                          (line-number :background ,(ewal-get-color 'background 0)))))
-  ;; reload theme
-  (load-theme 'spacemacs-dark t t)
+  (enable-theme 'ewal-spacemacs-modern)
 #+END_SRC
 
-Reloading the theme using =(load-theme 'spacemacs-dark t t)= is necessary due to
-the problem with =spacemacs-theme='s =dyn-let= macro discussed [[https://github.com/nashamri/spacemacs-theme/issues/139#issuecomment-482917254_][here]]. I will be
-submitting a PR to fix it shortly, which should also enable =Spacemacs= users to
-use =ewal= as a library in their =user-init= as discussed [[Note to Spacemacs and Spacemacs-Theme Users and Maintainers][here]].
+Vanilla Emacs users can do both of these steps wherever they please.
+
+=ewal= is in the process of being added to =MELPA=, so you can expect to ditch
+the =load-path= fiddling soon. Also make sure you have =spacemacs-theme=
+installed if you are using any of its 4 =ewal= derivative themes.
 
 To check if =ewal= can load your =pywal= theme first, wrap your config in the
 following block:
@@ -68,12 +65,6 @@ following block:
   (when (ewal-load-wal-colors)
     (ewal-get-spacemacs-theme-colors t)
     (ewal-get-emacs-evil-cursors-colors t))
-#+END_SRC
-
-If you prefer =spacemacs-theme= with borders, pass the =:borders=
-keyword argument to =ewal-get-spacemacs-theme-colors= like so:
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (ewal-get-spacemacs-theme-colors :borders t)
 #+END_SRC
 
 ** Functions & Variables
@@ -88,8 +79,8 @@ set of tables should get you started:
 |--------------------------------------+--------------------------------------------------------------------------------------------------------------------|
 | =ewal-wal-cache-dir=                 | the directory where =pywal= caches its colorschemes                                                                |
 | =ewal-wal-cache-json-file=           | the basename of the json file containing the =pywal= colorscheme (it's the most complete of the ones supplied)     |
-| =ewal-daemon-use-tty-colors=         | whether to use TTY colors when Emacs is running as a daemon                                                        |
-| =ewal-use-tty-colors=                | manually set to =t= to use TTY colors everywhere                                                                   |
+| =ewal-force-tty-colors-daemon=       | whether to use TTY colors when Emacs is running as a daemon                                                        |
+| =ewal-force-tty-colors=              | manually set to =t= to use TTY colors everywhere                                                                   |
 | =ewal-primary-accent-color=          | most predominant color returned by =ewal-get-spacemacs-theme-colors=                                               |
 | =ewal-secondary-accent-color=        | second most predominant color returned by =ewal-get-spacemacs-theme-colors=                                        |
 | =ewal-base-palette=                  | base colors extracted from =pywals= cache                                                                          |
@@ -107,17 +98,3 @@ set of tables should get you started:
 | =ewal-get-spacemacs-theme-colors=       | Get =ewal= colors in =spacemacs-theme-custom-colors= format, mostly preserving theme style, except for a slightly more modern look.                           |
 | =ewal-get-spacemacs-evil-cursor-colors= | Get =ewal= colors in =spacemacs-evil-cursors= format.                                                                                                         |
 | =ewal-get-emacs-evil-cursor-colors=     | Get =ewal= colors as an alist, each element of which is in vanilla Emacs Evil format. Advisable to use =APPLY= argument, as manual application is convoluted. |
-
-
-* Note to Spacemacs and Spacemacs-Theme Users and Maintainers 
-If you're using =spacemacs-theme= as jut another package in vanilla =Emacs=, you
-should experience no problems.
-
-However, since =spacemacs-theme= is part of the =spacemacs-bootstrap= layer, it
-is loaded before everything else. And since =spacemacs/user-init= is called
-before =load-path= is fully populated, it's impossible to =require= this
-package, while using =with-eval-after-load= sets the requisite environment
-variables long after =spacemacs-theme= is loaded.
-
-Get in touch if you have any advice on integrating this into the =Spacemacs=
-boot process, and eventually into the repo itself!
