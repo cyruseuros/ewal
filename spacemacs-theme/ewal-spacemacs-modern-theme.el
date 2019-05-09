@@ -1,5 +1,6 @@
 (require 'ewal-spacemacs)
 ;; has to be run before loading `spacemacs-common'
+(setq spacemacs-theme-org-highlight t)
 (ewal-spacemacs-get-colors :apply t)
 (require 'spacemacs-common)
 
