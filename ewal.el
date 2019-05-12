@@ -5,7 +5,7 @@
 ;; Copyright (C) 2016-2018 Henrik Lissner
 
 ;; Author: Uros Perisic
-;; URL: https://gitlab.com/jjzmajic/ewal.el
+;; URL: https://gitlab.com/jjzmajic/ewal
 ;;
 ;; Version: 0.1
 ;; Keywords: faces
