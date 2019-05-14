@@ -96,7 +96,7 @@ the range of shades of returned colors."
             (ttip-bg       . ,(ewal--get-color 'background (ewal-spacemacs-themes--double high-contrast 0)))
             (type          . ,(ewal--get-color 'red (ewal-spacemacs-themes--double high-contrast 2)))
             (var           . ,(ewal--get-color secondary-accent-color (ewal-spacemacs-themes--double high-contrast 4)))
-            (war           . ,(ewal--get-color 'red (ewal-spacemacs-themes--double high-contrast 4)))
+            (war           . ,(ewal--get-color 'yellow (ewal-spacemacs-themes--double high-contrast 0)))
             ;; colors
             (aqua          . ,(ewal--get-color 'cyan (ewal-spacemacs-themes--double high-contrast 0)))
             (aqua-bg       . ,(ewal--get-color 'cyan (ewal-spacemacs-themes--double high-contrast -3)))
