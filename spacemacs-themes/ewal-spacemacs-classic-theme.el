@@ -1,6 +1,6 @@
-(require 'ewal-spacemacs)
+(require 'ewal-spacemacs-themes)
 ;; has to be run before loading spacemacs-common
-(ewal-spacemacs-get-colors :apply t :borders t)
+(ewal-spacemacs-themes-get-colors :apply t :borders t)
 (require 'spacemacs-common)
 
 (deftheme ewal-spacemacs-classic)
