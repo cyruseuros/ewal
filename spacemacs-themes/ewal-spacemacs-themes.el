@@ -135,6 +135,11 @@ range of shades of returned colors."
       (setq spacemacs-theme-custom-colors ewal-spacemacs-themes-colors)
     ewal-spacemacs-themes-colors))
 
+;;;###autoload
+(when load-file-name
+  (add-to-list 'custom-theme-load-path
+               (file-name-as-directory (file-name-directory load-file-name))))
+
 (provide 'ewal-spacemacs-themes)
 
 ;;; ewal-spacemacs-themes.el ends here
