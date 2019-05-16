@@ -32,11 +32,11 @@
 ;;; Code:
 (require 'ewal "./ewal.el")
 
-(defvar ewal-spacemacs-evil-cursors-colors nil
+(defvar ewal-evil-cursors-spacemacs-colors nil
   "`spacemacs-evil-cursors' compatible colors.
 Extracted from current `ewal' palette.")
 
-(defvar ewal-emacs-evil-cursors-colors nil
+(defvar ewal-evil-cursors-emacs-colors nil
   "Vanilla Emacs Evil compatible colors.
 Extracted from current `ewal' palette, and stored in a plist for
 easy application.")
@@ -80,12 +80,12 @@ Reload `ewal' environment variables before returning colors even
 if they have already been computed if FORCE-RELOAD is t. TTY
 defaults to return value of `ewal--use-tty-colors-p'. If TTY is
 t, use TTY colors."
-  (ewal-load-ewal-colors force-reload 'ewal-spacemacs-evil-cursors-colors
+  (ewal-load-ewal-colors force-reload 'ewal-evil-cursors-spacemacs-colors
                          #'ewal-evil-cursors--generate-spacemacs-colors
                          nil)
   (if apply
-      (setq spacemacs-evil-cursors ewal-spacemacs-evil-cursors-colors)
-    ewal-spacemacs-evil-cursors-colors))
+      (setq spacemacs-evil-cursors ewal-evil-cursors-spacemacs-colors)
+    ewal-evil-cursors-spacemacs-colors))
 
 ;;;###autoload
 (cl-defun ewal-evil-cursors-get-emacs-colors
@@ -96,14 +96,14 @@ Reload `ewal' environment variables before returning colors even
 if they have already been computed if FORCE-RELOAD is t. TTY
 defaults to return value of `ewal--use-tty-colors-p'. If TTY is
 t, use TTY colors."
-  (ewal-load-ewal-colors force-reload 'ewal-spacemacs-evil-cursors-colors
+  (ewal-load-ewal-colors force-reload 'ewal-evil-cursors-spacemacs-colors
                          #'ewal-evil-cursors--generate-spacemacs-colors
                          nil)
   (if apply
       (cl-loop for (key . value)
-               in ewal-emacs-evil-cursors-colors
+               in ewal-evil-cursors-emacs-colors
                do (set key value))
-    ewal-emacs-evil-cursors-colors))
+    ewal-evil-cursors-emacs-colors))
 
 (provide 'ewal-evil-cursors)
 ;;; ewal-evil-cursors.el ends here
