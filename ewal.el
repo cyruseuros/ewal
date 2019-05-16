@@ -46,7 +46,7 @@
 (require 'cl-lib)
 (require 'color)
 (require 'json)
-(require 'term/tty-colors)
+;; (require 'term/tty-colors)
 
 (defgroup ewal nil
   "ewal options."
