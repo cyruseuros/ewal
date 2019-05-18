@@ -1,3 +1,5 @@
+;; ewal-spacemacs-modern-high-contrast-theme.el --- A modern, high-contrast, `ewal'-colored take on `spacemacs-theme'.
+
 (require 'ewal-spacemacs-themes)
 ;; has to be run before loading `spacemacs-common'
 (setq spacemacs-theme-org-highlight t)
@@ -24,3 +26,4 @@
 (create-spacemacs-theme 'dark 'ewal-spacemacs-modern-high-contrast)
 
 (provide-theme 'ewal-spacemacs-modern-high-contrast)
+;; ewal-spacemacs-modern-high-contrast-theme.el ends here
