@@ -84,7 +84,14 @@ t, use TTY colors."
                          #'ewal-evil-cursors--generate-spacemacs-colors
                          nil)
   (if apply
-      (setq spacemacs-evil-cursors ewal-evil-cursors-spacemacs-colors)
+      (if (boundp 'spacemacs/add-evil-cursor)
+          (when (functionp 'spacemacs/add-evil-cursor)
+            (cl-loop for (state color shape) in ewal-evil-cursors-spacemacs-colors
+                     do (spacemacs/add-evil-cursor state color shape)))
+        (if (boundp 'spacemacs-evil-cursors)
+            (cl-loop for cursor in ewal-evil-cursors-spacemacs-colors
+                     do (add-to-list spacemacs-evil-cursors cursor))
+          (setq spacemacs-evil-cursors ewal-evil-cursors-spacemacs-colors)))
     ewal-evil-cursors-spacemacs-colors))
 
 ;;;###autoload
