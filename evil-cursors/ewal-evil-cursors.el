@@ -103,13 +103,13 @@ Reload `ewal' environment variables before returning colors even
 if they have already been computed if FORCE-RELOAD is t. TTY
 defaults to return value of `ewal--use-tty-colors-p'. If TTY is
 t, use TTY colors."
-  (ewal-load-ewal-colors force-reload 'ewal-evil-cursors-spacemacs-colors
-                         #'ewal-evil-cursors--generate-spacemacs-colors
+  (ewal-load-ewal-colors force-reload 'ewal-evil-cursors-emacs-colors
+                         #'ewal-evil-cursors--generate-emacs-colors
                          nil)
   (if apply
       (cl-loop for (key . value)
                in ewal-evil-cursors-emacs-colors
-               do (set key value))
+               do (set key (car value)))
     ewal-evil-cursors-emacs-colors))
 
 (provide 'ewal-evil-cursors)
