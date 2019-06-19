@@ -55,7 +55,7 @@ disabled.")
     (visual . ewal-evil-cursors-visual-state)
     (motion . ewal-evil-cursors-motion-state)
     (iedit . ewal-evil-cursors-iedit-state)
-    (iedit-inser . ewal-evil-cursors-iedit-insert-state))
+    (iedit-insert . ewal-evil-cursors-iedit-state))
   "Association list mapping evil states to their corresponding highlight faces.
 Is used by ‘ewal-evil-cursors-highlight-face-evil-state’.")
 
@@ -101,30 +101,22 @@ TTY specifies whether to use or GUI colors."
 
 (defun ewal-evil-cursors--generate-evil-faces ()
   "Define evil faces.
-Later to be used in `ewal-evil-cursors-highlight-face-evil-state'.
-No, a loop does not work. Don't ask."
-  (defvar dyn-s)
-  (dolist (dyn-s
-           `((ewal-evil-cursors-normal-state ,(ewal--get-color 'cursor 0) "Ewal normal state face.")
-             (ewal-evil-cursors-insert-state ,(ewal--get-color
-                               (if (and ewal-evil-cursors-obey-evil-p
-                                        (bound-and-true-p evil-disable-insert-state-bindings))
-                                   'blue 'green) 0) "Ewal insert state face.")
-             (ewal-evil-cursors-emacs-state ,(ewal--get-color 'blue 0) "Ewal emacs state face.")
-             (ewal-evil-cursors-hybrid-state ,(ewal--get-color 'blue 0) "Ewal hybrid state face.")
-             (ewal-evil-cursors-evilified-state ,(ewal--get-color 'red 0) "Ewal evilified state face.")
-             (ewal-evil-cursors-visual-state ,(ewal--get-color 'white -4) "Ewal visual state face.")
-             (ewal-evil-cursors-motion-state ,(ewal--get-color ewal-primary-accent-color 0) "Ewal motion state face.")
-             (ewal-evil-cursors-replace-state ,(ewal--get-color 'red -4) "Ewal replace state face.")
-             (ewal-evil-cursors-lisp-state ,(ewal--get-color 'magenta 4) "Ewal lisp state face.")
-             (ewal-evil-cursors-iedit-state ,(ewal--get-color 'magenta -4) "Ewal iedit state face.")
-             (ewal-evil-cursors-iedit-insert-state ,(ewal--get-color 'magenta -4) "Ewal iedit insert state face.")))
-    (eval `(defface ,(nth 0 dyn-s)
-             `((t (:background ,(nth 1 dyn-s)
-                   :foreground ,(ewal--get-color 'background -3)
-                   :inherit 'mode-line)))
-             ,(nth 2 dyn-s)
-             :group 'spaceline))))
+Later to be used in `ewal-evil-cursors-highlight-face-evil-state'."
+  (defvar dyn-color)
+  (defvar dyn-state)
+  (let ((face-string "ewal-evil-cursors-%s-state")
+        (doc-string "Ewal evil %s state face."))
+    (cl-loop for (key . value) in (or ewal-evil-cursors-emacs-colors (ewal-evil-cursors--generate-emacs-colors))
+             ;; only check single string
+             ;; iedit-insert is the same color anyway
+             as dyn-state = (cadr (split-string (symbol-name key) "-"))
+             as dyn-color = (caar value) do
+             (eval `(defface ,(intern (format face-string dyn-state))
+                      `((t (:background ,dyn-color
+                            :foreground ,(ewal--get-color 'background -3)
+                            :inherit 'mode-line)))
+                      ,(format doc-string dyn-state)
+                      :group 'spaceline)))))
 
 (ewal-evil-cursors--generate-evil-faces)
 
