@@ -41,6 +41,30 @@ Extracted from current `ewal' palette.")
 Extracted from current `ewal' palette, and stored in a plist for
 easy application.")
 
+(defvar ewal-evil-cursors-obey-evil-p t
+  "Whether to respect evil settings.
+I.e. call insert state hybrid state if insert bindings are
+disabled.")
+
+(defvar ewal-evil-cursors-evil-state-faces
+  '((normal . ewal-evil-cursors-normal-state)
+    (insert . ewal-evil-cursors-insert-state)
+    (emacs . ewal-evil-cursors-emacs-state)
+    (hybrid . ewal-evil-cursors-hybrid-state)
+    (replace . ewal-evil-cursors-replace-state)
+    (visual . ewal-evil-cursors-visual-state)
+    (motion . ewal-evil-cursors-motion-state)
+    (iedit . ewal-evil-cursors-iedit-state)
+    (iedit-inser . ewal-evil-cursors-iedit-insert-state))
+  "Association list mapping evil states to their corresponding highlight faces.
+Is used by ‘ewal-evil-cursors-highlight-face-evil-state’.")
+
+(defgroup ewal-evil-cursors nil
+  "Ewal evil faces.
+Originally indented to be used in spaceline for state indication,
+but might be useful otherwise"
+  :group 'faces)
+
 (defun ewal-evil-cursors--generate-spacemacs-colors ()
   "Use wal colors to customize `spacemacs-evil-cursors'.
 TTY specifies whether to use TTY or GUI colors."
@@ -60,7 +84,10 @@ TTY specifies whether to use TTY or GUI colors."
   "Use wal colors to customize vanilla Emacs Evil cursor colors.
 TTY specifies whether to use or GUI colors."
   `((evil-normal-state-cursor (,(ewal--get-color 'cursor 0) box))
-    (evil-insert-state-cursor (,(ewal--get-color 'green 0) (bar . 2)))
+    (evil-insert-state-cursor (,(ewal--get-color
+                                 (if (and ewal-evil-cursors-obey-evil-p
+                                          (bound-and-true-p evil-disable-insert-state-bindings))
+                                     'blue 'green) 0) (bar . 2)))
     (evil-emacs-state-cursor (,(ewal--get-color 'blue 0) box))
     (evil-hybrid-state-cursor (,(ewal--get-color 'blue 0) (bar . 2)))
     (evil-evilified-state-cursor (,(ewal--get-color 'red 0) box))
@@ -70,6 +97,48 @@ TTY specifies whether to use or GUI colors."
     (evil-lisp-state-cursor (,(ewal--get-color 'magenta 4) box))
     (evil-iedit-state-cursor (,(ewal--get-color 'magenta -4) box))
     (evil-iedit-insert-state-cursor (,(ewal--get-color 'magenta -4) (bar . 2)))))
+
+
+(defun ewal-evil-cursors--generate-evil-faces ()
+  "Define evil faces.
+Later to be used in `ewal-evil-cursors-highlight-face-evil-state'.
+No, a loop does not work. Don't ask."
+  (defvar dyn-s)
+  (dolist (dyn-s
+           `((ewal-evil-cursors-normal-state ,(ewal--get-color 'cursor 0) "Ewal normal state face.")
+             (ewal-evil-cursors-insert-state ,(ewal--get-color
+                               (if (and ewal-evil-cursors-obey-evil-p
+                                        (bound-and-true-p evil-disable-insert-state-bindings))
+                                   'blue 'green) 0) "Ewal insert state face.")
+             (ewal-evil-cursors-emacs-state ,(ewal--get-color 'blue 0) "Ewal emacs state face.")
+             (ewal-evil-cursors-hybrid-state ,(ewal--get-color 'blue 0) "Ewal hybrid state face.")
+             (ewal-evil-cursors-evilified-state ,(ewal--get-color 'red 0) "Ewal evilified state face.")
+             (ewal-evil-cursors-visual-state ,(ewal--get-color 'white -4) "Ewal visual state face.")
+             (ewal-evil-cursors-motion-state ,(ewal--get-color ewal-primary-accent-color 0) "Ewal motion state face.")
+             (ewal-evil-cursors-replace-state ,(ewal--get-color 'red -4) "Ewal replace state face.")
+             (ewal-evil-cursors-lisp-state ,(ewal--get-color 'magenta 4) "Ewal lisp state face.")
+             (ewal-evil-cursors-iedit-state ,(ewal--get-color 'magenta -4) "Ewal iedit state face.")
+             (ewal-evil-cursors-iedit-insert-state ,(ewal--get-color 'magenta -4) "Ewal iedit insert state face.")))
+    (eval `(defface ,(nth 0 dyn-s)
+             `((t (:background ,(nth 1 dyn-s)
+                   :foreground ,(ewal--get-color 'background -3)
+                   :inherit 'mode-line)))
+             ,(nth 2 dyn-s)
+             :group 'spaceline))))
+
+(ewal-evil-cursors--generate-evil-faces)
+
+;;;###autoload
+(defun ewal-evil-cursors-highlight-face-evil-state ()
+  "Set the highlight face depending on the evil state.
+Set `spaceline-highlight-face-func' to
+`ewal-evil-cursors-highlight-face-evil-state' to use this. Could
+be useful elsewhere too."
+  (if (bound-and-true-p evil-local-mode)
+      (let* ((state (if (eq 'operator evil-state) evil-previous-state evil-state))
+             (face (assq state ewal-evil-cursors-evil-state-faces)))
+        (if face (cdr face) (spaceline-highlight-face-default)))
+    (ewal-evil-cursors-highlight-face-default)))
 
 ;;;###autoload
 (cl-defun ewal-evil-cursors-get-spacemacs-colors
