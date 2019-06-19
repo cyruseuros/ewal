@@ -31,6 +31,7 @@
 
 ;;; Code:
 (require 'ewal "./ewal.el")
+(declare-function #'spaceline-highlight-face-default "ext:noop")
 
 (defvar ewal-evil-cursors-spacemacs-colors nil
   "`spacemacs-evil-cursors' compatible colors.
@@ -130,7 +131,7 @@ be useful elsewhere too."
       (let* ((state (if (eq 'operator evil-state) evil-previous-state evil-state))
              (face (assq state ewal-evil-cursors-evil-state-faces)))
         (if face (cdr face) (spaceline-highlight-face-default)))
-    (ewal-evil-cursors-highlight-face-default)))
+    (spaceline-highlight-face-default)))
 
 ;;;###autoload
 (cl-defun ewal-evil-cursors-get-spacemacs-colors
