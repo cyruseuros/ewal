@@ -118,7 +118,7 @@ increase (double) the range of shades of returned colors."
 
 ;;;###autoload
 (cl-defun ewal-spacemacs-themes-get-colors
-    (&key apply force-reload borders high-contrast)
+    (&key apply force-reload borders)
   "Get `spacemacs-theme' colors.
 For usage see: <https://github.com/nashamri/spacemacs-theme>. If
 APPLY is t, set relevant environment variable for the user.
@@ -130,7 +130,7 @@ range of shades of returned colors."
   (ewal-load-ewal-colors force-reload
                          'ewal-spacemacs-themes-colors
                          #'ewal-spacemacs-themes--generate-colors
-                         `((,borders ,high-contrast)))
+                         `((,borders)))
   (if apply
       (setq spacemacs-theme-custom-colors ewal-spacemacs-themes-colors)
     ewal-spacemacs-themes-colors))
