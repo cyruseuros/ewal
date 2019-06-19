@@ -111,6 +111,11 @@ Must be one of `ewal-ansi-color-name-symbols'")
 (defvar ewal-extended-palette nil
   "Extended palette based on `ewal-base-palette'.")
 
+(defvar ewal-high-contrast-p nil
+  "Whether to increase the contrast of colors.
+Essentially just double the argument passed to
+`ewal-get-color'.")
+
 ;;;###autoload
 (defun ewal-load-wal-colors (&optional json color-names)
   "Read JSON as the most complete of the cached wal files.
@@ -226,7 +231,8 @@ Choose color that is darker (-) or lightener (+) than COLOR
 defaults to 0, returning original wal COLOR. If SHADE exceeds
 number of available shades, the darkest/lightest shade is
 returned. If TTY is t, return original, TTY compatible `wal'
-color regardless od SHADE."
+color regardless od SHADE. If `ewal-high-contrast-p' is t, double
+SHADE."
   (let* ((palette (or palette ewal-extended-palette))
          ;; override, broad, narrow, fallback
          (tty (or tty
@@ -234,7 +240,7 @@ color regardless od SHADE."
                   (and (daemonp) ewal-force-tty-colors-daemon)
                   (and (not (daemonp)) (not (display-graphic-p)))))
          (middle (/ (- (length (car ewal-extended-palette)) 1) 2))
-         (shade (or shade 0))
+         (shade (or (* (if ewal-high-contrast-p 2 1) shade) 0))
          (original-color (nth middle (alist-get color palette)))
          (requested-color (nth (+ middle shade) (alist-get color palette)))
          (defined-requested-color (if requested-color
