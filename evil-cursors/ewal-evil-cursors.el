@@ -55,6 +55,7 @@ disabled.")
     (replace . ewal-evil-cursors-replace-state)
     (visual . ewal-evil-cursors-visual-state)
     (motion . ewal-evil-cursors-motion-state)
+    (lisp . ewal-evil-cursors-lisp-state)
     (iedit . ewal-evil-cursors-iedit-state)
     (iedit-insert . ewal-evil-cursors-iedit-state))
   "Association list mapping evil states to their corresponding highlight faces.
@@ -98,7 +99,6 @@ TTY specifies whether to use or GUI colors."
     (evil-lisp-state-cursor (,(ewal--get-color 'magenta 4) box))
     (evil-iedit-state-cursor (,(ewal--get-color 'magenta -4) box))
     (evil-iedit-insert-state-cursor (,(ewal--get-color 'magenta -4) (bar . 2)))))
-
 
 (defun ewal-evil-cursors--generate-evil-faces ()
   "Define evil faces.
