@@ -63,7 +63,7 @@ increase (double) the range of shades of returned colors."
             (bg1           . ,(ewal--get-color 'background 0))
             ;; used to highlight current line
             (bg2           . ,(if tty
-                                  (ewal--get-color secondary-accent-color 0)
+                                  (ewal--get-color 'comment 0)
                                 (ewal--get-color 'background -2)))
             (bg3           . ,(ewal--get-color 'background -3))
             (bg4           . ,(ewal--get-color 'background -4))
