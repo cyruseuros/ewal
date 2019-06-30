@@ -259,8 +259,9 @@ SHADE."
                                (car (last (alist-get color palette))))))
     (if tty
         (let ((color-name (symbol-name color)))
-          (cond ((eq color-name "background") ewal-ansi-background-name)
-                ((eq color-name "foreground") ewal-ansi-foreground-name)
+          (cond ((string= color-name "background") ewal-ansi-background-name)
+                ((string= color-name "foreground") ewal-ansi-foreground-name)
+                ((string= color-name "comment") "brightblack")
                 (t color-name)))
       defined-requested-color)))
 

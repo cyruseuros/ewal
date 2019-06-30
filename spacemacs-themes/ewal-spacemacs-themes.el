@@ -52,6 +52,9 @@ increase (double) the range of shades of returned colors."
   (let* ((primary-accent-color ewal-primary-accent-color)
          (secondary-accent-color ewal-secondary-accent-color)
          (border-color (if borders primary-accent-color 'background))
+         (tty (or ewal-force-tty-colors
+                  (and (daemonp) ewal-force-tty-colors-daemon)
+                  (and (not (daemonp)) (not (display-graphic-p)))))
          (theme-colors
           `((act1          . ,(ewal--get-color 'background -3))
             (act2          . ,(ewal--get-color primary-accent-color 0))
@@ -59,7 +62,9 @@ increase (double) the range of shades of returned colors."
             (base-dim      . ,(ewal--get-color 'foreground -4))
             (bg1           . ,(ewal--get-color 'background 0))
             ;; used to highlight current line
-            (bg2           . ,(ewal--get-color 'background -2))
+            (bg2           . ,(if tty
+                                  (ewal--get-color secondary-accent-color 0)
+                                (ewal--get-color 'background -2)))
             (bg3           . ,(ewal--get-color 'background -3))
             (bg4           . ,(ewal--get-color 'background -4))
             (border        . ,(ewal--get-color border-color 0))
