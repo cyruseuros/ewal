@@ -101,6 +101,17 @@ Must be one of `ewal-ansi-color-name-symbols'"
   :type 'symbol
   :group 'ewal)
 
+(defcustom ewal-dark-theme t
+  "Assume `ewal' theme is a dark theme."
+  :type 'boolean
+  :group 'ewal)
+
+(defvar ewal-ansi-background-name (if ewal-dark-theme "black" "white")
+  "Ansi color to use for background in tty.")
+
+(defvar ewal-ansi-foreground-name (if ewal-dark-theme "white" "black")
+  "Ansi color to use for background in tty.")
+
 (defvar ewal-secondary-accent-color 'blue
   "Second most predominant `ewal' color.
 Must be one of `ewal-ansi-color-name-symbols'")
@@ -247,7 +258,10 @@ SHADE."
                                  requested-color
                                (car (last (alist-get color palette))))))
     (if tty
-        original-color
+        (let ((color-name (symbol-name color)))
+          (cond ((eq color-name "background") ewal-ansi-background-name)
+                ((eq color-name "foreground") ewal-ansi-foreground-name)
+                (t color-name)))
       defined-requested-color)))
 
 ;;;###autoload
