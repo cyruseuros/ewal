@@ -37,12 +37,6 @@
   "`spacemacs-theme' compatible colors.
 Extracted from current `ewal' theme.")
 
-(defun ewal-spacemacs-themes--double (condition num)
-  "Double NUM if CONDITION is t.
-Meant for use in `ewal-spacemacs-themes--generate-colors' when a high
-contrast theme is desired."
-  (if condition (* 2 num) num))
-
 (defun ewal-spacemacs-themes--generate-colors (&optional borders)
   "Make theme colorscheme from theme palettes.
 If TTY is t, colorscheme is reduced to basic supported colors. If

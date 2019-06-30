@@ -106,10 +106,10 @@ Must be one of `ewal-ansi-color-name-symbols'"
   :type 'boolean
   :group 'ewal)
 
-(defvar ewal-ansi-background-name (if ewal-dark-theme "black" "white")
+(defvar ewal-ansi-background-name (if ewal-dark-theme "white" "black")
   "Ansi color to use for background in tty.")
 
-(defvar ewal-ansi-foreground-name (if ewal-dark-theme "white" "black")
+(defvar ewal-ansi-foreground-name (if ewal-dark-theme "black" "white")
   "Ansi color to use for background in tty.")
 
 (defvar ewal-secondary-accent-color 'blue
@@ -259,9 +259,12 @@ SHADE."
                                (car (last (alist-get color palette))))))
     (if tty
         (let ((color-name (symbol-name color)))
-          (cond ((eq color-name "background") ewal-ansi-background-name)
-                ((eq color-name "foreground") ewal-ansi-foreground-name)
-                (t color-name)))
+          (cond
+           ((string= color-name "background")
+            (if (eq shade 0) ewal-ansi-foreground-name "grey"))
+           ((string= color-name "foreground")
+            (if (eq shade 0) ewal-ansi-foreground-name "grey"))
+           (t color-name)))
       defined-requested-color)))
 
 ;;;###autoload
