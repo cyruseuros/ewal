@@ -81,7 +81,7 @@ for more details). NOTE: Order matters."
   :type 'list
   :group 'ewal)
 
-(defcustom ewal-force-tty-colors-daemon nil
+(defcustom ewal-force-tty-colors-in-daemon-p nil
   "Whether to use TTY version of `ewal' colors in Emacs daemon.
 It's a numbers game. Set to t if you connect to your Emacs server
 from a TTY most of the time, unless you want to run `ewal' every
@@ -89,7 +89,7 @@ time you connect with `emacsclient'."
   :type 'boolean
   :group 'ewal)
 
-(defcustom ewal-force-tty-colors nil
+(defcustom ewal-force-tty-colors-p nil
   "Whether to use TTY version of `ewal' colors.
 Meant for setting TTY theme regardless of GUI support."
   :type 'boolean
@@ -101,12 +101,24 @@ Must be one of `ewal-ansi-color-name-symbols'"
   :type 'symbol
   :group 'ewal)
 
-(defcustom ewal-dark-theme-p t
+(defcustom ewal-secondary-accent-color 'blue
+  "Second most predominant `ewal' color.
+Must be one of `ewal-ansi-color-name-symbols'"
+  :type 'symbol
+  :group 'ewal)
+
+(defcustom ewal-dark-palette-p t
   "Assume `ewal' theme is a dark theme.
 Relevant either when using `ewal's built-in palettes, or when
 guessing which colors to use as the special \"background\" and
 \"foreground\" `wal' colors."
   :type 'boolean
+  :group 'ewal)
+
+(defcustom ewal-built-in-palette "sexy-material"
+  "Whether to skip reading the `wal' cache and use built-in palettes.
+Only applies when `wal' cache is unreadable for some reason."
+  :type 'string
   :group 'ewal)
 
 (defcustom ewal-use-built-in-always-p nil
@@ -120,36 +132,26 @@ Only applies when `wal' cache is unreadable for some reason."
   :type 'boolean
   :group 'ewal)
 
-(defcustom ewal-built-in-palette "sexy-material"
-  "Whether to skip reading the `wal' cache and use built-in palettes.
-Only applies when `wal' cache is unreadable for some reason."
-  :type 'string
-  :group 'ewal)
-
-(defvar ewal-built-in-json-file
-  (concat (file-name-directory load-file-name)
-          "palettes/"
-          (if ewal-dark-theme-p "dark/" "light/")
-          ewal-built-in-palette
-          ".json")
-  "Json file to be used in case `ewal-use-built-in-always-p' is t.
-Also if `ewal-use-built-in-on-failure-p' is t and something goes wrong.")
-
 (defcustom ewal-cursor-color (symbol-name ewal-primary-accent-color)
   "Assumed color of special \"cursor\" color in `wal' themes.
 Only relevant in TTY/terminal."
   :type 'string
   :group 'ewal)
 
-(defvar ewal-ansi-background-name (if ewal-dark-theme-p "black" "white")
+(defvar ewal-built-in-json-file
+  (concat (file-name-directory load-file-name)
+          "palettes/"
+          (if ewal-dark-palette-p "dark/" "light/")
+          ewal-built-in-palette
+          ".json")
+  "Json file to be used in case `ewal-use-built-in-always-p' is t.
+Also if `ewal-use-built-in-on-failure-p' is t and something goes wrong.")
+
+(defvar ewal-ansi-background-name (if ewal-dark-palette-p "black" "white")
   "Ansi color to use for background in tty.")
 
-(defvar ewal-ansi-foreground-name (if ewal-dark-theme-p "white" "black")
+(defvar ewal-ansi-foreground-name (if ewal-dark-palette-p "white" "black")
   "Ansi color to use for background in tty.")
-
-(defvar ewal-secondary-accent-color 'blue
-  "Second most predominant `ewal' color.
-Must be one of `ewal-ansi-color-name-symbols'")
 
 (defvar ewal-base-palette nil
   "Current base palette extracted from `ewal-wal-cache-json-file'.")
@@ -282,8 +284,8 @@ SHADE."
   (let* ((palette (or palette ewal-extended-palette))
          ;; override, broad, narrow, fallback
          (tty (or tty
-                  ewal-force-tty-colors
-                  (and (daemonp) ewal-force-tty-colors-daemon)
+                  ewal-force-tty-colors-p
+                  (and (daemonp) ewal-force-tty-colors-in-daemon-p)
                   (and (not (daemonp)) (not (display-graphic-p)))))
          (middle (/ (- (length (car ewal-extended-palette)) 1) 2))
          (shade (or (* (if ewal-high-contrast-p 2 1) shade) 0))
@@ -314,7 +316,6 @@ must be of the same length if passed at all."
     (when (or (null ewal-base-palette)
               (null ewal-extended-palette)
               force-reload)
-      ;; always set together
       (setq ewal-base-palette (if ewal-use-built-in-always-p
                                   (ewal-load-wal-colors ewal-built-in-json-file)
                                 (ewal-load-wal-colors))))
