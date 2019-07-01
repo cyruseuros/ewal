@@ -106,7 +106,13 @@ Must be one of `ewal-ansi-color-name-symbols'"
   :type 'boolean
   :group 'ewal)
 
-(defvar ewal-ansi-background-name (if ewal-dark-theme "white" "black")
+(defcustom ewal-cursor-color "yellow"
+  "Assumed color of special \"cursor\" color in `wal' themes.
+Only relevant in TTY/terminal."
+  :type 'string
+  :group 'ewal)
+
+(defvar ewal-ansi-background-name (if ewal-dark-theme "black" "white")
   "Ansi color to use for background in tty.")
 
 (defvar ewal-ansi-foreground-name (if ewal-dark-theme "black" "white")
@@ -259,12 +265,11 @@ SHADE."
                                (car (last (alist-get color palette))))))
     (if tty
         (let ((color-name (symbol-name color)))
-          (cond
-           ((string= color-name "background")
-            (if (eq shade 0) ewal-ansi-foreground-name "grey"))
-           ((string= color-name "foreground")
-            (if (eq shade 0) ewal-ansi-foreground-name "grey"))
-           (t color-name)))
+          (cond ((string= color-name "background") ewal-ansi-background-name)
+                ((string= color-name "foreground") ewal-ansi-foreground-name)
+                ((string= color-name "comment") "brightblack")
+                ((string= color-name "cursor") ewal-cursor-color)
+                (t color-name)))
       defined-requested-color)))
 
 ;;;###autoload
