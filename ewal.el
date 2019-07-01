@@ -101,21 +101,50 @@ Must be one of `ewal-ansi-color-name-symbols'"
   :type 'symbol
   :group 'ewal)
 
-(defcustom ewal-dark-theme t
-  "Assume `ewal' theme is a dark theme."
+(defcustom ewal-dark-theme-p t
+  "Assume `ewal' theme is a dark theme.
+Relevant either when using `ewal's built-in palettes, or when
+guessing which colors to use as the special \"background\" and
+\"foreground\" `wal' colors."
   :type 'boolean
   :group 'ewal)
 
-(defcustom ewal-cursor-color "yellow"
+(defcustom ewal-use-built-in-always-p nil
+  "Whether to skip reading the `wal' cache and use built-in palettes."
+  :type 'boolean
+  :group 'ewal)
+
+(defcustom ewal-use-built-in-on-failure-p t
+  "Whether to skip reading the `wal' cache and use built-in palettes.
+Only applies when `wal' cache is unreadable for some reason."
+  :type 'boolean
+  :group 'ewal)
+
+(defcustom ewal-built-in-palette "sexy-material"
+  "Whether to skip reading the `wal' cache and use built-in palettes.
+Only applies when `wal' cache is unreadable for some reason."
+  :type 'string
+  :group 'ewal)
+
+(defvar ewal-built-in-json-file
+  (concat (file-name-directory load-file-name)
+          "palettes/"
+          (if ewal-dark-theme-p "dark/" "light/")
+          ewal-built-in-palette
+          ".json")
+  "Json file to be used in case `ewal-use-built-in-always-p' is t.
+Also if `ewal-use-built-in-on-failure-p' is t and something goes wrong.")
+
+(defcustom ewal-cursor-color (symbol-name ewal-primary-accent-color)
   "Assumed color of special \"cursor\" color in `wal' themes.
 Only relevant in TTY/terminal."
   :type 'string
   :group 'ewal)
 
-(defvar ewal-ansi-background-name (if ewal-dark-theme "black" "white")
+(defvar ewal-ansi-background-name (if ewal-dark-theme-p "black" "white")
   "Ansi color to use for background in tty.")
 
-(defvar ewal-ansi-foreground-name (if ewal-dark-theme "white" "black")
+(defvar ewal-ansi-foreground-name (if ewal-dark-theme-p "white" "black")
   "Ansi color to use for background in tty.")
 
 (defvar ewal-secondary-accent-color 'blue
@@ -286,8 +315,13 @@ must be of the same length if passed at all."
               (null ewal-extended-palette)
               force-reload)
       ;; always set together
-      (setq ewal-base-palette (ewal-load-wal-colors)
-            ewal-extended-palette (ewal--extend-base-palette 8 5)))
+      (setq ewal-base-palette (if ewal-use-built-in-always-p
+                                  (ewal-load-wal-colors ewal-built-in-json-file)
+                                (ewal-load-wal-colors))))
+    ;; reload if failed and user wants you to
+    (when (and (null ewal-base-palette) ewal-use-built-in-on-failure-p)
+      (setq ewal-base-palette (ewal-load-wal-colors ewal-built-in-json-file)))
+    (setq ewal-extended-palette (ewal--extend-base-palette 8 5))
     ;; let errors propagate if only some args are set
     (when (or vars funcs args)
       ;; accept atoms as well as lists
