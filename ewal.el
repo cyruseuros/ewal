@@ -115,7 +115,7 @@ Only relevant in TTY/terminal."
 (defvar ewal-ansi-background-name (if ewal-dark-theme "black" "white")
   "Ansi color to use for background in tty.")
 
-(defvar ewal-ansi-foreground-name (if ewal-dark-theme "black" "white")
+(defvar ewal-ansi-foreground-name (if ewal-dark-theme "white" "black")
   "Ansi color to use for background in tty.")
 
 (defvar ewal-secondary-accent-color 'blue
