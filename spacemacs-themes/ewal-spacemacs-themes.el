@@ -47,7 +47,7 @@ increase (double) the range of shades of returned colors."
          (secondary-accent-color ewal-secondary-accent-color)
          (border-color (if borders primary-accent-color 'background))
          (tty (or ewal-force-tty-colors-p
-                  (and (daemonp) ewal-force-tty-colors-p-daemon)
+                  (and (daemonp) ewal-force-tty-colors-in-daemon-p)
                   (and (not (daemonp)) (not (display-graphic-p)))))
          (theme-colors
           `((act1          . ,(ewal--get-color 'background -3))
