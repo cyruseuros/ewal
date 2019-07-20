@@ -1,9 +1,8 @@
 * Overview
 A theme isn't just a colorscheme. =ewal= lives by that. It uses
 =pywal= as a backend to spruce up your Emacs setup by default, but
-also sports over 200 built in palettes (still waiting on MELPA to
-merge the recipe PR for this) to do so if you don't use the program
-(or *shudders*, you use a DOS system).
+also sports over 200 built in palettes to do so if you don't use the
+program (or *shudders*, you use a DOS system).
 
 It adds extra shades to =pywal= palettes and makes your Emacs look
 sexy in a GUI and in a terminal too (=pywal= users
@@ -11,7 +10,7 @@ only). =ewal-spacemacs-themes= shows what ewal can do in (* 4 200)
 flavors of =spacemacs-theme=, while =ewal-evil-cursors= spices up,
 well, your evil cursors. It also provides a function to colorize
 =spaceline= accordingly. All these packages are available on
-MELPA. I'm too lazy to add URLs.
+MELPA.
 
 * Screenshots 
 ** GUI  
@@ -24,84 +23,88 @@ These are the fundamentals. For more detail, see the docstrings.
 
 Get a color and a specific shade (+ for ligther, - for darker):
 #+BEGIN_SRC emacs-lisp :tangle yes
-(ewal-get-color 'magenta +4)
+  (ewal-get-color 'magenta +4)
 #+END_SRC
 
 Use built-in palettes if your =pywal= theme fails to load (otherwise
 you just get a black-and-white theme and something about color being
 nil):
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq ewal-use-built-in-on-failure-p t)
+  (setq ewal-use-built-in-on-failure-p t)
 #+END_SRC
 
 Always use built-in palettes:
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq ewal-use-built-in-always-p t)
+  (setq ewal-use-built-in-always-p t)
 #+END_SRC
 
 Pick a built-in palette:
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq ewal-built-in-palette "sexy-material")
+  (setq ewal-built-in-palette "sexy-material")
 #+END_SRC
 
 Set custom folder and custom filename for =pywal= scheme (if you use
-=wpgtk= or keep your own palette somewhere on the system):
+=wpgtk= or keep your own palette somewhere on your system):
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq ewal-wal-cache-dir "foo"
-      ewal-wal-cache-json-file "bar.json")
+  ;; If you just want to set the folder
+  ;; (assumes palette is in a file named "colors.json"):
+  (setq ewal-wal-cache-dir "~/path/to/cache-dir")
+  ;; If you want to set file name explicitly
+  ;; (must include full path)
+  (setq ewal-wal-cache-dir "~/path/to/cache-file")
 #+END_SRC
 
 Use special cursor for insert state when evil insert bindings are disabled:
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq ewal-evil-cursors-obey-evil-p t)
+  (setq ewal-evil-cursors-obey-evil-p t)
 #+END_SRC
 
 My config with all its warts:
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package ewal
-  :straight (ewal
-             :type git
-             :files ("ewal.el" ("palettes" "palettes/*"))
-             :host gitlab
-             :branch "develop"
-             :repo "jjzmajic/ewal")
-  :init (setq ewal-use-built-in-always-p t
-              ewal-built-in-palette "sexy-material"))
+  (use-package ewal
+    :straight (ewal
+               :type git
+               :files ("ewal.el" "palettes")
+               :host gitlab
+               :branch "develop"
+               :repo "jjzmajic/ewal")
+    :init (setq ewal-use-built-in-always-p t
+                ewal-built-in-palette "sexy-material"))
               
-(use-package ewal-spacemacs-themes
-  :init (progn
-          (setq spacemacs-theme-underline-parens t
-                my:rice:font "Source Code Pro Semibold 11")
-          (show-paren-mode +1)
-          (global-hl-line-mode)
-          (set-frame-font my:rice:font nil t)
-          (add-to-list  'default-frame-alist `(font . ,my:rice:font)))
-  :config (progn
-            (load-theme 'ewal-spacemacs-modern t)
-            (enable-theme 'ewal-spacemacs-modern)
-            (custom-set-faces
-               `(line-number
-                 ((t (:foreground ,(ewal--get-color 'comment 0)
-                      :background ,(ewal--get-color 'background 0)
-                      :inherit default))))
-               `(page-break-lines
-                 ((t (:foreground ,(alist-get 'act2 spacemacs-theme-custom-colors)
-                      :background ,(alist-get 'act1 spacemacs-theme-custom-colors))))))))
+  (use-package ewal-spacemacs-themes
+    :init (progn
+            (setq spacemacs-theme-underline-parens t
+                  my:rice:font "Source Code Pro Semibold 11")
+            (show-paren-mode +1)
+            (global-hl-line-mode)
+            (set-frame-font my:rice:font nil t)
+            (add-to-list  'default-frame-alist `(font . ,my:rice:font)))
+    :config (progn
+              (load-theme 'ewal-spacemacs-modern t)
+              (enable-theme 'ewal-spacemacs-modern)
+              (custom-set-faces
+                 `(line-number
+                   ((t (:foreground ,(ewal--get-color 'comment 0)
+                        :background ,(ewal--get-color 'background 0)
+                        :inherit default))))
+                 `(page-break-lines
+                   ((t (:foreground ,(alist-get 'act2 spacemacs-theme-custom-colors)
+                        :background ,(alist-get 'act1 spacemacs-theme-custom-colors))))))))
                       
-(use-package ewal-evil-cursors
-  :after (ewal-spacemacs-themes)
-  :config (when (ewal-load-wal-colors)
-            (ewal-evil-cursors-get-emacs-colors :apply t)))
+  (use-package ewal-evil-cursors
+    :after (ewal-spacemacs-themes)
+    :config (when (ewal-load-wal-colors)
+              (ewal-evil-cursors-get-emacs-colors :apply t)))
             
-(use-package spaceline
-  :after (ewal-evil-cursors winum)
-  :init (setq powerline-default-separator nil
-               spaceline-highlight-face-func
-               #'ewal-evil-cursors-highlight-face-evil-state)
-  :config (progn
-            (add-to-list 'spaceline-evil-state-faces
-                         '(lisp . spaceline-evil-lisp))
-            (add-to-list 'spaceline-evil-state-faces
-                         '(iedit . spaceline-evil-iedit))
-            (spaceline-spacemacs-theme)))
+  (use-package spaceline
+    :after (ewal-evil-cursors winum)
+    :init (setq powerline-default-separator nil
+                 spaceline-highlight-face-func
+                 #'ewal-evil-cursors-highlight-face-evil-state)
+    :config (progn
+              (add-to-list 'spaceline-evil-state-faces
+                           '(lisp . spaceline-evil-lisp))
+              (add-to-list 'spaceline-evil-state-faces
+                           '(iedit . spaceline-evil-iedit))
+              (spaceline-spacemacs-theme)))
 #+END_SRC
