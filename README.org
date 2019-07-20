@@ -1,3 +1,9 @@
+[[./img/ewal.png]]
+
+A dependency-free, pywal-based, automatic, terminal-aware Emacs
+color-picker and theme generator.
+
+
 * Overview
 A theme isn't just a colorscheme. =ewal= lives by that. It uses
 =pywal= as a backend to spruce up your Emacs setup by default, but
@@ -14,9 +20,9 @@ MELPA.
 
 * Screenshots 
 ** GUI  
-[[./scrots/ewal.gif]]
+[[./img/ewal.gif]]
 ** Terminal
-[[./scrots/ewal-terminal.png]]
+[[./img/ewal-terminal.png]]
 
 * Usage
 These are the fundamentals. For more detail, see the docstrings.
