@@ -1,9 +1,8 @@
 * Overview
 A theme isn't just a colorscheme. =ewal= lives by that. It uses
 =pywal= as a backend to spruce up your Emacs setup by default, but
-also sports over 200 built in palettes (still waiting on MELPA to
-merge the recipe PR for this) to do so if you don't use the program
-(or *shudders*, you use a DOS system).
+also sports over 200 built in palettes to do so if you don't use the
+program (or *shudders*, you use a DOS system).
 
 It adds extra shades to =pywal= palettes and makes your Emacs look
 sexy in a GUI and in a terminal too (=pywal= users
@@ -11,7 +10,7 @@ only). =ewal-spacemacs-themes= shows what ewal can do in (* 4 200)
 flavors of =spacemacs-theme=, while =ewal-evil-cursors= spices up,
 well, your evil cursors. It also provides a function to colorize
 =spaceline= accordingly. All these packages are available on
-MELPA. I'm too lazy to add URLs.
+MELPA.
 
 * Screenshots 
 ** GUI  
