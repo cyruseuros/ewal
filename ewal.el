@@ -123,7 +123,7 @@ Only applies when `wal' cache is unreadable for some reason."
   :type 'boolean
   :group 'ewal)
 
-(defcustom ewal-use-built-in-on-failure-p nil
+(defcustom ewal-use-built-in-on-failure-p t
   "Whether to skip reading the `wal' cache and use built-in palettes.
 Only applies when `wal' cache is unreadable for some reason."
   :type 'boolean
