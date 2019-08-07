@@ -5,7 +5,7 @@
 ;; Author: Uros Perisic
 ;; URL: https://gitlab.com/jjzmajic/ewal
 ;;
-;; Version: 0.1
+;; Version: 1.0
 ;; Keywords: faces
 ;; Package-Requires: ((emacs "25") (ewal "0.1"))
 
@@ -132,20 +132,29 @@ be useful elsewhere too."
         (if face (cdr face) (spaceline-highlight-face-default)))
     (spaceline-highlight-face-default)))
 
-;;;###autoload
-(cl-defun ewal-evil-cursors-get-spacemacs-colors
-    (&key apply force-reload)
-  "Get `spacemacs-evil-cursors' colors.
-If APPLY is t, set relevant environment variable for the user.
+(defun ewal-evil-cursors--apply-emacs-colors (&optional force-reload)
+  "Apply `ewal-evil-cursors' colors to Emacs.
 Reload `ewal' environment variables before returning colors even
-if they have already been computed if FORCE-RELOAD is t. TTY
-defaults to return value of `ewal--use-tty-colors-p'. If TTY is
-t, use TTY colors."
+if they have already been computed if FORCE-RELOAD is t."
+  (ewal-load-ewal-colors force-reload 'ewal-evil-cursors-emacs-colors
+                         #'ewal-evil-cursors--generate-emacs-colors
+                         nil)
+
+  (cl-loop for (key . value)
+               in ewal-evil-cursors-emacs-colors
+               do (set key (car value)))
+
+  ewal-evil-cursors-emacs-colors)
+
+(defun ewal-evil-cursors--apply-spacemacs-colors (&optional force-reload)
+  "Apply `ewal-evil-cursors' colors to Spacemacs.
+Reload `ewal' environment variables before returning colors even
+if they have already been computed if FORCE-RELOAD is t."
   (ewal-load-ewal-colors force-reload 'ewal-evil-cursors-spacemacs-colors
                          #'ewal-evil-cursors--generate-spacemacs-colors
                          nil)
-  (if apply
-      (if (boundp 'spacemacs/add-evil-cursor)
+
+  (if (boundp 'spacemacs/add-evil-cursor)
           (when (functionp 'spacemacs/add-evil-cursor)
             (cl-loop for (state color shape) in ewal-evil-cursors-spacemacs-colors
                      do (spacemacs/add-evil-cursor state color shape)))
@@ -153,25 +162,31 @@ t, use TTY colors."
             (cl-loop for cursor in ewal-evil-cursors-spacemacs-colors
                      do (add-to-list spacemacs-evil-cursors cursor))
           (setq spacemacs-evil-cursors ewal-evil-cursors-spacemacs-colors)))
-    ewal-evil-cursors-spacemacs-colors))
+
+  ewal-evil-cursors-spacemacs-colors)
 
 ;;;###autoload
-(cl-defun ewal-evil-cursors-get-emacs-colors
-    (&key apply force-reload)
-  "Get vanilla Emacs Evil cursor colors.
-If APPLY is t, set relevant environment variables for the user.
-Reload `ewal' environment variables before returning colors even
-if they have already been computed if FORCE-RELOAD is t. TTY
-defaults to return value of `ewal--use-tty-colors-p'. If TTY is
-t, use TTY colors."
-  (ewal-load-ewal-colors force-reload 'ewal-evil-cursors-emacs-colors
-                         #'ewal-evil-cursors--generate-emacs-colors
-                         nil)
-  (if apply
-      (cl-loop for (key . value)
-               in ewal-evil-cursors-emacs-colors
-               do (set key (car value)))
-    ewal-evil-cursors-emacs-colors))
+(cl-defun ewal-evil-cursors-get-colors
+    (&key apply spacemacs spaceline force-reload)
+  "Get `ewal-evil-cursors' colors.
+If APPLY is t, set relevant environment variable for the user.
+If SPACEMACS is t, target Spacemacs-relevant variables.  Tweak
+spaceline to use `ewal' colors if SPACELINE is t.  Reload `ewal'
+environment variables before returning colors even if they have
+already been computed if FORCE-RELOAD is t."
+  ;; tweak spaceline
+  (when spaceline
+    (with-eval-after-load 'spaceline
+      (add-to-list 'spaceline-evil-state-faces '(lisp . spaceline-evil-lisp))
+      (add-to-list 'spaceline-evil-state-faces '(iedit . spaceline-evil-iedit))
+      (setq spaceline-highlight-face-func
+            #'ewal-evil-cursors-highlight-face-evil-state)))
+
+  ;; apply colors
+  (when apply
+    (if spacemacs
+        (ewal-evil-cursors--apply-spacemacs-colors force-reload)
+      (ewal-evil-cursors--apply-emacs-colors force-reload))))
 
 (provide 'ewal-evil-cursors)
 ;;; ewal-evil-cursors.el ends here

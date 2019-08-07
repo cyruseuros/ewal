@@ -70,9 +70,13 @@
                    collect key))
   "The 8 most universaly supported TTY color names.
 They will be extracted from `ewal--cache-json-file', and with the
-right escape sequences applied using #+BEGIN_SRC shell source
-${HOME}/.cache/wal/colors-tty.sh #+END_SRC should be viewable
-even in the Linux console (See
+right escape sequences applied using:
+
+#+BEGIN_SRC shell
+${HOME}/.cache/wal/colors-tty.sh
+#+END_SRC
+
+The colors should be viewable even in the Linux console (See
 https://github.com/dylanaraps/pywal/wiki/Getting-Started#applying-the-theme-to-new-terminals
 for more details).  NOTE: Order matters."
   :type 'list

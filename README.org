@@ -76,7 +76,7 @@ My config with all its warts:
                :repo "jjzmajic/ewal")
     :init (setq ewal-use-built-in-always-p t
                 ewal-built-in-palette "sexy-material"))
-              
+
   (use-package ewal-spacemacs-themes
     :init (progn
             (setq spacemacs-theme-underline-parens t
@@ -90,27 +90,15 @@ My config with all its warts:
               (enable-theme 'ewal-spacemacs-modern)
               (custom-set-faces
                  `(line-number
-                   ((t (:foreground ,(ewal--get-color 'comment 0)
-                        :background ,(ewal--get-color 'background 0)
+                   ((t (:foreground ,(ewal-get-color 'comment 0)
+                        :background ,(ewal-get-color 'background 0)
                         :inherit default))))
                  `(page-break-lines
                    ((t (:foreground ,(alist-get 'act2 spacemacs-theme-custom-colors)
                         :background ,(alist-get 'act1 spacemacs-theme-custom-colors))))))))
-                      
+
   (use-package ewal-evil-cursors
     :after (ewal-spacemacs-themes)
-    :config (when (ewal-load-wal-colors)
-              (ewal-evil-cursors-get-emacs-colors :apply t)))
-            
-  (use-package spaceline
-    :after (ewal-evil-cursors winum)
-    :init (setq powerline-default-separator nil
-                 spaceline-highlight-face-func
-                 #'ewal-evil-cursors-highlight-face-evil-state)
-    :config (progn
-              (add-to-list 'spaceline-evil-state-faces
-                           '(lisp . spaceline-evil-lisp))
-              (add-to-list 'spaceline-evil-state-faces
-                           '(iedit . spaceline-evil-iedit))
-              (spaceline-spacemacs-theme)))
+    :config (ewal-evil-cursors-get-colors
+             :apply t :spaceline t))
 #+END_SRC
