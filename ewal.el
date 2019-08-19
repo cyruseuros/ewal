@@ -289,7 +289,7 @@ double SHADE."
                   (and (daemonp) ewal-force-tty-colors-in-daemon-p)
                   (and (not (daemonp)) (not (display-graphic-p)))))
          (middle (/ (- (length (car ewal-extended-palette)) 1) 2))
-         (shade (or (* (if ewal-high-contrast-p 2 1) shade) 0))
+         (shade (or (and shade (* (if ewal-high-contrast-p 2 1) shade)) 0))
          (requested-color (nth (+ middle shade) (alist-get color palette)))
          (defined-requested-color (if requested-color
                                  requested-color
