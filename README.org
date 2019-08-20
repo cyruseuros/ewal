@@ -74,31 +74,30 @@ My config with all its warts:
                :host gitlab
                :branch "develop"
                :repo "jjzmajic/ewal")
-    :init (setq ewal-use-built-in-always-p t
+    :init (setq ewal-use-built-in-always-p nil
+                ewal-use-built-in-on-failure-p t
                 ewal-built-in-palette "sexy-material"))
-
   (use-package ewal-spacemacs-themes
     :init (progn
             (setq spacemacs-theme-underline-parens t
-                  my:rice:font "Source Code Pro Semibold 11")
+                  my:rice:font (font-spec
+                                :family "Source Code Pro"
+                                :weight 'semi-bold
+                                :size 11.0))
             (show-paren-mode +1)
             (global-hl-line-mode)
             (set-frame-font my:rice:font nil t)
-            (add-to-list  'default-frame-alist `(font . ,my:rice:font)))
+            (add-to-list  'default-frame-alist
+                          `(font . ,(font-xlfd-name my:rice:font))))
     :config (progn
               (load-theme 'ewal-spacemacs-modern t)
-              (enable-theme 'ewal-spacemacs-modern)
-              (custom-set-faces
-                 `(line-number
-                   ((t (:foreground ,(ewal-get-color 'comment 0)
-                        :background ,(ewal-get-color 'background 0)
-                        :inherit default))))
-                 `(page-break-lines
-                   ((t (:foreground ,(alist-get 'act2 spacemacs-theme-custom-colors)
-                        :background ,(alist-get 'act1 spacemacs-theme-custom-colors))))))))
-
+              (enable-theme 'ewal-spacemacs-modern)))
   (use-package ewal-evil-cursors
     :after (ewal-spacemacs-themes)
     :config (ewal-evil-cursors-get-colors
              :apply t :spaceline t))
+  (use-package spaceline
+    :after (ewal-evil-cursors winum)
+    :init (setq powerline-default-separator nil)
+    :config (spaceline-spacemacs-theme))
 #+END_SRC
