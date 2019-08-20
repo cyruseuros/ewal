@@ -145,7 +145,7 @@ range of shades of returned colors."
             :background ,(ewal--get-color 'background 0))))
        `(page-break-lines
          ((,class
-           (:foreground ,(ewal--get-color ewal-primary-accent-color 0)
+           (:foreground ,(ewal--get-color 'background -3)
             :background ,(ewal--get-color 'background -3)))))))))
 
 ;;;###autoload
