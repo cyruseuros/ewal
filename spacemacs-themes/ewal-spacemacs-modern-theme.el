@@ -2,8 +2,8 @@
 
 (require 'ewal-spacemacs-themes)
 ;; has to be run before loading `spacemacs-common'
-(let ((spacemacs-theme-org-highlight t)
-      (spacemacs-theme-custom-colors
+(setq spacemacs-theme-org-highlight t)
+(let ((spacemacs-theme-custom-colors
        (ewal-spacemacs-themes-get-colors)))
   (require 'spacemacs-common)
 
