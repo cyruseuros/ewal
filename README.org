@@ -52,7 +52,7 @@ Pick a built-in palette:
 Set custom folder and custom filename for =pywal= scheme (if you use
 =wpgtk= or keep your own palette somewhere on your system):
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (setq ewal-wal-cache-dir "~/path/to/cache-file")
+  (setq ewal-wal-json-file "~/path/to/cache-file")
 #+END_SRC
 
 Use special cursor for insert state when evil insert bindings are disabled:
