@@ -9,8 +9,10 @@
   (require 'spacemacs-common)
   (deftheme ewal-spacemacs-modern-high-contrast)
   ;; must be run before `create-spacemacs-theme'
-  (ewal-spacemacs-themes-modernize-theme)
-  (create-spacemacs-theme 'dark 'ewal-spacemacs-modern-high-contrast))
+  (ewal-spacemacs-themes--modernize-theme
+   'ewal-spacemacs-modern-high-contrast)
+  (create-spacemacs-theme
+   'dark 'ewal-spacemacs-modern-high-contrast))
 
 (provide-theme 'ewal-spacemacs-modern-high-contrast)
 ;; ewal-spacemacs-modern-high-contrast-theme.el ends here
