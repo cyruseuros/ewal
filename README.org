@@ -52,11 +52,6 @@ Pick a built-in palette:
 Set custom folder and custom filename for =pywal= scheme (if you use
 =wpgtk= or keep your own palette somewhere on your system):
 #+BEGIN_SRC emacs-lisp :tangle yes
-  ;; If you just want to set the folder
-  ;; (assumes palette is in a file named "colors.json"):
-  (setq ewal-wal-cache-dir "~/path/to/cache-dir")
-  ;; If you want to set file name explicitly
-  ;; (must include full path)
   (setq ewal-wal-cache-dir "~/path/to/cache-file")
 #+END_SRC
 
