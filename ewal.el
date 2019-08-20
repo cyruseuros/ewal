@@ -160,10 +160,11 @@ Also if `ewal-use-built-in-on-failure-p' is t and something goes wrong.")
 (defvar ewal-extended-palette nil
   "Extended palette based on `ewal-base-palette'.")
 
-(defvar ewal-high-contrast-p nil
-  "Whether to increase the contrast of colors.
-Essentially just double the argument passed to
-`ewal-get-color'.")
+(defvar ewal-pct-shade 5
+  "Percentage difference between each shade.")
+
+(defvar ewal-num-shades 4
+  "Number of shades to extend `ewal-base-palette' with.")
 
 ;;;###autoload
 (defun ewal-load-wal-colors (&optional json color-names)
@@ -280,8 +281,7 @@ Choose color that is darker (-) or lightener (+) than COLOR
 SHADE defaults to 0, returning original wal COLOR.  If SHADE
 exceeds number of available shades, the darkest/lightest shade is
 returned.  If TTY is t, return original, TTY compatible `wal'
-color regardless od SHADE.  If `ewal-high-contrast-p' is t,
-double SHADE."
+color regardless od SHADE."
   (let* ((palette (or palette ewal-extended-palette))
          ;; override, broad, narrow, fallback
          (tty (or tty
@@ -289,7 +289,7 @@ double SHADE."
                   (and (daemonp) ewal-force-tty-colors-in-daemon-p)
                   (and (not (daemonp)) (not (display-graphic-p)))))
          (middle (/ (- (length (car ewal-extended-palette)) 1) 2))
-         (shade (or (and shade (* (if ewal-high-contrast-p 2 1) shade)) 0))
+         (shade (or shade 0))
          (requested-color (nth (+ middle shade) (alist-get color palette)))
          (defined-requested-color (if requested-color
                                  requested-color
@@ -322,7 +322,8 @@ must be of the same length if passed at all."
     ;; reload if failed and user wants you to
     (when (and (null ewal-base-palette) ewal-use-built-in-on-failure-p)
       (setq ewal-base-palette (ewal-load-wal-colors ewal-built-in-json-file)))
-    (setq ewal-extended-palette (ewal--extend-base-palette 8 5))
+    (setq ewal-extended-palette (ewal--extend-base-palette
+                                 ewal-num-shades ewal-pct-shade))
     ;; let errors propagate if only some args are set
     (when (or vars funcs args)
       ;; accept atoms as well as lists

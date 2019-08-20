@@ -2,7 +2,7 @@
 
 (require 'ewal-spacemacs-themes)
 ;; has to be run before loading spacemacs-common
-(let ((ewal-high-contrast-p t)
+(let ((ewal-pct-shade 10)
       (spacemacs-theme-custom-colors
        (ewal-spacemacs-themes-get-colors :borders t)))
   (require 'spacemacs-common)
