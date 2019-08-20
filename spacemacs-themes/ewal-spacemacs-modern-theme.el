@@ -2,27 +2,13 @@
 
 (require 'ewal-spacemacs-themes)
 ;; has to be run before loading `spacemacs-common'
-(let ((spacemacs-theme-org-highlight t)
-      (spacemacs-theme-custom-colors
+(setq spacemacs-theme-org-highlight t)
+(let ((spacemacs-theme-custom-colors
        (ewal-spacemacs-themes-get-colors)))
   (require 'spacemacs-common)
-
   (deftheme ewal-spacemacs-modern)
-
   ;; must be run before `create-spacemacs-theme'
-  (custom-theme-set-faces
-  'ewal-spacemacs-modern
-  (let ((class '((class color) (min-colors 89))))
-    `(line-number
-      ((,class
-        (:foreground ,(ewal--get-color 'comment 0)
-          :background ,(ewal--get-color 'background 0)
-          :inherit default))))
-    `(page-break-lines
-      ((,class
-        ;; depends on custom variable
-        (:foreground ,(alist-get 'act2 spacemacs-theme-custom-colors)
-          :background ,(alist-get 'act1 spacemacs-theme-custom-colors)))))))
+  (ewal-spacemacs-themes-modernize-theme)
   (create-spacemacs-theme 'dark 'ewal-spacemacs-modern))
 
 (provide-theme 'ewal-spacemacs-modern)

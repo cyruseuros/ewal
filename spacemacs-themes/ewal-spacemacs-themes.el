@@ -33,25 +33,25 @@
 ;;; Code:
 (require 'ewal "./ewal.el")
 
+(defvar spacemacs-theme-custom-colors)
+
 (defvar ewal-spacemacs-themes-colors nil
   "`spacemacs-theme' compatible colors.
 Extracted from current `ewal' theme.")
 
 (defun ewal-spacemacs-themes--generate-colors (&optional borders)
   "Make theme colorscheme from theme palettes.
-If TTY is t, colorscheme is reduced to basic supported colors. If
-BORDERS is t use `ewal-primary-accent-color' for borders. I
-prefer to remove them. If `ewal-high-contrast-p' is t,
+If TTY is t, colorscheme is reduced to basic supported colors.  If
+BORDERS is t use `ewal-primary-accent-color' for borders.  I
+prefer to remove them.  If `ewal-high-contrast-p' is t,
 increase (double) the range of shades of returned colors."
-  (let* ((primary-accent-color ewal-primary-accent-color)
-         (secondary-accent-color ewal-secondary-accent-color)
-         (border-color (if borders primary-accent-color 'background))
+  (let* ((border-color (if borders ewal-primary-accent-color 'background))
          (tty (or ewal-force-tty-colors-p
                   (and (daemonp) ewal-force-tty-colors-in-daemon-p)
                   (and (not (daemonp)) (not (display-graphic-p)))))
          (theme-colors
           `((act1          . ,(ewal--get-color 'background -3))
-            (act2          . ,(ewal--get-color primary-accent-color 0))
+            (act2          . ,(ewal--get-color ewal-primary-accent-color 0))
             (base          . ,(ewal--get-color 'foreground 0))
             (base-dim      . ,(ewal--get-color 'foreground -4))
             (bg1           . ,(ewal--get-color 'background 0))
@@ -64,18 +64,18 @@ increase (double) the range of shades of returned colors."
             (border        . ,(ewal--get-color border-color 0))
             (cblk          . ,(ewal--get-color 'foreground -3))
             (cblk-bg       . ,(ewal--get-color 'background -3))
-            (cblk-ln       . ,(ewal--get-color primary-accent-color 4))
-            (cblk-ln-bg    . ,(ewal--get-color primary-accent-color -4))
+            (cblk-ln       . ,(ewal--get-color ewal-primary-accent-color 4))
+            (cblk-ln-bg    . ,(ewal--get-color ewal-primary-accent-color -4))
             (cursor        . ,(ewal--get-color 'cursor 0))
-            (const         . ,(ewal--get-color primary-accent-color 4))
+            (const         . ,(ewal--get-color ewal-primary-accent-color 4))
             (comment       . ,(ewal--get-color 'comment 0))
             (comment-bg    . ,(ewal--get-color 'background 0))
-            (comp          . ,(ewal--get-color secondary-accent-color 0))
+            (comp          . ,(ewal--get-color ewal-secondary-accent-color 0))
             (err           . ,(ewal--get-color 'red 0))
-            (func          . ,(ewal--get-color primary-accent-color 0))
-            (head1         . ,(ewal--get-color primary-accent-color 0))
+            (func          . ,(ewal--get-color ewal-primary-accent-color 0))
+            (head1         . ,(ewal--get-color ewal-primary-accent-color 0))
             (head1-bg      . ,(ewal--get-color 'background -3))
-            (head2         . ,(ewal--get-color secondary-accent-color 0))
+            (head2         . ,(ewal--get-color ewal-secondary-accent-color 0))
             (head2-bg      . ,(ewal--get-color 'background -3))
             (head3         . ,(ewal--get-color 'cyan 0))
             (head3-bg      . ,(ewal--get-color 'background -3))
@@ -83,7 +83,7 @@ increase (double) the range of shades of returned colors."
             (head4-bg      . ,(ewal--get-color 'background -3))
             (highlight     . ,(ewal--get-color 'background 4))
             (highlight-dim . ,(ewal--get-color 'background 2))
-            (keyword       . ,(ewal--get-color secondary-accent-color 0))
+            (keyword       . ,(ewal--get-color ewal-secondary-accent-color 0))
             (lnum          . ,(ewal--get-color 'comment 0))
             (mat           . ,(ewal--get-color 'green 0))
             (meta          . ,(ewal--get-color 'yellow 4))
@@ -94,7 +94,7 @@ increase (double) the range of shades of returned colors."
             (ttip-sl       . ,(ewal--get-color 'background -2))
             (ttip-bg       . ,(ewal--get-color 'background 0))
             (type          . ,(ewal--get-color 'red 2))
-            (var           . ,(ewal--get-color secondary-accent-color 4))
+            (var           . ,(ewal--get-color ewal-secondary-accent-color 4))
             (war           . ,(ewal--get-color 'yellow 0))
             ;; colors
             (aqua          . ,(ewal--get-color 'cyan 0))
@@ -133,6 +133,20 @@ range of shades of returned colors."
   (if apply
       (setq spacemacs-theme-custom-colors ewal-spacemacs-themes-colors)
     ewal-spacemacs-themes-colors))
+
+(defun ewal-spacemacs-themes-modernize-theme ()
+  "Modernize an ewal-spacemacs-theme."
+  (let ((class '((class color) (min-colors 89))))
+    (custom-theme-set-faces
+     'ewal-spacemacs-modern
+       `(line-number
+         ((,class
+           (:foreground ,(ewal--get-color 'comment 0)
+            :background ,(ewal--get-color 'background 0))))
+       `(page-break-lines
+         ((,class
+           (:foreground ,(ewal--get-color ewal-primary-accent-color 0)
+            :background ,(ewal--get-color 'background -3)))))))))
 
 ;;;###autoload
 (when load-file-name
