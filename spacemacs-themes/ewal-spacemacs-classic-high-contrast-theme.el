@@ -2,13 +2,12 @@
 
 (require 'ewal-spacemacs-themes)
 ;; has to be run before loading spacemacs-common
-(setq ewal-high-contrast-p t)
-(ewal-spacemacs-themes-get-colors :apply t :borders t)
-(require 'spacemacs-common)
-
-(deftheme ewal-spacemacs-classic-high-contrast)
-
-(create-spacemacs-theme 'dark 'ewal-spacemacs-classic-high-contrast)
+(let ((ewal-high-contrast-p t)
+      (spacemacs-theme-custom-colors
+       (ewal-spacemacs-themes-get-colors :borders t)))
+  (require 'spacemacs-common)
+  (deftheme ewal-spacemacs-classic-high-contrast)
+  (create-spacemacs-theme 'dark 'ewal-spacemacs-classic-high-contrast))
 
 (provide-theme 'ewal-spacemacs-classic-high-contrast)
 ;; ewal-spacemacs-classic-high-contrast-theme.el ends here
