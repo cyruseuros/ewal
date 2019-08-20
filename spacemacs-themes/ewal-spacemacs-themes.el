@@ -134,11 +134,11 @@ range of shades of returned colors."
       (setq spacemacs-theme-custom-colors ewal-spacemacs-themes-colors)
     ewal-spacemacs-themes-colors))
 
-(defun ewal-spacemacs-themes-modernize-theme ()
-  "Modernize an ewal-spacemacs-theme."
+(defun ewal-spacemacs-themes--modernize-theme (theme)
+  "Modernize an ewal-spacemacs-themes THEME."
   (let ((class '((class color) (min-colors 89))))
     (custom-theme-set-faces
-     'ewal-spacemacs-modern
+     theme
        `(line-number
          ((,class
            (:foreground ,(ewal--get-color 'comment 0)

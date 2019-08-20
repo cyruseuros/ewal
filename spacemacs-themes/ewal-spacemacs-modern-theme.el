@@ -8,8 +8,10 @@
   (require 'spacemacs-common)
   (deftheme ewal-spacemacs-modern)
   ;; must be run before `create-spacemacs-theme'
-  (ewal-spacemacs-themes-modernize-theme)
-  (create-spacemacs-theme 'dark 'ewal-spacemacs-modern))
+  (ewal-spacemacs-themes--modernize-theme
+   'ewal-spacemacs-modern)
+  (create-spacemacs-theme
+   'dark 'ewal-spacemacs-modern))
 
 (provide-theme 'ewal-spacemacs-modern)
 ;; ewal-spacemacs-modern-theme.el ends here
