@@ -33,18 +33,13 @@
 ;;; Code:
 (require 'ewal "./ewal.el")
 
-(defvar spacemacs-theme-custom-colors)
-
 (defvar ewal-spacemacs-themes-colors nil
   "`spacemacs-theme' compatible colors.
 Extracted from current `ewal' theme.")
 
 (defun ewal-spacemacs-themes--generate-colors (&optional borders)
-  "Make theme colorscheme from theme palettes.
-If TTY is t, colorscheme is reduced to basic supported colors.  If
-BORDERS is t use `ewal-primary-accent-color' for borders.  I
-prefer to remove them.  If `ewal-high-contrast-p' is t,
-increase (double) the range of shades of returned colors."
+  "Make theme colorscheme from theme palettes. If BORDERS is t
+use `ewal-primary-accent-color' for borders."
   (let ((tty (or ewal-force-tty-colors-p
                  (and (daemonp) ewal-force-tty-colors-in-daemon-p)
                  (and (not (daemonp)) (not (display-graphic-p)))))
@@ -147,21 +142,13 @@ increase (double) the range of shades of returned colors."
 
 ;;;###autoload
 (cl-defun ewal-spacemacs-themes-get-colors
-    (&optional borders apply)
+    (&optional borders)
   "Get `spacemacs-theme' colors.
-For usage see: <https://github.com/nashamri/spacemacs-theme>. If
-APPLY is t, set relevant environment variable for the user.
-Reload `ewal' environment variables before returning colors even
-if they have already been computed if FORCE-RELOAD is t. TTY
-defaults to return value of `ewal--use-tty-colors-p'. if TTY is
-t, use TTY colors. If HIGH-CONTRAST is t, increase (double) the
-range of shades of returned colors."
+For usage see: <https://github.com/nashamri/spacemacs-theme>."
   (ewal-load-wal-colors)
   (setq ewal-spacemacs-themes-colors
         (ewal-spacemacs-themes--generate-colors borders))
-  (if apply
-      (setq spacemacs-theme-custom-colors ewal-spacemacs-themes-colors)
-    ewal-spacemacs-themes-colors))
+  ewal-spacemacs-themes-colors)
 
 (defun ewal-spacemacs-themes--modernize-theme (theme)
   "Modernize an ewal-spacemacs-themes THEME."

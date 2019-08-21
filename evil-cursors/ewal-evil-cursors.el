@@ -73,8 +73,7 @@ but might be useful otherwise"
   :group 'faces)
 
 (defun ewal-evil-cursors--generate-spacemacs-colors ()
-  "Use wal colors to customize `spacemacs-evil-cursors'.
-TTY specifies whether to use TTY or GUI colors."
+  "Use `ewal' colors to customize `spacemacs-evil-cursors'."
   (ewal-load-wal-colors)
   `(("normal" ,(ewal--get-color 'cursor 0) box)
     ("insert" ,(ewal--get-color 'green 0) (bar . 2))
@@ -89,13 +88,15 @@ TTY specifies whether to use TTY or GUI colors."
     ("iedit-insert" ,(ewal--get-color 'magenta -4) (bar . 2))))
 
 (defun ewal-evil-cursors--generate-emacs-colors ()
-  "Use wal colors to customize vanilla Emacs Evil cursor colors.
-TTY specifies whether to use or GUI colors."
+  "Use `ewal' colors to customize vanilla Emacs Evil cursor colors."
   `((evil-normal-state-cursor (,(ewal--get-color 'cursor 0) box))
-    (evil-insert-state-cursor (,(ewal--get-color
-                                 (if (and ewal-evil-cursors-obey-evil-p
-                                          (bound-and-true-p evil-disable-insert-state-bindings))
-                                     'blue 'green) 0) (bar . 2)))
+    (evil-insert-state-cursor
+     (,(ewal--get-color
+        (if (and ewal-evil-cursors-obey-evil-p
+                 (bound-and-true-p evil-disable-insert-state-bindings))
+            'blue
+          'green) 0)
+      (bar . 2)))
     (evil-emacs-state-cursor (,(ewal--get-color 'blue 0) box))
     (evil-hybrid-state-cursor (,(ewal--get-color 'blue 0) (bar . 2)))
     (evil-evilified-state-cursor (,(ewal--get-color 'red 0) box))

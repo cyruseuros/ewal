@@ -126,7 +126,8 @@ Only applies when `wal' cache is unreadable for some reason."
   :type 'boolean
   :group 'ewal)
 
-(defcustom ewal-cursor-color (symbol-name ewal-primary-accent-color)
+(defcustom ewal-cursor-color
+  (symbol-name ewal-primary-accent-color)
   "Assumed color of special \"cursor\" color in `wal' themes.
 Only relevant in TTY/terminal."
   :type 'string
@@ -141,11 +142,13 @@ Only relevant in TTY/terminal."
   "Json file to be used in case `ewal-use-built-in-always-p' is t.
 Also if `ewal-use-built-in-on-failure-p' is t and something goes wrong.")
 
-(defvar ewal-ansi-background-name (if ewal-dark-palette-p "black" "white")
-  "Ansi color to use for background in tty.")
+(defvar ewal-ansi-background-name
+  (if ewal-dark-palette-p "black" "white")
+  "Ansi color to use for background in a TTY/terminal.")
 
-(defvar ewal-ansi-foreground-name (if ewal-dark-palette-p "white" "black")
-  "Ansi color to use for background in tty.")
+(defvar ewal-ansi-foreground-name
+  (if ewal-dark-palette-p "white" "black")
+  "Ansi color to use for background in TTY/terminal.")
 
 (defvar ewal-base-palette nil
   "Current base palette extracted from `ewal-wal-json-file'.")
