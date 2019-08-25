@@ -74,7 +74,6 @@ but might be useful otherwise"
 
 (defun ewal-evil-cursors--generate-spacemacs-colors ()
   "Use `ewal' colors to customize `spacemacs-evil-cursors'."
-  (ewal-load-wal-colors)
   `(("normal" ,(ewal--get-color 'cursor 0) box)
     ("insert" ,(ewal--get-color 'green 0) (bar . 2))
     ("emacs" ,(ewal--get-color 'blue 0) box)
@@ -114,9 +113,7 @@ Later to be used in `ewal-evil-cursors-highlight-face-evil-state'."
   (defvar dyn-state)
   (let ((face-string "ewal-evil-cursors-%s-state")
         (doc-string "Ewal evil %s state face."))
-    (cl-loop for (key . value) in
-             (or ewal-evil-cursors-emacs-colors
-                 (ewal-evil-cursors--generate-emacs-colors))
+    (cl-loop for (key . value) in ewal-evil-cursors-emacs-colors
              ;; only check single string
              ;; iedit-insert is the same color anyway
              as dyn-state = (cadr (split-string (symbol-name key) "-"))
@@ -128,13 +125,15 @@ Later to be used in `ewal-evil-cursors-highlight-face-evil-state'."
                       ,(format doc-string dyn-state)
                       :group 'spaceline)))))
 
-(ewal-evil-cursors--generate-evil-faces)
-
 ;;;###autoload
 (defun ewal-evil-cursors-highlight-face-evil-state ()
   "Set highlight face depending on the evil state.
 Set `spaceline-highlight-face-func' to
 `ewal-evil-cursors-highlight-face-evil-state' to use this."
+  (ewal-load-wal-colors)
+  (setq ewal-evil-cursors-emacs-colors
+        (ewal-evil-cursors--generate-emacs-colors))
+  (ewal-evil-cursors--generate-evil-faces)
   (if (bound-and-true-p evil-local-mode)
       (let* ((state (if (eq 'operator evil-state) evil-previous-state evil-state))
              (face (assq state ewal-evil-cursors-evil-state-faces)))
@@ -145,6 +144,9 @@ Set `spaceline-highlight-face-func' to
   "Apply `ewal-evil-cursors' colors to Emacs.
 Reload `ewal' environment variables before returning colors even
 if they have already been computed if FORCE-RELOAD is t."
+  (ewal-load-wal-colors)
+  (setq ewal-evil-cursors-emacs-colors
+        (ewal-evil-cursors--generate-emacs-colors))
   (cl-loop for (key . value)
                in ewal-evil-cursors-emacs-colors
                do (set key (car value)))
@@ -154,6 +156,9 @@ if they have already been computed if FORCE-RELOAD is t."
   "Apply `ewal-evil-cursors' colors to Spacemacs.
 Reload `ewal' environment variables before returning colors even
 if they have already been computed if FORCE-RELOAD is t."
+  (ewal-load-wal-colors)
+  (setq ewal-evil-cursors-spacemacs-colors
+        (ewal-evil-cursors--generate-spacemacs-colors))
   (if (boundp 'spacemacs/add-evil-cursor)
           (when (functionp 'spacemacs/add-evil-cursor)
             (cl-loop for (state color shape) in ewal-evil-cursors-spacemacs-colors
