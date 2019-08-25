@@ -55,7 +55,7 @@ use `ewal-primary-accent-color' for borders."
         (border (ewal--get-color (if borders
                                      ewal-primary-accent-color
                                    'background) 0))
-        (cblk (ewal--get-color 'foreground -3))
+        (cblk (ewal--get-color 'background -3))
         (const (ewal--get-color ewal-primary-accent-color 4))
         (cblk-ln-bg (ewal--get-color ewal-primary-accent-color -4))
         (cursor (ewal--get-color 'cursor 0))
@@ -89,7 +89,7 @@ use `ewal-primary-accent-color' for borders."
       (bg3           . ,bg3)
       (bg4           . ,bg4)
       (border        . ,border)
-      (cblk          . ,cblk)
+      (cblk          . ,base)
       (cblk-bg       . ,cblk)
       (cblk-ln       . ,const)
       (cblk-ln-bg    . ,cblk-ln-bg)
