@@ -4,7 +4,7 @@
 ;; has to be run before loading spacemacs-common
 (let ((ewal-pct-shade 10)
       (spacemacs-theme-custom-colors
-       (ewal-spacemacs-themes-get-colors :borders t)))
+       (ewal-spacemacs-themes-get-colors t)))
   (require 'spacemacs-common)
   (deftheme ewal-spacemacs-classic-high-contrast)
   (create-spacemacs-theme 'dark 'ewal-spacemacs-classic-high-contrast))
