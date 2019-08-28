@@ -89,18 +89,6 @@ Meant for setting TTY theme regardless of GUI support."
   :type 'boolean
   :group 'ewal)
 
-(defcustom ewal-primary-accent-color 'magenta
-  "Predominant `ewal' color.
-Must be one of `ewal-ansi-color-name-symbols'"
-  :type 'symbol
-  :group 'ewal)
-
-(defcustom ewal-secondary-accent-color 'blue
-  "Second most predominant `ewal' color.
-Must be one of `ewal-ansi-color-name-symbols'"
-  :type 'symbol
-  :group 'ewal)
-
 (defcustom ewal-dark-palette-p t
   "Assume `ewal' theme is a dark theme.
 Relevant either when using `ewal's built-in palettes, or when
