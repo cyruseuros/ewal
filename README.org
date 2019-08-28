@@ -1,3 +1,5 @@
+[[https://melpa.org/#/ewal][file:https://melpa.org/packages/ewal-badge.svg]] [[https://melpa.org/#/ewal-spacemacs-themes][file:https://melpa.org/packages/ewal-spacemacs-themes-badge.svg]] [[https://melpa.org/#/ewal-evil-cursors][file:https://melpa.org/packages/ewal-evil-cursors-badge.svg]]
+
 [[./img/ewal.png]]
 
 A dependency-free, pywal-based, automatic, terminal-aware Emacs
