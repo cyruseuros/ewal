@@ -82,16 +82,16 @@ determine the exact padding."
 
    (grey       base4)
    (red        `(,(ewal--get-color 'red      0) nil nil))
-   (orange     `(,(ewal--get-color 'red      -2) nil nil))
+   (orange     `(,(ewal--get-color 'red     +2) nil nil))
    (green      `(,(ewal--get-color 'green    0) nil nil))
-   (teal       `(,(ewal--get-color 'cyan    -2) nil nil))
+   (teal       `(,(ewal--get-color 'green   +2) nil nil))
    (yellow     `(,(ewal--get-color 'yellow   0) nil nil))
    (blue       `(,(ewal--get-color 'blue     0) nil nil))
-   (dark-blue  `(,(ewal--get-color 'blue    -1) nil nil))
+   (dark-blue  `(,(ewal--get-color 'blue    +2) nil nil))
    (magenta    `(,(ewal--get-color 'magenta  0) nil nil))
-   (violet     `(,(ewal--get-color 'magenta -1) nil nil))
+   (violet     `(,(ewal--get-color 'magenta +2) nil nil))
    (cyan       `(,(ewal--get-color 'cyan     0) nil nil))
-   (dark-cyan  `(,(ewal--get-color 'cyan    -1) nil nil))
+   (dark-cyan  `(,(ewal--get-color 'cyan    -2) nil nil))
 
    ;; face categories -- required for all themes
    (highlight      blue)
