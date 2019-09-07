@@ -1,4 +1,4 @@
-;;; ewal-spacemacs-themes.el --- An `ewal'-based theme -*- lexical-binding: t; -*-
+;;; ewal-spacemacs-themes.el --- Ride the rainbow spaceship -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Uros Perisic
 
@@ -31,7 +31,7 @@
 ;; this file if you want to contribute other `ewal' customized themes.
 
 ;;; Code:
-(require 'ewal "./ewal.el")
+(require 'ewal)
 
 (defvar ewal-spacemacs-themes-colors nil
   "`spacemacs-theme' compatible colors.
@@ -43,42 +43,42 @@ use `ewal-primary-accent-color' for borders."
   (let ((tty (or ewal-force-tty-colors-p
                  (and (daemonp) ewal-force-tty-colors-in-daemon-p)
                  (and (not (daemonp)) (not (display-graphic-p)))))
-        (bg1 (ewal--get-color 'background 0))
-        (bg2 (ewal--get-color 'background -2))
-        (bg3 (ewal--get-color 'background -3))
-        (bg4 (ewal--get-color 'background -4))
-        (act1 (ewal--get-color 'background -3))
-        (act2 (ewal--get-color ewal-primary-accent-color 0))
-        (base (ewal--get-color 'foreground 0))
-        (base-dim (ewal--get-color 'foreground -4))
-        (comment (ewal--get-color 'comment 0))
-        (border (ewal--get-color (if borders
+        (bg1 (ewal-get-color 'background 0))
+        (bg2 (ewal-get-color 'background -2))
+        (bg3 (ewal-get-color 'background -3))
+        (bg4 (ewal-get-color 'background -4))
+        (act1 (ewal-get-color 'background -3))
+        (act2 (ewal-get-color ewal-primary-accent-color 0))
+        (base (ewal-get-color 'foreground 0))
+        (base-dim (ewal-get-color 'foreground -4))
+        (comment (ewal-get-color 'comment 0))
+        (border (ewal-get-color (if borders
                                      ewal-primary-accent-color
                                    'background) 0))
-        (cblk (ewal--get-color 'background -3))
-        (const (ewal--get-color ewal-primary-accent-color 4))
-        (cblk-ln-bg (ewal--get-color ewal-primary-accent-color -4))
-        (cursor (ewal--get-color 'cursor 0))
-        (comp (ewal--get-color ewal-secondary-accent-color 0))
-        (red  (ewal--get-color 'red 0))
-        (highlight (ewal--get-color 'background 4))
-        (highlight-dim (ewal--get-color 'background 2))
-        (cyan (ewal--get-color 'cyan 0))
-        (yellow (ewal--get-color 'yellow 0))
-        (green (ewal--get-color 'green 0))
-        (suc (ewal--get-color 'green 4))
-        (type (ewal--get-color 'red 2))
-        (var (ewal--get-color ewal-secondary-accent-color 4))
-        (aqua-bg (ewal--get-color 'cyan -3))
-        (green-bg (ewal--get-color 'green -3))
-        (green-bg-s  (ewal--get-color 'green -4))
-        (red-bg (ewal--get-color 'red -3))
-        (red-bg-s (ewal--get-color 'red -4))
-        (blue (ewal--get-color 'blue 0))
-        (blue-bg (ewal--get-color 'blue -3))
-        (blue-bg-s (ewal--get-color 'blue -4))
-        (magenta (ewal--get-color 'magenta 0))
-        (yellow-bg (ewal--get-color 'yellow -3)))
+        (cblk (ewal-get-color 'background -3))
+        (const (ewal-get-color ewal-primary-accent-color 4))
+        (cblk-ln-bg (ewal-get-color ewal-primary-accent-color -4))
+        (cursor (ewal-get-color 'cursor 0))
+        (comp (ewal-get-color ewal-secondary-accent-color 0))
+        (red  (ewal-get-color 'red 0))
+        (highlight (ewal-get-color 'background 4))
+        (highlight-dim (ewal-get-color 'background 2))
+        (cyan (ewal-get-color 'cyan 0))
+        (yellow (ewal-get-color 'yellow 0))
+        (green (ewal-get-color 'green 0))
+        (suc (ewal-get-color 'green 4))
+        (type (ewal-get-color 'red 2))
+        (var (ewal-get-color ewal-secondary-accent-color 4))
+        (aqua-bg (ewal-get-color 'cyan -3))
+        (green-bg (ewal-get-color 'green -3))
+        (green-bg-s  (ewal-get-color 'green -4))
+        (red-bg (ewal-get-color 'red -3))
+        (red-bg-s (ewal-get-color 'red -4))
+        (blue (ewal-get-color 'blue 0))
+        (blue-bg (ewal-get-color 'blue -3))
+        (blue-bg-s (ewal-get-color 'blue -4))
+        (magenta (ewal-get-color 'magenta 0))
+        (yellow-bg (ewal-get-color 'yellow -3)))
     `((act1          . ,act1)
       (act2          . ,act2)
       (base          . ,base)
@@ -145,7 +145,7 @@ use `ewal-primary-accent-color' for borders."
     (&optional borders)
   "Get `spacemacs-theme' colors.
 For usage see: <https://github.com/nashamri/spacemacs-theme>."
-  (ewal-load-wal-colors)
+  (ewal-load-colors)
   (setq ewal-spacemacs-themes-colors
         (ewal-spacemacs-themes--generate-colors borders))
   ewal-spacemacs-themes-colors)
@@ -157,12 +157,12 @@ For usage see: <https://github.com/nashamri/spacemacs-theme>."
      theme
        `(line-number
          ((,class
-           (:foreground ,(ewal--get-color 'comment 0)
-            :background ,(ewal--get-color 'background 0))))
+           (:foreground ,(ewal-get-color 'comment 0)
+            :background ,(ewal-get-color 'background 0))))
        `(page-break-lines
          ((,class
-           (:foreground ,(ewal--get-color 'background -3)
-            :background ,(ewal--get-color 'background -3)))))))))
+           (:foreground ,(ewal-get-color 'background -3)
+            :background ,(ewal-get-color 'background -3)))))))))
 
 ;;;###autoload
 (when load-file-name

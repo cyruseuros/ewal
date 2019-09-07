@@ -153,11 +153,11 @@ Also if `ewal-use-built-in-on-failure-p' is t and something goes wrong.")
 (defvar ewal-base-palette nil
   "Current base palette extracted from `ewal-wal-json-file'.")
 
-(defvar ewal-default-shade-percent-difference 5
+(defvar ewal-shade-percent-difference 5
   "Default percentage difference between each shade.")
 
 ;;;###autoload
-(defun ewal-load-wal-colors (&optional json color-names)
+(defun ewal-load-colors (&optional json color-names)
   "Read JSON as the most complete of the cached wal files.
 COLOR-NAMES will be associated with the first 8 colors of the
 cached wal colors.  COLOR-NAMES are meant to be used in
@@ -201,8 +201,8 @@ alist. Return nil on failure."
 \(a float between 0 and 1\)"
   (when (and color1 color2)
     (cond ((and color1 color2 (symbolp color1) (symbolp color2))
-           (ewal--color-blend (ewal--get-color color1 0)
-                              (ewal--get-color color2 0) alpha))
+           (ewal--color-blend (ewal-get-color color1 0)
+                              (ewal-get-color color2 0) alpha))
 
           ((or (listp color1) (listp color2))
            (cl-loop for x in color1
@@ -230,7 +230,7 @@ alist. Return nil on failure."
              (ewal--color-blend "#FFFFFF" color alpha)
            (ewal--color-blend "#000000" color (* -1 alpha))))))
 
-(defun ewal--get-color
+(defun ewal-get-color
     (color &optional shade shade-percent-difference)
   "Get an `ewal' color.
 Return SHADE of COLOR with SHADE-PERCENT-DIFFERENCE between
@@ -240,7 +240,7 @@ shades."
                  (and (not (daemonp)) (not (display-graphic-p)))))
         (shade-percent-difference
          (or shade-percent-difference
-             ewal-default-shade-percent-difference)))
+             ewal-shade-percent-difference)))
   (if tty
         (let ((color-name (symbol-name color)))
           (cond ((string= color-name "background") ewal-ansi-background-name)
@@ -254,12 +254,12 @@ shades."
        color (/ (* shade shade-percent-difference) (float 100)))))))
 
 ;;;###autoload
-(defun ewal-get-color (color &optional shade shade-percent-difference)
-  "Same as `ewal--get-color' but call `ewal-load-ewal-colors' first.
+(defun ewal-load-color (color &optional shade shade-percent-difference)
+  "Same as `ewal-get-color' but call `ewal-load-ewal-colors' first.
 Pass COLOR, SHADE, and SHADE-PERCENT-DIFFERENCE to
-`ewal--get-color'.  Meant to be called from user config."
-  (ewal-load-wal-colors)
-  (ewal--get-color color shade shade-percent-difference))
+`ewal-get-color'.  Meant to be called from user config."
+  (ewal-load-colors)
+  (ewal-get-color color shade shade-percent-difference))
 
 (provide 'ewal)
 

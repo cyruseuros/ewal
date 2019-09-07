@@ -74,37 +74,37 @@ but might be useful otherwise"
 
 (defun ewal-evil-cursors--generate-spacemacs-colors ()
   "Use `ewal' colors to customize `spacemacs-evil-cursors'."
-  `(("normal" ,(ewal--get-color 'cursor 0) box)
-    ("insert" ,(ewal--get-color 'green 0) (bar . 2))
-    ("emacs" ,(ewal--get-color 'blue 0) box)
-    ("hybrid" ,(ewal--get-color 'blue 0) (bar . 2))
-    ("evilified" ,(ewal--get-color 'red 0) box)
-    ("visual" ,(ewal--get-color 'white -4) (hbar . 2))
-    ("motion" ,(ewal--get-color ewal-primary-accent-color 0) box)
-    ("replace" ,(ewal--get-color 'red -4) (hbar . 2))
-    ("lisp" ,(ewal--get-color 'magenta 4) box)
-    ("iedit" ,(ewal--get-color 'magenta -4) box)
-    ("iedit-insert" ,(ewal--get-color 'magenta -4) (bar . 2))))
+  `(("normal" ,(ewal-get-color 'cursor 0) box)
+    ("insert" ,(ewal-get-color 'green 0) (bar . 2))
+    ("emacs" ,(ewal-get-color 'blue 0) box)
+    ("hybrid" ,(ewal-get-color 'blue 0) (bar . 2))
+    ("evilified" ,(ewal-get-color 'red 0) box)
+    ("visual" ,(ewal-get-color 'white -4) (hbar . 2))
+    ("motion" ,(ewal-get-color ewal-primary-accent-color 0) box)
+    ("replace" ,(ewal-get-color 'red -4) (hbar . 2))
+    ("lisp" ,(ewal-get-color 'magenta 4) box)
+    ("iedit" ,(ewal-get-color 'magenta -4) box)
+    ("iedit-insert" ,(ewal-get-color 'magenta -4) (bar . 2))))
 
 (defun ewal-evil-cursors--generate-emacs-colors ()
   "Use `ewal' colors to customize vanilla Emacs Evil cursor colors."
-  `((evil-normal-state-cursor (,(ewal--get-color 'cursor 0) box))
+  `((evil-normal-state-cursor (,(ewal-get-color 'cursor 0) box))
     (evil-insert-state-cursor
-     (,(ewal--get-color
+     (,(ewal-get-color
         (if (and ewal-evil-cursors-obey-evil-p
                  (bound-and-true-p evil-disable-insert-state-bindings))
             'blue
           'green) 0)
       (bar . 2)))
-    (evil-emacs-state-cursor (,(ewal--get-color 'blue 0) box))
-    (evil-hybrid-state-cursor (,(ewal--get-color 'blue 0) (bar . 2)))
-    (evil-evilified-state-cursor (,(ewal--get-color 'red 0) box))
-    (evil-visual-state-cursor (,(ewal--get-color 'white -4) (hbar . 2)))
-    (evil-motion-state-cursor (,(ewal--get-color ewal-primary-accent-color 0) box))
-    (evil-replace-state-cursor (,(ewal--get-color 'red -4) (hbar . 2)))
-    (evil-lisp-state-cursor (,(ewal--get-color 'magenta 4) box))
-    (evil-iedit-state-cursor (,(ewal--get-color 'magenta -4) box))
-    (evil-iedit-insert-state-cursor (,(ewal--get-color 'magenta -4) (bar . 2)))))
+    (evil-emacs-state-cursor (,(ewal-get-color 'blue 0) box))
+    (evil-hybrid-state-cursor (,(ewal-get-color 'blue 0) (bar . 2)))
+    (evil-evilified-state-cursor (,(ewal-get-color 'red 0) box))
+    (evil-visual-state-cursor (,(ewal-get-color 'white -4) (hbar . 2)))
+    (evil-motion-state-cursor (,(ewal-get-color ewal-primary-accent-color 0) box))
+    (evil-replace-state-cursor (,(ewal-get-color 'red -4) (hbar . 2)))
+    (evil-lisp-state-cursor (,(ewal-get-color 'magenta 4) box))
+    (evil-iedit-state-cursor (,(ewal-get-color 'magenta -4) box))
+    (evil-iedit-insert-state-cursor (,(ewal-get-color 'magenta -4) (bar . 2)))))
 
 (defun ewal-evil-cursors--generate-evil-faces ()
   "Define evil faces.
@@ -120,7 +120,7 @@ Later to be used in `ewal-evil-cursors-highlight-face-evil-state'."
              as dyn-color = (caar value) do
              (eval `(defface ,(intern (format face-string dyn-state))
                       `((t (:background ,dyn-color
-                            :foreground ,(ewal--get-color 'background -3)
+                            :foreground ,(ewal-get-color 'background -3)
                             :inherit 'mode-line)))
                       ,(format doc-string dyn-state)
                       :group 'spaceline)))))
@@ -130,7 +130,7 @@ Later to be used in `ewal-evil-cursors-highlight-face-evil-state'."
   "Set highlight face depending on the evil state.
 Set `spaceline-highlight-face-func' to
 `ewal-evil-cursors-highlight-face-evil-state' to use this."
-  (ewal-load-wal-colors)
+  (ewal-load-colors)
   (setq ewal-evil-cursors-emacs-colors
         (ewal-evil-cursors--generate-emacs-colors))
   (ewal-evil-cursors--generate-evil-faces)
@@ -144,7 +144,7 @@ Set `spaceline-highlight-face-func' to
   "Apply `ewal-evil-cursors' colors to Emacs.
 Reload `ewal' environment variables before returning colors even
 if they have already been computed if FORCE-RELOAD is t."
-  (ewal-load-wal-colors)
+  (ewal-load-colors)
   (setq ewal-evil-cursors-emacs-colors
         (ewal-evil-cursors--generate-emacs-colors))
   (cl-loop for (key . value)
@@ -156,7 +156,7 @@ if they have already been computed if FORCE-RELOAD is t."
   "Apply `ewal-evil-cursors' colors to Spacemacs.
 Reload `ewal' environment variables before returning colors even
 if they have already been computed if FORCE-RELOAD is t."
-  (ewal-load-wal-colors)
+  (ewal-load-colors)
   (setq ewal-evil-cursors-spacemacs-colors
         (ewal-evil-cursors--generate-spacemacs-colors))
   (if (boundp 'spacemacs/add-evil-cursor)
@@ -179,7 +179,7 @@ spaceline to use `ewal' colors if SPACELINE is t.  Reload `ewal'
 environment variables before returning colors even if they have
 already been computed if FORCE-RELOAD is t."
   ;; tweak spaceline
-  (ewal-load-wal-colors)
+  (ewal-load-colors)
   (when spaceline
     (with-eval-after-load 'spaceline
       (add-to-list 'spaceline-evil-state-faces '(lisp . spaceline-evil-lisp))

@@ -1,105 +1,74 @@
-;;; doom-ewal-theme.el --- Themes ain't clorschemes -*- lexical-binding: t; -*-
+;;; ewal-doom-one-theme.el -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019 Uros Perisic
+(require 'ewal-doom-themes)
 
-;; Author: Uros Perisic
-;; URL: https://gitlab.com/jjzmajic/ewal
-;;
-;; Version: 0.1
-;; Keywords: faces
-;; Package-Requires: ((emacs "25") (ewal "0.1") (doom-themes "0.1"))
-
-;; This program is free software: you can redistribute it and/or modify it under
-;; the terms of the GNU General Public License as published by the Free Software
-;; Foundation, either version 3 of the License, or (at your option) any later
-;; version.
-
-;; This program is distributed in the hope that it will be useful, but WITHOUT
-;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-;; FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
-;; details.
-
-;; You should have received a copy of the GNU General Public License along with
-;; this program. If not, see <http://www.gnu.org/licenses/>.
-
-;; This file is not part of Emacs.
-
-;;; Commentary:
-
-;; An `ewal'-based theme, created using `doom-themes' as its base. Emulate this
-;;  file if you want to contribute other `ewal' customized themes.
-
-;;; Code:
-(require 'doom-themes)
-(require 'ewal)
-
-(defgroup doom-ewal-theme nil
+(defgroup ewal-doom-one-theme nil
   "Options for doom-themes"
   :group 'doom-themes)
 
-(defcustom doom-ewal-brighter-modeline nil
+(defcustom ewal-doom-one-brighter-modeline nil
   "If non-nil, more vivid colors will be used to style the mode-line."
-  :group 'doom-ewal-theme
+  :group 'ewal-doom-one-theme
   :type 'boolean)
 
-(defcustom doom-ewal-brighter-comments nil
+(defcustom ewal-doom-one-brighter-comments nil
   "If non-nil, comments will be highlighted in more vivid colors."
-  :group 'doom-ewal-theme
+  :group 'ewal-doom-one-theme
   :type 'boolean)
 
-(defcustom doom-ewal-comment-bg doom-ewal-brighter-comments
+(defcustom ewal-doom-one-comment-bg ewal-doom-one-brighter-comments
   "If non-nil, comments will have a subtle, darker background. Enhancing their
 legibility."
-  :group 'doom-ewal-theme
+  :group 'ewal-doom-one-theme
   :type 'boolean)
 
-(defcustom doom-ewal-padded-modeline doom-themes-padded-modeline
+(defcustom ewal-doom-one-padded-modeline doom-themes-padded-modeline
   "If non-nil, adds a 4px padding to the mode-line. Can be an integer to
 determine the exact padding."
-  :group 'doom-ewal-theme
-  :type '(or integer boolean))
+  :group 'ewal-doom-one-theme
+  :type '(choice integer boolean))
+
+(ewal-load-colors)
 
 ;;
-(ewal-load-wal-colors)
-
-(def-doom-theme doom-ewal
-  "A dark theme inspired by Atom One Dark"
+(def-doom-theme ewal-doom-one
+  "A dark theme inspired by Atom One Dark, cutomized with `ewal'."
 
   ;; name        default   256       16
-  ((bg         `(,(ewal--get-color 'background  0) nil nil))
-   (bg-alt     `(,(ewal--get-color 'background -1) nil nil))
-   (base0      `(,(ewal--get-color 'background -2) nil nil))
-   (base1      `(,(ewal--get-color 'background -3) nil nil))
-   (base2      `(,(ewal--get-color 'background -4) nil nil))
-   (base3      `(,(ewal--get-color 'background -5) nil nil))
-   (base4      `(,(ewal--get-color 'background +1) nil nil))
-   (base5      `(,(ewal--get-color 'background +2) nil nil))
-   (base6      `(,(ewal--get-color 'background +3) nil nil))
-   (base7      `(,(ewal--get-color 'background +4) nil nil))
-   (base8      `(,(ewal--get-color 'background +5) nil nil))
-   (fg         `(,(ewal--get-color 'foreground  0) nil nil))
-   (fg-alt     `(,(ewal--get-color 'foreground -1) nil nil))
+  ((bg         (ewal-doom-themes-get-color 'background  0))
+   (bg-alt     (ewal-doom-themes-get-color 'background -1))
+   (base0      (ewal-doom-themes-get-color 'background -4))
+   (base1      (ewal-doom-themes-get-color 'background -3))
+   (base2      (ewal-doom-themes-get-color 'background -2))
+   (base3      (ewal-doom-themes-get-color 'background -1))
+   (base4      (ewal-doom-themes-get-color 'background +1))
+   (base5      (ewal-doom-themes-get-color 'background +2))
+   (base6      (ewal-doom-themes-get-color 'background +3))
+   (base7      (ewal-doom-themes-get-color 'background +4))
+   (base8      (ewal-doom-themes-get-color 'foreground +1))
+   (fg         (ewal-doom-themes-get-color 'foreground  0))
+   (fg-alt     (ewal-doom-themes-get-color 'foreground -1))
 
    (grey       base4)
-   (red        `(,(ewal--get-color 'red      0) nil nil))
-   (orange     `(,(ewal--get-color 'red     +2) nil nil))
-   (green      `(,(ewal--get-color 'green    0) nil nil))
-   (teal       `(,(ewal--get-color 'green   +2) nil nil))
-   (yellow     `(,(ewal--get-color 'yellow   0) nil nil))
-   (blue       `(,(ewal--get-color 'blue     0) nil nil))
-   (dark-blue  `(,(ewal--get-color 'blue    -2) nil nil))
-   (magenta    `(,(ewal--get-color 'magenta  0) nil nil))
-   (violet     `(,(ewal--get-color 'magenta -2) nil nil))
-   (cyan       `(,(ewal--get-color 'cyan     0) nil nil))
-   (dark-cyan  `(,(ewal--get-color 'cyan    -2) nil nil))
+   (red        (ewal-doom-themes-get-color 'red      0))
+   (orange     (ewal-doom-themes-get-color 'red     +2))
+   (green      (ewal-doom-themes-get-color 'green    0))
+   (teal       (ewal-doom-themes-get-color 'green   +2))
+   (yellow     (ewal-doom-themes-get-color 'yellow   0))
+   (blue       (ewal-doom-themes-get-color 'blue    +2))
+   (dark-blue  (ewal-doom-themes-get-color 'blue     0))
+   (magenta    (ewal-doom-themes-get-color 'magenta +2))
+   (violet     (ewal-doom-themes-get-color 'magenta  0))
+   (cyan       (ewal-doom-themes-get-color 'cyan    +2))
+   (dark-cyan  (ewal-doom-themes-get-color 'cyan     0))
 
    ;; face categories -- required for all themes
    (highlight      blue)
    (vertical-bar   (doom-darken base1 0.1))
    (selection      dark-blue)
    (builtin        magenta)
-   (comments       (if doom-ewal-brighter-comments dark-cyan base5))
-   (doc-comments   (doom-lighten (if doom-ewal-brighter-comments dark-cyan base5) 0.25))
+   (comments       (if ewal-doom-one-brighter-comments dark-cyan base5))
+   (doc-comments   (doom-lighten (if ewal-doom-one-brighter-comments dark-cyan base5) 0.25))
    (constants      violet)
    (functions      magenta)
    (keywords       blue)
@@ -119,10 +88,10 @@ determine the exact padding."
 
    ;; custom categories
    (hidden     `(,(car bg) "black" "black"))
-   (-modeline-bright doom-ewal-brighter-modeline)
+   (-modeline-bright ewal-doom-one-brighter-modeline)
    (-modeline-pad
-    (when doom-ewal-padded-modeline
-      (if (integerp doom-ewal-padded-modeline) doom-ewal-padded-modeline 4)))
+    (when ewal-doom-one-padded-modeline
+      (if (integerp ewal-doom-one-padded-modeline) doom-one-padded-modeline 4)))
 
    (modeline-fg     nil)
    (modeline-fg-alt base5)
@@ -149,7 +118,7 @@ determine the exact padding."
 
    (font-lock-comment-face
     :foreground comments
-    :background (if doom-ewal-comment-bg (doom-lighten bg 0.05)))
+    :background (if ewal-doom-one-comment-bg (doom-lighten bg 0.05)))
    (font-lock-doc-face
     :inherit 'font-lock-comment-face
     :foreground doc-comments)
@@ -201,10 +170,6 @@ determine the exact padding."
   ()
   )
 
-;;;###autoload
-(when load-file-name
-  (add-to-list 'custom-theme-load-path
-               (file-name-as-directory (file-name-directory load-file-name))))
+(provide-theme 'ewal-doom-one)
 
-(provide-theme 'doom-ewal)
-;;; doom-ewal-theme.el ends here
+;;; ewal-doom-one-theme.el ends here
