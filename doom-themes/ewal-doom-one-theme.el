@@ -51,15 +51,15 @@ determine the exact padding."
 
    (grey       base4)
    (red        (ewal-doom-themes-get-color 'red      0))
-   (orange     (ewal-doom-themes-get-color 'red     +2))
+   (orange     (ewal-doom-themes-get-color 'red     +1))
    (green      (ewal-doom-themes-get-color 'green    0))
-   (teal       (ewal-doom-themes-get-color 'green   +2))
+   (teal       (ewal-doom-themes-get-color 'green   +1))
    (yellow     (ewal-doom-themes-get-color 'yellow   0))
-   (blue       (ewal-doom-themes-get-color 'blue    +2))
+   (blue       (ewal-doom-themes-get-color 'blue    +1))
    (dark-blue  (ewal-doom-themes-get-color 'blue     0))
-   (magenta    (ewal-doom-themes-get-color 'magenta +2))
+   (magenta    (ewal-doom-themes-get-color 'magenta +1))
    (violet     (ewal-doom-themes-get-color 'magenta  0))
-   (cyan       (ewal-doom-themes-get-color 'cyan    +2))
+   (cyan       (ewal-doom-themes-get-color 'cyan    +1))
    (dark-cyan  (ewal-doom-themes-get-color 'cyan     0))
 
    ;; face categories -- required for all themes
