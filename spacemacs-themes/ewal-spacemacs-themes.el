@@ -33,6 +33,19 @@
 ;;; Code:
 (require 'ewal)
 
+(defcustom ewal-spacemacs-themes-primary-accent-color 'magenta
+  "Predominant `ewal' color.
+Must be one of `ewal-ansi-color-name-symbols'"
+  :type 'symbol
+  :group 'ewal)
+
+(defcustom ewal-spacemacs-themes-secondary-accent-color 'blue
+  "Second most predominant `ewal' color.
+Must be one of `ewal-ansi-color-name-symbols'"
+  :type 'symbol
+  :group 'ewal)
+
+
 (defvar ewal-spacemacs-themes-colors nil
   "`spacemacs-theme' compatible colors.
 Extracted from current `ewal' theme.")
