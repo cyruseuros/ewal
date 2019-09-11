@@ -42,7 +42,7 @@ determine the exact padding."
    (base2      (ewal-doom-themes-get-color 'background -3))
    (base3      (ewal-doom-themes-get-color 'background -2))
    (base4      (ewal-doom-themes-get-color 'background +2))
-   (base5      (ewal-doom-themes-get-color 'background +3))
+   (base5      (ewal-doom-themes-get-color 'comment     0))
    (base6      (ewal-doom-themes-get-color 'background +4))
    (base7      (ewal-doom-themes-get-color 'background +5))
    (base8      (ewal-doom-themes-get-color 'foreground +1))
