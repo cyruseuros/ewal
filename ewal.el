@@ -114,6 +114,18 @@ Only applies when `wal' cache is unreadable for some reason."
   :type 'boolean
   :group 'ewal)
 
+(defcustom ewal-primary-accent-color 'magenta
+  "Predominant `ewal' color.
+Must be one of `ewal-ansi-color-name-symbols'"
+  :type 'symbol
+  :group 'ewal)
+
+(defcustom ewal-secondary-accent-color 'blue
+  "Second most predominant `ewal' color.
+Must be one of `ewal-ansi-color-name-symbols'"
+  :type 'symbol
+  :group 'ewal)
+
 (defcustom ewal-ansi-cursor-color
   (symbol-name ewal-primary-accent-color)
   "Assumed color of special \"cursor\" color in `wal' themes.
