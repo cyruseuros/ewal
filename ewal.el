@@ -126,7 +126,7 @@ Only applies when `wal' cache is unreadable for some reason."
   :type 'boolean
   :group 'ewal)
 
-(defcustom ewal-cursor-color
+(defcustom ewal-ansi-cursor-color
   (symbol-name ewal-primary-accent-color)
   "Assumed color of special \"cursor\" color in `wal' themes.
 Only relevant in TTY/terminal."
@@ -142,11 +142,15 @@ Only relevant in TTY/terminal."
   "Json file to be used in case `ewal-use-built-in-always-p' is t.
 Also if `ewal-use-built-in-on-failure-p' is t and something goes wrong.")
 
-(defvar ewal-ansi-background-name
+(defvar ewal-ansi-background-color
   (if ewal-dark-palette-p "black" "white")
   "Ansi color to use for background in a TTY/terminal.")
 
-(defvar ewal-ansi-foreground-name
+(defvar ewal-ansi-comment-color
+  (if ewal-dark-palette-p "black" "white")
+  "Ansi color to use for background in TTY/terminal.")
+
+(defvar ewal-ansi-foreground-color
   (if ewal-dark-palette-p "white" "black")
   "Ansi color to use for background in TTY/terminal.")
 
@@ -242,11 +246,12 @@ shades."
              ewal-shade-percent-difference)))
     (if tty
         (let ((color-name (symbol-name color)))
-          (cond ((string= color-name "background") ewal-ansi-background-name)
-                ((string= color-name "foreground") ewal-ansi-foreground-name)
-                ((string= color-name "comment") "brightblack")
-                ((string= color-name "cursor") ewal-cursor-color)
-                (t color-name)))
+          (concat (if (or (string= color-name "comment") (> shade 0)) "bright" "")
+                  (cond ((string= color-name "background") ewal-ansi-background-color)
+                        ((string= color-name "foreground") ewal-ansi-foreground-color)
+                        ((string= color-name "comment") ewal-ansi-comment-color)
+                        ((string= color-name "cursor") ewal-ansi-cursor-color)
+                        (t color-name))))
       (if (or (not shade) (= shade 0))
           (ewal--get-base-color color)
         (ewal--color-chshade
