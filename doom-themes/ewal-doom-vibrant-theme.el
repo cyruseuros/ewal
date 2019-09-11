@@ -93,12 +93,12 @@ determine the exact padding."
     (when ewal-doom-vibrant-padded-modeline
       (if (integerp ewal-doom-vibrant-padded-modeline) doom-vibrant-padded-modeline 4)))
 
-   (modeline-fg     "#bbc2cf")
+   (modeline-fg     (ewal-get-color 'foreground 0))
    (modeline-fg-alt (doom-blend blue grey (if ewal-doom-vibrant-brighter-modeline 0.4 0.08)))
 
    (modeline-bg
     (if ewal-doom-vibrant-brighter-modeline
-        `("#383f58" ,@(cdr base1))
+        `(,(car bg-alt) ,@(cdr base1))
       `(,(car bg-alt) ,@(cdr base0))))
    (modeline-bg-l
     (if ewal-doom-vibrant-brighter-modeline
@@ -109,7 +109,7 @@ determine the exact padding."
 
 
   ;; --- extra faces ------------------------
-  ((elscreen-tab-other-screen-face :background "#353a42" :foreground "#1e2022")
+  ((elscreen-tab-other-screen-face :background base8 :foreground base0)
 
    (font-lock-comment-face
     :foreground comments
