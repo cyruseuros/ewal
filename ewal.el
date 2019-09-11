@@ -7,7 +7,7 @@
 ;; Author: Uros Perisic
 ;; URL: https://gitlab.com/jjzmajic/ewal
 ;;
-;; Version: 0.1
+;; Version: 0.2
 ;; Keywords: faces
 ;; Package-Requires: ((emacs "25"))
 

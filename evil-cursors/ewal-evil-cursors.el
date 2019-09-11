@@ -29,7 +29,7 @@
 ;; vanilla Emacs format.
 
 ;;; Code:
-(require 'ewal "./ewal.el")
+(require 'ewal)
 
 (defvar evil-state)
 (defvar evil-previous-state)

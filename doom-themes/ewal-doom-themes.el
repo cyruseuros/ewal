@@ -30,8 +30,8 @@
 ;; file if you want to contribute other `ewal' customized themes.
 
 ;;; Code:
-(require 'doom-themes)
 (require 'ewal)
+(require 'doom-themes)
 
 (defun ewal-doom-themes-get-color (color &optional shade shade-percent-difference)
   "Return COLOR of SHADE with SHADE-PERCENT-DIFFERENCE repeated 3 times.
