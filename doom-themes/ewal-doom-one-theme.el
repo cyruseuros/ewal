@@ -36,12 +36,12 @@ determine the exact padding."
 
   ;; name        default   256       16
   ((bg         (ewal-doom-themes-get-color 'background  0))
-   (bg-alt     (ewal-doom-themes-get-color 'background -1))
+   (bg-alt     (ewal-doom-themes-get-color 'background -3))
    (base0      (ewal-doom-themes-get-color 'background -5))
    (base1      (ewal-doom-themes-get-color 'background -4))
-   (base2      (ewal-doom-themes-get-color 'background -3))
-   (base3      (ewal-doom-themes-get-color 'background -2))
-   (base4      (ewal-doom-themes-get-color 'background +2))
+   (base2      (ewal-doom-themes-get-color 'background -2))
+   (base3      (ewal-doom-themes-get-color 'background -1))
+   (base4      (ewal-doom-themes-get-color 'background +1))
    (base5      (ewal-doom-themes-get-color 'comment     0))
    (base6      (ewal-doom-themes-get-color 'background +4))
    (base7      (ewal-doom-themes-get-color 'background +5))
