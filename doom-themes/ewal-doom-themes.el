@@ -47,6 +47,6 @@ deals with tty contexts."
                (file-name-as-directory
                 (file-name-directory load-file-name))))
 
-(provide 'ewal-doom-themes)
 
+(provide 'ewal-doom-themes)
 ;;; ewal-doom-themes.el ends here
