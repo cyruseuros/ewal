@@ -9,32 +9,34 @@ color-picker and theme generator.
 - =ewal-doom-themes= have been added!
 - =ewal-wal-json-file= has been renamed to =ewal-json-file=.
 - =ewal-load-wal-colors= has been renamed to =ewal-load-colors=.
-- =ewal-get-color= has been renamed to =ewal-load-color=. =ewal--get-color= has
-  now been exposed as =ewal-get-color=. Both functions do the same thing, except
-  that =ewal-load-color= will always call =ewal-load-colors= first, while
-  =ewal-get-color= expects the user to do so first, for a marginal performance
-  improvement.
-- =ewal-spacemacs-theme-*-high-contrast= have been deprecated. To achieve the
-  same effect =(setq ewal-shade-percent-difference 10)=
+- =ewal-get-color= has been renamed to
+  =ewal-load-color=. =ewal--get-color= has now been exposed as
+  =ewal-get-color=. Both functions do the same thing, except that
+  =ewal-load-color= will always call =ewal-load-colors= first, while
+  =ewal-get-color= expects the user to do so first, for a marginal
+  performance improvement.
+- =ewal-spacemacs-theme-*-high-contrast= have been deprecated. To
+  achieve the same effect =(setq ewal-shade-percent-difference 10)=
 
 * TODOs
 - Add =ewal-doom-themes= screenshots.
 
 * Overview
-A theme isn't just a colorscheme. =ewal= lives by that. It uses =pywal= as a
-backend to spruce up your Emacs setup by default, but also sports over 200 built
-in palettes to do so if you don't use the program (or *shudders*, you use a DOS
-system).
+A theme isn't just a colorscheme. =ewal= lives by that. It uses [[https://github.com/dylanaraps/pywal][pywal]]
+as a backend to spruce up your Emacs setup by default, but also sports
+over 200 built in palettes to do so if you don't use the program (or
+*shudders*, you use a DOS system).
 
-It adds extra shades to =pywal= palettes and makes your Emacs look sexy in a GUI
-and in a terminal (=pywal= users only). =ewal-spacemacs-themes= shows what ewal
-can do in 400 flavors of =spacemacs-theme= and =doom-themes=, while
-=ewal-evil-cursors= spices up, well, your evil cursors. It also provides a
-function to colorize =spaceline= accordingly. All these packages (with the
+It adds extra shades to =pywal= palettes and makes your Emacs look
+sexy in a GUI and in a terminal (=pywal= users
+only). =ewal-spacemacs-themes= shows what ewal can do in 400 flavors
+of =spacemacs-theme= and =doom-themes=, while =ewal-evil-cursors=
+spices up, well, your evil cursors. It also provides a function to
+colorize =spaceline= accordingly. All these packages (with the
 excepton of doom themes) are available on MELPA.
 
-* Screenshots 
-** GUI  
+* Screenshots
+** GUI
 [[./img/ewal.gif]]
 ** Terminal
 [[./img/ewal-terminal.png]]
