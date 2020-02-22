@@ -30,7 +30,10 @@ Can be an integer to determine the exact padding."
 
 (ewal-load-colors)
 
-;;
+;; HACK: fixes bytecode overflow
+(defvar ewal-doom-one-hack
+  (ewal-doom-themes-get-color 'background 0))
+
 (def-doom-theme ewal-doom-vibrant
   "A dark theme based off of doom-one with more vibrant `ewal' colors."
 
@@ -90,7 +93,7 @@ Can be an integer to determine the exact padding."
    (hidden-alt `(,(car bg-alt) "black" "black"))
    (-modeline-pad
     (when ewal-doom-vibrant-padded-modeline
-      (if (integerp ewal-doom-vibrant-padded-modeline) doom-vibrant-padded-modeline 4)))
+      (if (integerp ewal-doom-vibrant-padded-modeline) ewal-doom-vibrant-padded-modeline 4)))
 
    (modeline-fg     (ewal-get-color 'foreground 0))
    (modeline-fg-alt (doom-blend blue grey (if ewal-doom-vibrant-brighter-modeline 0.4 0.08)))
