@@ -17,14 +17,13 @@
   :type 'boolean)
 
 (defcustom ewal-doom-one-comment-bg ewal-doom-one-brighter-comments
-  "If non-nil, comments will have a subtle, darker background. Enhancing their
-legibility."
+  "If non-nil, comments will have a subtle, darker background."
   :group 'ewal-doom-one-theme
   :type 'boolean)
 
 (defcustom ewal-doom-one-padded-modeline doom-themes-padded-modeline
-  "If non-nil, adds a 4px padding to the mode-line. Can be an integer to
-determine the exact padding."
+  "If non-nil, adds a 4px padding to the mode-line.
+Can be an integer to determine the exact padding."
   :group 'ewal-doom-one-theme
   :type '(choice integer boolean))
 
