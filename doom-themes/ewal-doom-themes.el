@@ -1,6 +1,6 @@
 ;;; ewal-doom-themes.el --- Dread the colors of darkness -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019 Uros Perisic
+;; Copyright (C) 2019-2020 Uros Perisic
 
 ;; Author: Uros Perisic
 ;; URL: https://gitlab.com/jjzmajic/ewal
