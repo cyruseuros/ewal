@@ -26,8 +26,8 @@
 
 ;;; Commentary:
 
-;; An `ewal'-based theme, created using `doom-themes' as its base.  Emulate this
-;; file if you want to contribute other `ewal' customized themes.
+;; An `ewal'-based theme library, to be used when working with
+;; `doom-themes' as a base.
 
 ;;; Code:
 (require 'ewal)
