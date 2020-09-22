@@ -34,11 +34,13 @@
 (require 'doom-themes)
 
 (defun ewal-doom-themes-get-color (color &optional shade shade-percent-difference)
-  "Return COLOR of SHADE with SHADE-PERCENT-DIFFERENCE repeated 3 times.
-This fits `def-doom-theme' and works because `ewal' automatically
-deals with tty contexts."
-  (let ((color (ewal-get-color color shade shade-percent-difference)))
-    `(,color ,color ,color)))
+  "Return COLOR of SHADE with SHADE-PERCENT-DIFFERENCE.
+Return one accurate hex color, and 2 tty approximation colors to
+fit `def-doom-theme'."
+  (let ((color (ewal-get-color color shade shade-percent-difference))
+        (tty-color (let ((ewal-force-tty-colors-p t))
+                     (ewal-get-color color shade shade-percent-difference))))
+    `(,color ,tty-color ,tty-color)))
 
 ;;;###autoload
 (when (and (boundp 'custom-theme-load-path)
