@@ -241,7 +241,11 @@ shades."
   (let ((tty (or ewal-force-tty-colors-p
                  (and (daemonp) ewal-force-tty-colors-in-daemon-p)
                  (and (not (daemonp)) (not (display-graphic-p)))))
-        (shade (or shade 0))
+        (shade (if shade
+                   (if ewal-dark-palette-p
+                       shade
+                     (* shade -1))
+                 0))
         (shade-percent-difference
          (or shade-percent-difference
              ewal-shade-percent-difference)))
