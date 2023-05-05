@@ -1,11 +1,11 @@
 ;; ewal-spacemacs-modern-theme.el --- A modern, `ewal'-colored take on `spacemacs-theme'.
 
 (require 'ewal-spacemacs-themes)
-;; has to be run before loading `spacemacs-common'
+;; has to be run before loading `spacemacs-theme'
 (setq spacemacs-theme-org-highlight t)
 (let ((spacemacs-theme-custom-colors
        (ewal-spacemacs-themes-get-colors)))
-  (require 'spacemacs-common)
+  (require 'spacemacs-theme)
   (deftheme ewal-spacemacs-modern)
   ;; must be run before `create-spacemacs-theme'
   (ewal-spacemacs-themes--modernize-theme
